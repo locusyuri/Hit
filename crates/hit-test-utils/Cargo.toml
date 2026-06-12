@@ -1,0 +1,10 @@
+[package]
+name = "hit-test-utils"
+version.workspace = true
+edition.workspace = true
+description = "Hit 共享测试 fixture：mock_config / sample_manifest / temp_scoop_root"
+
+[dependencies]
+hit-common = { workspace = true }
+hit-core = { workspace = true }
+tempfile = { workspace = true }

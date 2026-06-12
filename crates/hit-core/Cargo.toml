@@ -1,0 +1,8 @@
+[package]
+name = "hit-core"
+version.workspace = true
+edition.workspace = true
+description = "Hit 核心业务逻辑：manifest / bucket / download / compress / store / install / win"
+
+[dependencies]
+hit-common = { workspace = true }

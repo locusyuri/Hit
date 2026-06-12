@@ -1,0 +1,9 @@
+[package]
+name = "hit-shim"
+version.workspace = true
+edition.workspace = true
+description = "Hit Shim 代理：独立轻量级二进制，转发命令到真实程序"
+
+[dependencies]
+hit-common = { workspace = true }
+sonic-rs = { workspace = true }

@@ -1,3 +1,7 @@
 /target
 .codegraph/
 .agents/graph.bin
+Cargo.lock
+*.swp
+.vs/
+*.pdb

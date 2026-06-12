@@ -1,0 +1,12 @@
+[package]
+name = "hit-common"
+version.workspace = true
+edition.workspace = true
+description = "Hit 基础类型库：error / config / paths / session / event bus"
+
+[dependencies]
+thiserror = { workspace = true }
+serde = { workspace = true }
+tracing = { workspace = true }
+flume = { workspace = true }
+once_cell = { workspace = true }

@@ -74,23 +74,27 @@ impl HitConfig {
         if !path.exists() {
             return Ok(Self::default());
         }
-        let content = std::fs::read_to_string(path)?;
-        sonic_rs::from_str(&content)
-            .map_err(|e| HitError::Config {
-                message: format!("解析 {} 失败：{e}", path.display()),
-            })
+        let content = std::fs::read_to_string(path).map_err(|e| {
+            HitError::io(format!("读取配置文件 {}", path.display()), e)
+        })?;
+        sonic_rs::from_str(&content).map_err(|e| HitError::Config {
+            message: format!("解析 {} 失败：{e}", path.display()),
+        })
     }
 
     /// 保存到指定路径（覆盖写入）
     pub fn save(&self, path: &Path) -> Result<()> {
         if let Some(parent) = path.parent() {
-            std::fs::create_dir_all(parent)?;
-        }
-        let content = sonic_rs::to_string_pretty(self)
-            .map_err(|e| HitError::Config {
-                message: format!("序列化配置失败：{e}"),
+            std::fs::create_dir_all(parent).map_err(|e| {
+                HitError::io(format!("创建配置目录 {}", parent.display()), e)
             })?;
-        std::fs::write(path, content)?;
+        }
+        let content = sonic_rs::to_string_pretty(self).map_err(|e| HitError::Config {
+            message: format!("序列化配置失败：{e}"),
+        })?;
+        std::fs::write(path, content).map_err(|e| {
+            HitError::io(format!("写入配置文件 {}", path.display()), e)
+        })?;
         Ok(())
     }
 }

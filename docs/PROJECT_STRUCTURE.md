@@ -183,9 +183,10 @@ hit/
 │           ├── api.rs            # 插件 API 定义
 │           └── hooks.rs          # 插件钩子系统
 │
-├── Scoop/                        # 参考：原版 Scoop PowerShell 源码
-├── Main/                         # 参考：Scoop 官方 Main Bucket
-├── Hok/                          # 参考：Rust 实现的 Scoop 替代品
+├── ref/                          # 参考源码
+│   ├── Scoop/                    # 原版 Scoop PowerShell 源码
+│   ├── Main/                     # Scoop 官方 Main Bucket
+│   └── Hok/                      # Rust 实现的 Scoop 替代品
 │
 ├── buckets/                      # 默认 Bucket 仓库（Git 子模块或独立仓库）
 │   ├── main/                     # 主仓库（命令行工具）
@@ -502,9 +503,9 @@ C:\Users\<username>\.hit\
 
 | 目录 | 来源 | 用途 |
 |------|------|------|
-| [`Scoop/`](./Scoop/) | [Scoop PowerShell](https://github.com/ScoopInstaller/Scoop) | 原版 Scoop 实现，核心参考 |
-| [`Main/`](./Main/) | [Scoop Main Bucket](https://github.com/ScoopInstaller/Main) | 官方软件清单，兼容性测试 |
-| [`Hok/`](./Hok/) | [hok](https://github.com/chawyehsu/hok) | Rust 实现的 Scoop 替代品（较久未更新） |
+| [`ref/Scoop/`](./ref/Scoop/) | [Scoop PowerShell](https://github.com/ScoopInstaller/Scoop) | 原版 Scoop 实现，核心参考 |
+| [`ref/Main/`](./ref/Main/) | [Scoop Main Bucket](https://github.com/ScoopInstaller/Main) | 官方软件清单，兼容性测试 |
+| [`ref/Hok/`](./ref/Hok/) | [hok](https://github.com/chawyehsu/hok) | Rust 实现的 Scoop 替代品（较久未更新） |
 
 详情见 [REFERENCE_PROJECTS.md](./REFERENCE_PROJECTS.md)。
 

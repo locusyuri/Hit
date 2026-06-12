@@ -6,9 +6,9 @@
 
 | 目录 | 来源 | 说明 |
 |------|------|------|
-| [`Scoop/`](../Scoop/) | [Scoop](https://github.com/ScoopInstaller/Scoop) | 原版 Scoop PowerShell 实现，核心参考 |
-| [`Main/`](../Main/) | [Scoop 官方 Main Bucket](https://github.com/ScoopInstaller/Main) | Scoop 主仓库的软件清单，用于兼容性测试 |
-| [`Hok/`](../Hok/) | [hok](https://github.com/chawyehsu/hok) | 用 Rust 实现的 Scoop 替代品（较久未更新），参考其架构设计 |
+| [`ref/Scoop/`](../ref/Scoop/) | [Scoop](https://github.com/ScoopInstaller/Scoop) | 原版 Scoop PowerShell 实现，核心参考 |
+| [`ref/Main/`](../ref/Main/) | [Scoop 官方 Main Bucket](https://github.com/ScoopInstaller/Main) | Scoop 主仓库的软件清单，用于兼容性测试 |
+| [`ref/Hok/`](../ref/Hok/) | [hok](https://github.com/chawyehsu/hok) | 用 Rust 实现的 Scoop 替代品（较久未更新），参考其架构设计 |
 
 > **Hok 说明**：Hok 由 chawyehsu 开发，是一个用 Rust 实现 Scoop 的 CLI 工具。
 > - 版本：v0.1.0-beta.7（较久未更新）

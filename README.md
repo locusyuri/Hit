@@ -4,11 +4,15 @@
 
 ## 特性
 
+- **交互式安装**：集成 fzf 交互式搜索安装（`hit si`），告别手动翻找
+- **命令简写**：内置子命令简写，`hit i` = `hit install`，`hit s` = `hit search`
 - **零污染**：所有软件安装在用户目录，无需管理员权限
 - **Shim 代理**：通过轻量级代理实现 PATH 不污染
 - **版本管理**：支持 JDK、Python、Node.js 等 SDK 的多版本切换
 - **深度卸载**：集成类似 Geek Uninstaller 的残留扫描清理功能
 - **便携化**：解压即用，卸载干净
+
+> 完整功能列表请参阅 [docs/FEATURES.md](docs/FEATURES.md)。
 
 ## 快速开始
 

@@ -5,13 +5,17 @@
 //! - `config`：用户配置 `HitConfig`
 //! - `paths`：Scoop 兼容路径计算
 //! - `log`：tracing 日志初始化
-//! - `session`：`Session`/Context 模式（1.1.7）
-//! - `event`：`EventBus` + `Event` 枚举（1.1.8）
+//! - `event`：`EventBus` + `Event` 枚举
+//! - `session`：`Session`/Context 模式
 
 pub mod config;
 pub mod error;
+pub mod event;
 pub mod log;
 pub mod paths;
+pub mod session;
 
-pub use config::HitConfig;
+pub use config::{HitConfig, LinkMode};
 pub use error::{HitError, Result};
+pub use event::{Event, EventBus, InstallPhase};
+pub use session::Session;

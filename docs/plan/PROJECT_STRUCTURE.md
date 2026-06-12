@@ -25,18 +25,24 @@ hit/
 ├── .gitignore                    # Git 忽略配置
 │
 ├── docs/                         # 项目文档
-│   ├── PROJECT_STRUCTURE.md      # 项目结构说明（本文件）
-│   ├── CODING_GUIDELINES.md      # 编码规范
-│   ├── TECH_STACK.md             # 技术栈清单
-│   ├── DEV_FLOW.md               # 开发流程
-│   ├── MANIFEST_FORMAT.md        # Manifest 清单格式
-│   ├── WINDOWS_NOTES.md          # Windows 注意事项
-│   ├── ROADMAP.md                # 路线图与新增功能详解
-│   ├── FEATURES.md               # 功能特性清单与设计理念
-│   ├── REFERENCE_PROJECTS.md     # 参考项目
-│   └── TODO.md                   # 实现任务清单（Phase 1-3 权威）
+│   ├── TODO.md                   # 实现任务清单（Phase 1-3 权威，留根目录）
+│   ├── plan/                     # 项目规划
+│   │   ├── PROJECT_STRUCTURE.md  # 项目结构说明（本文件）
+│   │   ├── ROADMAP.md            # 路线图与新增功能详解
+│   │   ├── FEATURES.md           # 功能特性清单与设计理念
+│   │   └── TECH_STACK.md         # 技术栈清单
+│   ├── guides/                   # 开发指南
+│   │   ├── DEV_FLOW.md           # 开发流程
+│   │   ├── CODING_GUIDELINES.md  # 编码规范
+│   │   └── WINDOWS_NOTES.md      # Windows 注意事项
+│   ├── spec/                     # 规范与参考
+│   │   ├── MANIFEST_FORMAT.md    # Manifest 清单格式
+│   │   └── REFERENCE_PROJECTS.md # 参考项目
+│   └── notes/                    # 灵感与评审
+│       ├── EUREKA.md             # 灵感速记
+│       └── review/               # 评审记录
 │
-├── crates/                       # Rust 工作区子模块（5-crate 方案，详见 [TODO.md](./TODO.md)）
+├── crates/                       # Rust 工作区子模块（5-crate 方案，详见 [TODO.md](../TODO.md)）
 │   │
 │   ├── hit-common/               # 基础类型库（lib）
 │   │   ├── Cargo.toml
@@ -138,7 +144,7 @@ hit/
 
 ## 🔑 核心模块说明
 
-> 模块架构以 [TODO.md](./TODO.md) 为 Phase 1-3 权威清单；本节提供设计意图与职责概览。
+> 模块架构以 [TODO.md](../TODO.md) 为 Phase 1-3 权威清单；本节提供设计意图与职责概览。
 
 ### 1. **hit-common** - 基础类型库
 - **职责**：跨 crate 共享的基础类型、配置、路径、日志、Session 与 EventBus
@@ -367,11 +373,11 @@ C:\Users\<username>\.hit\
 
 | 目录 | 来源 | 用途 |
 |------|------|------|
-| [`ref/Scoop/`](./ref/Scoop/) | [Scoop PowerShell](https://github.com/ScoopInstaller/Scoop) | 原版 Scoop 实现，核心参考 |
-| [`ref/Main/`](./ref/Main/) | [Scoop Main Bucket](https://github.com/ScoopInstaller/Main) | 官方软件清单，兼容性测试 |
-| [`ref/Hok/`](./ref/Hok/) | [hok](https://github.com/chawyehsu/hok) | Rust 实现的 Scoop 替代品（较久未更新） |
+| [`ref/Scoop/`](../../ref/Scoop/) | [Scoop PowerShell](https://github.com/ScoopInstaller/Scoop) | 原版 Scoop 实现，核心参考 |
+| [`ref/Main/`](../../ref/Main/) | [Scoop Main Bucket](https://github.com/ScoopInstaller/Main) | 官方软件清单，兼容性测试 |
+| [`ref/Hok/`](../../ref/Hok/) | [hok](https://github.com/chawyehsu/hok) | Rust 实现的 Scoop 替代品（较久未更新） |
 
-详情见 [REFERENCE_PROJECTS.md](./REFERENCE_PROJECTS.md)。
+详情见 [REFERENCE_PROJECTS.md](../spec/REFERENCE_PROJECTS.md)。
 
 ---
 
@@ -379,12 +385,12 @@ C:\Users\<username>\.hit\
 
 | 文档 | 内容 |
 |------|------|
-| [TECH_STACK.md](./TECH_STACK.md) | 技术栈清单与各模块 Cargo.toml 依赖 |
-| [DEV_FLOW.md](./DEV_FLOW.md) | 初始化、构建、测试、发布流程 |
-| [MANIFEST_FORMAT.md](./MANIFEST_FORMAT.md) | Manifest 清单格式（Scoop 兼容 + Hit 扩展） |
-| [WINDOWS_NOTES.md](./WINDOWS_NOTES.md) | Windows 符号链接、PATH、UAC 等注意事项 |
+| [TODO.md](../TODO.md) | 实现任务清单（Phase 1-3 权威） |
 | [ROADMAP.md](./ROADMAP.md) | 里程碑规划与新增功能详解 |
-| [REFERENCE_PROJECTS.md](./REFERENCE_PROJECTS.md) | 参考项目与学习资源 |
-| [CODING_GUIDELINES.md](./CODING_GUIDELINES.md) | 编码规范 |
-| [TODO.md](./TODO.md) | 实现任务清单（Phase 1-3 权威） |
 | [FEATURES.md](./FEATURES.md) | 功能特性清单与设计理念 |
+| [TECH_STACK.md](./TECH_STACK.md) | 技术栈清单与各模块 Cargo.toml 依赖 |
+| [DEV_FLOW.md](../guides/DEV_FLOW.md) | 初始化、构建、测试、发布流程 |
+| [CODING_GUIDELINES.md](../guides/CODING_GUIDELINES.md) | 编码规范 |
+| [WINDOWS_NOTES.md](../guides/WINDOWS_NOTES.md) | Windows 符号链接、PATH、UAC 等注意事项 |
+| [MANIFEST_FORMAT.md](../spec/MANIFEST_FORMAT.md) | Manifest 清单格式（Scoop 兼容 + Hit 扩展） |
+| [REFERENCE_PROJECTS.md](../spec/REFERENCE_PROJECTS.md) | 参考项目与学习资源 |

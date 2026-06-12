@@ -36,4 +36,4 @@ cargo test --package hit-core
 
 ---
 
-> 详见 [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) — 项目结构与模块说明
+> 详见 [PROJECT_STRUCTURE.md](../plan/PROJECT_STRUCTURE.md) — 项目结构与模块说明

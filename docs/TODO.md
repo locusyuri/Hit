@@ -3,8 +3,8 @@
 ## 🎯 目标：将 Scoop 重构为 Rust，完全兼容 Scoop Bucket
 
 > **文档定位**：本文档是 Phase 1-3 实现的 **权威任务清单**。
-> Phase 4-5 的远期规划请参阅 [ROADMAP.md](./ROADMAP.md)。
-> 项目结构与模块划分请参阅 [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)。
+> Phase 4-5 的远期规划请参阅 [ROADMAP.md](./plan/ROADMAP.md)。
+> 项目结构与模块划分请参阅 [PROJECT_STRUCTURE.md](./plan/PROJECT_STRUCTURE.md)。
 > 当其他文档与本文档在 Phase 1-3 范围内存在冲突时，以本文档为准。
 
 ---
@@ -345,7 +345,7 @@ crates/
 
 ## 远期展望（Phase 4-5）
 
-> 以下功能不在 Phase 1-3 范围内，详见 [ROADMAP.md](./ROADMAP.md) Phase 4-5。
+> 以下功能不在 Phase 1-3 范围内，详见 [ROADMAP.md](./plan/ROADMAP.md) Phase 4-5。
 
 | 功能领域         | 简述                                  | ROADMAP   |
 | ---------------- | ------------------------------------- | --------- |

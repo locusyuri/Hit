@@ -9,7 +9,7 @@ use std::path::{Path, PathBuf};
 
 use tempfile::TempDir;
 
-use hit_common::{HitConfig, LinkMode};
+use hit_common::HitConfig;
 
 /// 构造测试用 `HitConfig`
 ///
@@ -21,7 +21,7 @@ pub fn mock_config() -> HitConfig {
         mirror: None,
         aria2_enabled: false,
         no_junction: false,
-        link_mode: LinkMode::Symlink,
+        root_path: None,
         auto_cleanup_days: 0,
         health_check_interval_days: 0,
     }
@@ -119,8 +119,8 @@ mod tests {
     fn mock_config_is_deterministic() {
         let a = mock_config();
         let b = mock_config();
-        assert_eq!(a.link_mode, b.link_mode);
         assert_eq!(a.no_junction, b.no_junction);
+        assert_eq!(a.root_path, b.root_path);
         assert!(a.proxy.is_none());
     }
 
@@ -144,7 +144,7 @@ mod tests {
         let (_dir, root) = temp_scoop_root().unwrap();
         write_mock_config(&root).unwrap();
         let loaded = HitConfig::load(&root.join("config.json")).unwrap();
-        assert_eq!(loaded.link_mode, LinkMode::Symlink);
         assert!(!loaded.no_junction);
+        assert_eq!(loaded.root_path, None);
     }
 }

@@ -150,7 +150,7 @@ hit/
 - **职责**：跨 crate 共享的基础类型、配置、路径、日志、Session 与 EventBus
 - **关键组件**：
   - **HitError**：`thiserror` 统一错误枚举，覆盖 IO / Manifest / Bucket / Download / Install / Config 等类别
-  - **Config**：`sonic-rs` 序列化的用户配置（proxy, mirror, no_junction, link_mode 等）
+  - **Config**：`sonic-rs` 序列化的用户配置（proxy, mirror, no_junction, root_path 等）；链接策略仅用 Junction
   - **paths**：Scoop 兼容路径计算（root_path, cache_path, apps_path, shims_path, persist_path）
   - **Session/Context**：参考 `ref/Hok/libscoop/session.rs`，持有 `RefCell<Config>`、`OnceCell<EventBus>`、路径缓存；所有核心操作以 `&Session` 为首参数
   - **EventBus**：`flume` bounded channel（容量 20），定义 `Event` 枚举（DownloadProgress, ExtractStart, InstallStep, BucketUpdateProgress, PromptConfirm 等）
@@ -270,7 +270,7 @@ C:\Users\<username>\.hit\
       "install_date": "2024-01-15T10:30:00Z",
       "persist_files": ["etc/gitconfig"],
       "shims": ["git.exe", "git-lfs.exe"],
-      "link_mode": "symlink",
+      "held": false,
       "health_status": "healthy",
       "last_check": "2024-01-15T10:30:00Z",
       "dependencies": ["vc_redist"],
@@ -284,7 +284,7 @@ C:\Users\<username>\.hit\
       "available_versions": ["3.11.0", "3.12.0"],
       "current_version": "3.12.0",
       "sdk_proxies": ["python.exe", "pip.exe", "idle.exe"],
-      "link_mode": "symlink",
+      "held": false,
       "health_status": "healthy"
     }
   },
@@ -299,7 +299,8 @@ C:\Users\<username>\.hit\
     "proxy": null,
     "mirror": "https://mirror.nju.edu.cn/hit-main.git",
     "aria2_enabled": true,
-    "link_mode": "symlink",
+    "no_junction": false,
+    "root_path": null,
     "auto_cleanup_days": 30,
     "health_check_interval_days": 7,
     "default_mirror": "tuna",

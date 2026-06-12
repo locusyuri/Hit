@@ -27,14 +27,21 @@ struct PathCache {
 }
 
 impl PathCache {
-    fn new() -> Self {
+    /// 构建路径缓存：优先使用 config.root_path（用户显式指定），否则回退到 paths::root_path()
+    /// （基于 HIT_ROOT / SCOOP / USERPROFILE 回退链）。
+    fn new(config: &HitConfig) -> Self {
+        let root = config
+            .root_path
+            .as_ref()
+            .map(PathBuf::from)
+            .unwrap_or_else(paths::root_path);
         Self {
-            root: paths::root_path(),
-            apps: paths::apps_path(),
-            shims: paths::shims_path(),
-            cache: paths::cache_path(),
-            persist: paths::persist_path(),
-            buckets: paths::buckets_path(),
+            root: root.clone(),
+            apps: root.join("apps"),
+            shims: root.join("shims"),
+            cache: root.join("cache"),
+            persist: root.join("persist"),
+            buckets: root.join("buckets"),
         }
     }
 }
@@ -61,34 +68,39 @@ pub struct Session {
 
 impl Session {
     /// 创建 Session：自动从 `~/.hit/config.json` 加载配置（不存在则用默认值）
+    ///
+    /// 注意：配置文件自身的位置由 `paths::root_path()` 决定（基于环境变量回退链），
+    /// 而 `config.root_path` 字段仅影响后续 `apps/shims/cache/persist/buckets` 的路径计算。
     pub fn new() -> Result<Self> {
         let path = HitConfig::default_path();
         let config = HitConfig::load(&path)?;
+        let paths = PathCache::new(&config);
         Ok(Self {
             config: RefCell::new(config),
             config_path: Some(path),
             event_bus: OnceCell::new(),
-            paths: PathCache::new(),
+            paths,
         })
     }
 
     /// 创建使用默认配置的 Session（不读文件、不绑定路径）
     pub fn with_defaults() -> Self {
+        let config = HitConfig::default();
         Self {
-            config: RefCell::new(HitConfig::default()),
+            paths: PathCache::new(&config),
+            config: RefCell::new(config),
             config_path: None,
             event_bus: OnceCell::new(),
-            paths: PathCache::new(),
         }
     }
 
     /// 创建带指定配置的 Session（用于测试或注入）
     pub fn with_config(config: HitConfig) -> Self {
         Self {
+            paths: PathCache::new(&config),
             config: RefCell::new(config),
             config_path: None,
             event_bus: OnceCell::new(),
-            paths: PathCache::new(),
         }
     }
 
@@ -180,16 +192,19 @@ impl std::fmt::Debug for Session {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::config::LinkMode;
+    use crate::paths::acquire_env_lock;
 
     #[test]
     fn with_defaults_uses_default_config() {
+        let _guard = acquire_env_lock();
         let s = Session::with_defaults();
-        assert_eq!(s.config().link_mode, LinkMode::Symlink);
+        assert!(!s.config().no_junction);
+        assert_eq!(s.config().auto_cleanup_days, 30);
     }
 
     #[test]
     fn path_cache_is_consistent() {
+        let _guard = acquire_env_lock();
         let s = Session::with_defaults();
         assert!(s.apps_path().ends_with("apps"));
         assert!(s.shims_path().ends_with("shims"));
@@ -197,7 +212,10 @@ mod tests {
 
     #[test]
     fn emit_works_after_lazy_init() {
-        let s = Session::with_defaults();
+        let s = Session::with_config(HitConfig {
+            root_path: Some("P:\\emit_test".into()),
+            ..HitConfig::default()
+        });
         s.emit(Event::LogInfo {
             message: "test".into(),
         });
@@ -206,8 +224,37 @@ mod tests {
 
     #[test]
     fn config_mut_can_modify() {
+        let _guard = acquire_env_lock();
         let s = Session::with_defaults();
         s.config_mut().no_junction = true;
         assert!(s.config().no_junction);
+    }
+
+    #[test]
+    fn config_root_path_overrides_env_root() {
+        let cfg = HitConfig {
+            root_path: Some("Q:\\custom_hit_root".into()),
+            ..HitConfig::default()
+        };
+        let s = Session::with_config(cfg);
+        assert_eq!(s.root_path().to_string_lossy(), "Q:\\custom_hit_root");
+        assert_eq!(
+            s.apps_path().to_string_lossy(),
+            "Q:\\custom_hit_root\\apps"
+        );
+    }
+
+    #[test]
+    fn no_root_path_uses_env_fallback() {
+        let _guard = acquire_env_lock();
+        let cfg = HitConfig::default(); // root_path = None
+        let s = Session::with_config(cfg);
+        // 没有指定 root_path，应使用 paths::root_path() 的回退链
+        // 至少验证 root 路径以 `.hit` 结尾（默认行为）
+        let root = s.root_path().to_string_lossy().to_string();
+        assert!(
+            root.ends_with(".hit") || root.contains("hit"),
+            "root 路径应包含 .hit 或 hit：{root}"
+        );
     }
 }

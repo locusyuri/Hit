@@ -19,11 +19,11 @@ fn ensure_symlink_permission() -> Result<()> {
             Ok(())
         },
         Err(e) if e.kind() == ErrorKind::PermissionDenied => {
-            anyhow!("检测到符号链接权限不足。\n\n"
+            anyhow!("检测到权限不足。\n\n"
                 "请选择以下方案：\n"
-                "1. 开启 Windows 开发者模式（推荐）\n"
-                "2. 以管理员身份运行 hit（仅首次安装）\n"
-                "3. 使用 'hit config set link_mode hardlink' 降级（无法版本切换）")
+                "1. 确认安装目录可写（Hit 使用 Junction，无需管理员权限）\n"
+                "2. 以管理员身份运行 hit\n"
+                "3. 使用 'hit config set no_junction true' 禁用 junction（shim 直接指向版本目录）")
         },
         Err(e) => anyhow!(e),
     }

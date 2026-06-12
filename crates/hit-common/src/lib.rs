@@ -15,7 +15,7 @@ pub mod log;
 pub mod paths;
 pub mod session;
 
-pub use config::{HitConfig, LinkMode};
+pub use config::HitConfig;
 pub use error::{HitError, Result};
 pub use event::{Event, EventBus, InstallPhase};
 pub use session::Session;

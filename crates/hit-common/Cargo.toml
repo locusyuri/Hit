@@ -6,7 +6,10 @@ description = "Hit 基础类型库：error / config / paths / session / event bu
 
 [dependencies]
 thiserror = { workspace = true }
+anyhow = { workspace = true }
 serde = { workspace = true }
+sonic-rs = { workspace = true }
 tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
 flume = { workspace = true }
 once_cell = { workspace = true }

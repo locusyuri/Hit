@@ -107,7 +107,7 @@ crates/
 | 1.1.2 | 配置 workspace 级 Cargo.toml：`[workspace.dependencies]`（serde, sonic-rs, thiserror, anyhow, tracing, flume）；`[profile.release]`（LTO, strip, opt-level=3, codegen-units=1） | ✅    | -      | 已完成   | 1.1.1 |
 | 1.1.3 | 完善 .gitignore：在现有 `/target`、`.codegraph/`、`.agents/graph.bin` 基础上追加 `Cargo.lock`（库 crate 不锁）、`*.swp`、`.vs/`、`*.pdb` | ✅    | -      | 已完成   | -     |
 | 1.1.4 | 创建项目文档结构（已完成：docs/ 含 10 个 .md 文件）                                               | ✅    | -      | 已完成   | -     |
-| 1.1.5 | 初始化 hit-common crate：定义 error.rs / config.rs / paths.rs / log.rs                            | 📋    | -      | 5天      | 1.1.1 |
+| 1.1.5 | 初始化 hit-common crate：定义 error.rs / config.rs / paths.rs / log.rs                            | ✅    | -      | 已完成   | 1.1.1 |
 | 1.1.6 | 定义 HitError 枚举（hit-common/src/error.rs）：thiserror derive，覆盖 IO、Manifest、Bucket、Download、Install、Config 等错误类别；对外暴露 `type Result<T> = std::result::Result<T, HitError>` | 📋    | -      | 2天      | 1.1.5 |
 | 1.1.7 | 实现 Session/Context 模式（hit-common/src/session.rs）：Session 结构体持有 `RefCell<Config>`、`OnceCell<EventBus>`、路径缓存；所有核心操作以 `&Session` 为首参数；参考 `ref/Hok/crates/libscoop/src/session.rs` | 📋    | -      | 3天      | 1.1.5 |
 | 1.1.8 | 实现 EventBus 事件总线（hit-common/src/event.rs）：flume bounded channel（容量 20）；定义 `Event` 枚举（DownloadProgress, ExtractStart, InstallStep, BucketUpdateProgress, PromptConfirm 等）；Session 通过 `event_bus()` 暴露 sender/receiver | 📋    | -      | 2天      | 1.1.5 |

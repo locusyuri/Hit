@@ -18,6 +18,13 @@
 
 ### 安装
 
+```powershell
+# 一键安装（推荐）
+irm https://get.hit.sh | iex
+```
+
+> 若尚未发布到 get.hit.sh，可本地执行 `.\scripts\install-hit.ps1 -FromLocal .\target\release\hit.exe`
+
 ```bash
 # 从源码构建（需要 Rust 工具链）
 cargo build --release

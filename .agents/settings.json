@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "glob": "**/*.rs",
+        "command": "cargo check 2>&1"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "glob": "**/Cargo.lock",
+        "blockMessage": "❌ Cargo.lock 由 cargo 自动管理，请勿手动编辑。如需更新依赖，请运行 `cargo update`。"
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Edit",
+      "Write",
+      "Bash(cargo build:*)",
+      "Bash(cargo check:*)",
+      "Bash(cargo test:*)",
+      "Bash(cargo run:*)",
+      "Bash(cargo add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}

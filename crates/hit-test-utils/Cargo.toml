@@ -8,3 +8,6 @@ description = "Hit 共享测试 fixture：mock_config / sample_manifest / temp_s
 hit-common = { workspace = true }
 hit-core = { workspace = true }
 tempfile = { workspace = true }
+
+[dev-dependencies]
+sonic-rs = { workspace = true }

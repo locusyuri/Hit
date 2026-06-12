@@ -4,6 +4,19 @@
 			"type": "stdio",
 			"command": "bunx",
 			"args": ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-01559ca7-a37a-4a07-85a0-4a2cfbdfbcde"]
-			}
+			},
+    "codegraph": {
+      "command": "codegraph",
+      "args": [
+        "serve",
+        "--mcp"
+      ],
+      "env": {},
+      "autoApprove": [
+        "codegraph_search",
+        "codegraph_node",
+        "codegraph_context"
+      ]
+    }
   }
 }

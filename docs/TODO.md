@@ -214,7 +214,7 @@ crates/
 
 | 序号  | 任务                                 | 状态 | 负责人 | 预估时间 | 依赖     |
 | ----- | ------------------------------------ | ---- | ------ | -------- | -------- |
-| 1.9.1 | 实现 SQLite 数据库连接               | 📋    | -      | 3天      | rusqlite |
+| 1.9.1 | 实现 JSON 文件存储               | 📋    | -      | 2天      | sonic-rs |
 | 1.9.2 | 定义数据模型（App, Bucket, Version） | 📋    | -      | 3天      | -        |
 | 1.9.3 | 实现数据库迁移                       | 📋    | -      | 2天      | -        |
 | 1.9.4 | 实现安装记录管理                     | 📋    | -      | 3天      | 1.9.1    |
@@ -350,7 +350,7 @@ crates/
 
 | 序号  | 任务                     | 状态 | 负责人 | 预估时间 | 依赖      |
 | ----- | ------------------------ | ---- | ------ | -------- | --------- |
-| 3.3.1 | 集成 FuzzySelect 界面    | 📋    | -      | 3天      | dialoguer |
+| 3.3.1 | 集成 TUI 交互界面（ratatui） | 📋    | -      | 5天      | ratatui |
 | 3.3.2 | 上下箭头选择，Enter 安装 | 📋    | -      | 2天      | 3.3.1     |
 
 ---
@@ -380,15 +380,15 @@ crates/
 | CLI         | clap                | 参数解析      |
 | CLI         | indicatif           | 进度条        |
 | CLI         | colored             | 彩色输出      |
-| CLI         | dialoguer           | 交互式选择    |
-| Core        | serde + serde_json  | JSON 序列化   |
+| CLI         | ratatui             | TUI 交互界面    |
+| Core        | serde + sonic-rs      | JSON 序列化   |
 | Core        | thiserror           | 错误处理      |
 | Core        | petgraph            | 依赖图        |
 | Bucket      | git2                | Git 仓库操作  |
 | Downloader  | reqwest             | HTTP 下载     |
 | Downloader  | blake3/sha2         | 哈希计算      |
 | Compression | zip/sevenz-rust/tar | 压缩解压      |
-| Store       | rusqlite            | SQLite 数据库 |
+| Store       | JSON 文件             | 数据存储      |
 | Windows     | windows             | Windows API   |
 | Windows     | winreg              | 注册表操作    |
 

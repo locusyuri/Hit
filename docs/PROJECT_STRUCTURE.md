@@ -233,7 +233,7 @@ hit/
 
 ### 1. **hit-cli** - 命令行界面
 - **职责**：用户交互入口，解析子命令并调用核心模块
-- **关键技术**：`clap`（参数解析）、`indicatif`（进度条）、`colored`（彩色输出）
+- **关键技术**：`clap`（参数解析）、`ratatui`（TUI 界面）、`indicatif`（进度条）、`colored`（彩色输出）
 - **子命令**：
   - `hit install <package>` - 安装软件
   - `hit uninstall <package>` - 卸载软件

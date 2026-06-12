@@ -23,11 +23,17 @@ hit/
 ├── README.md                     # 项目说明文档
 ├── LICENSE                       # 开源许可证
 ├── .gitignore                    # Git 忽略配置
+│
 ├── docs/                         # 项目文档
 │   ├── PROJECT_STRUCTURE.md      # 项目结构说明（本文件）
 │   ├── CODING_GUIDELINES.md      # 编码规范
-│   ├── AGENT.md                  # AI 助手指南
-│   └── 对话.md                   # 需求讨论记录
+│   ├── TECH_STACK.md             # 技术栈清单
+│   ├── DEV_FLOW.md               # 开发流程
+│   ├── MANIFEST_FORMAT.md        # Manifest 清单格式
+│   ├── WINDOWS_NOTES.md          # Windows 注意事项
+│   ├── ROADMAP.md                # 路线图与新增功能详解
+│   ├── REFERENCE_PROJECTS.md     # 参考项目
+│   └── 对话.md                   # 需求讨论与技术选型记录
 │
 ├── crates/                       # Rust 工作区子模块
 │   │
@@ -85,54 +91,52 @@ hit/
 │   │       │   ├── mod.rs
 │   │       │   ├── manager.rs    # SDK 管理器
 │   │       │   └── proxy.rs      # SDK 代理转发
-│   │       ├── transaction/      # 事务管理（新增）
+│   │       ├── transaction/      # 事务管理
 │   │       │   ├── mod.rs
 │   │       │   ├── manager.rs    # 事务管理器
 │   │       │   └── rollback.rs   # 回滚机制
-│   │       ├── dependencies/     # 依赖解析（新增）
+│   │       ├── dependencies/     # 依赖解析
 │   │       │   ├── mod.rs
 │   │       │   ├── resolver.rs   # 依赖解析器
 │   │       │   └── conflict.rs   # 冲突检测
-│   │       ├── health/           # 健康检查（新增）
+│   │       ├── health/           # 健康检查
 │   │       │   ├── mod.rs
 │   │       │   ├── checker.rs    # 完整性检查
 │   │       │   └── repairer.rs   # 自动修复
-│   │       ├── bundle/           # 软件束（新增）
+│   │       ├── bundle/           # 软件束
 │   │       │   ├── mod.rs
 │   │       │   ├── manager.rs    # 束管理器
 │   │       │   └── manifest.rs   # 束清单格式
-│   │       ├── shadow/           # 沙盒环境（新增）
+│   │       ├── shadow/           # 沙盒环境
 │   │       │   ├── mod.rs
 │   │       │   ├── manager.rs    # 沙盒管理器
 │   │       │   └── isolate.rs    # 隔离机制
-│   │       ├── mirror/           # 镜像源管理（新增）
+│   │       ├── mirror/           # 镜像源管理
 │   │       │   ├── mod.rs
 │   │       │   ├── manager.rs    # 镜像管理器
 │   │       │   └── speedtest.rs  # 速度测试
-│   │       ├── lifecycle/        # 生命周期管理（新增）
+│   │       ├── lifecycle/        # 生命周期管理
 │   │       │   ├── mod.rs
 │   │       │   ├── archive.rs    # 归档管理
 │   │       │   ├── orphan.rs     # 孤立文件清理
 │   │       │   └── dedup.rs      # 跨软件去重
-│   │       ├── monitor/          # 运行时监控（新增）
+│   │       ├── monitor/          # 运行时监控
 │   │       │   ├── mod.rs
 │   │       │   ├── tracker.rs    # 进程跟踪
 │   │       │   └── stats.rs      # 资源统计
-│   │       ├── sync/             # 配置同步（新增）
+│   │       ├── sync/             # 配置同步
 │   │       │   ├── mod.rs
 │   │       │   ├── exporter.rs   # 配置导出
 │   │       │   └── importer.rs   # 配置导入
-│   │       └── dev/              # 开发模式（新增）
-│   │           ├── mod.rs
-│   │           ├── local.rs      # 本地目录安装
-│   │           └── watcher.rs    # 文件监听
-│   │
-│   │       ├── backup/           # 备份与恢复（新增）
+│   │       ├── dev/              # 开发模式
+│   │       │   ├── mod.rs
+│   │       │   ├── local.rs      # 本地目录安装
+│   │       │   └── watcher.rs    # 文件监听
+│   │       ├── backup/           # 备份与恢复
 │   │       │   ├── mod.rs
 │   │       │   ├── manager.rs    # 备份管理器
 │   │       │   └── storage.rs    # 存储后端
-│   │
-│   │       └── delta/            # 增量更新（新增）
+│   │       └── delta/            # 增量更新
 │   │           ├── mod.rs
 │   │           ├── diff.rs       # 差异计算
 │   │           └── patch.rs      # 补丁应用
@@ -160,16 +164,16 @@ hit/
 │   │       ├── checkver.rs       # 版本检查自动化
 │   │       └── autoupdate.rs     # 自动更新流水线
 │   │
-│   └── hit-common/               # 公共工具库
-│       ├── Cargo.toml
-│       └── src/
-│           ├── lib.rs
-│           ├── downloader.rs     # HTTP 下载器（reqwest）
-│           ├── hasher.rs         # 哈希计算（SHA256）
-│           ├── extractor.rs      # 压缩包解压（ZIP/7z）
-│           ├── logger.rs         # 日志输出
-│           └── error.rs          # 统一错误类型
-│
+│   ├── hit-common/               # 公共工具库
+│   │   ├── Cargo.toml
+│   │   └── src/
+│   │       ├── lib.rs
+│   │       ├── downloader.rs     # HTTP 下载器（reqwest）
+│   │       ├── hasher.rs         # 哈希计算（SHA256）
+│   │       ├── extractor.rs      # 压缩包解压（ZIP/7z）
+│   │       ├── logger.rs         # 日志输出
+│   │       └── error.rs          # 统一错误类型
+│   │
 │   └── hit-plugin/               # 插件系统
 │       ├── Cargo.toml
 │       └── src/
@@ -178,6 +182,10 @@ hit/
 │           ├── lua_engine.rs     # Lua 脚本引擎
 │           ├── api.rs            # 插件 API 定义
 │           └── hooks.rs          # 插件钩子系统
+│
+├── Scoop/                        # 参考：原版 Scoop PowerShell 源码
+├── Main/                         # 参考：Scoop 官方 Main Bucket
+├── Hok/                          # 参考：Rust 实现的 Scoop 替代品
 │
 ├── buckets/                      # 默认 Bucket 仓库（Git 子模块或独立仓库）
 │   ├── main/                     # 主仓库（命令行工具）
@@ -216,17 +224,6 @@ hit/
         ├── hit.bash
         ├── hit.zsh
         └── hit.ps1
-
-├── plugins/                      # 插件目录
-    ├── README.md                 # 插件开发指南
-    ├── examples/                 # 示例插件
-    └── lua/                      # Lua 插件
-
-├── docs/                         # 项目文档
-    ├── ARCHITECTURE.md           # 架构设计文档
-    ├── PLUGIN_GUIDE.md           # 插件开发指南
-    ├── CONTRIBUTING.md           # 贡献指南
-    └── ROADMAP.md                # 项目路线图
 ```
 
 ---
@@ -271,8 +268,6 @@ hit/
   - **Persist Linker**：使用符号链接将配置文件重定向到 `~/.hit/persist/`
   - **SDK Manager**：管理多版本 SDK，维护 `current` 符号链接
   - **Path Manager**：修改用户级 PATH（`HKCU\Environment`），广播 `WM_SETTINGCHANGE`
-  
-  **新增核心模块**：
   - **Transaction Manager**：事务性安装，原子操作，失败回滚
   - **Dependency Resolver**：依赖解析，自动安装依赖包，冲突检测
   - **Health Checker**：定期检查安装完整性，自动修复损坏文件
@@ -311,7 +306,6 @@ hit/
   - **全局索引**：内存中维护 `软件名 → [版本列表]`，自动合并所有 bucket
   - **Bucket 优先级**：main(100) > sdk(50) > extras(30) > personal(10)
   - **自动选择**：安装时选最高版本 + 最高优先级 bucket
-
 - **关键功能**：
   1. **全局搜索**：`hit search <keyword>` 显示所有 bucket 的结果，标注来源
   2. **交互式安装**：搜索后提供 FuzzySelect 界面，上下箭头选择，Enter 直接安装
@@ -323,38 +317,6 @@ hit/
   8. **快速安装**：`hit install`（无参数）直接弹出交互选择框
   9. **安装前预览**：显示版本、大小、依赖、bucket 来源，确认后再安装
   10. **Bucket 统计**：`hit bucket stats` 显示各 bucket 软件数、过时数、更新频率
-
-- **子命令扩展**：
-  - `hit bucket add/remove/list` - 基础管理
-  - `hit bucket update` - 更新所有 bucket（并行）
-  - `hit bucket conflict list/resolve` - 冲突管理
-  - `hit bucket stats/outdated` - 统计与过时检测
-  - `hit bucket verify <bucket>` - 验证 bucket 完整性
-
-- **Manifest 扩展字段**：
-```json
-{
-  "name": "python",
-  "version": "3.12.0",
-  "alias": ["py", "python3"],
-  "bucket_priority": 50,
-  "bucket_maintainer": "Python Official",
-  "bucket_last_update": "2024-01-20T00:00:00Z"
-}
-```
-
-- **Bucket 元数据（bucket.json）**：
-```json
-{
-  "name": "main",
-  "url": "https://github.com/hit-buckets/main.git",
-  "priority": 100,
-  "maintainer": "Hit Team",
-  "package_count": 156,
-  "last_update": "2024-01-20T00:00:00Z",
-  "auto_update": true
-}
-```
 
 ### 6. **hit-common** - 公共工具库
 - **职责**：提供跨模块复用的工具函数
@@ -528,639 +490,36 @@ C:\Users\<username>\.hit\
       }
     ]
   },
-  "version": "2"  // db 格式版本
+  "version": "2"
 }
 ```
 
 ---
 
-## 🛠️ 技术栈清单
+## 📚 参考目录
 
-### 核心依赖（Cargo.toml）
+项目根目录包含以下参考源码目录，用于开发时对照：
 
-```toml
-[workspace]
-members = [
-    "crates/hit-cli",
-    "crates/hit-core",
-    "crates/hit-shim",
-    "crates/hit-uninstaller",
-    "crates/hit-bucket",
-    "crates/hit-common",
-    "crates/hit-plugin",
-]
+| 目录 | 来源 | 用途 |
+|------|------|------|
+| [`Scoop/`](./Scoop/) | [Scoop PowerShell](https://github.com/ScoopInstaller/Scoop) | 原版 Scoop 实现，核心参考 |
+| [`Main/`](./Main/) | [Scoop Main Bucket](https://github.com/ScoopInstaller/Main) | 官方软件清单，兼容性测试 |
+| [`Hok/`](./Hok/) | [hok](https://github.com/chawyehsu/hok) | Rust 实现的 Scoop 替代品（较久未更新） |
 
-# hit-common/Cargo.toml
-[dependencies]
-reqwest = { version = "0.11", features = ["blocking", "native-tls"] }
-sha2 = "0.10"
-blake3 = "1.5"
-zip = "0.6"
-sevenz-rust = "0.5"
-tokio = { version = "1", features = ["full"] }
-
-# hit-core/Cargo.toml
-[dependencies]
-hit-common = { path = "../hit-common" }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-winreg = "0.50"
-dirs = "5"
-walkdir = "2"
-rayon = "1"
-thiserror = "1"
-sqlx = { version = "0.7", features = ["sqlite", "runtime-tokio-rustls"] }
-rusqlite = "0.30"
-tokio = { version = "1", features = ["full"] }
-
-# hit-cli/Cargo.toml
-[dependencies]
-hit-core = { path = "../hit-core" }
-hit-uninstaller = { path = "../hit-uninstaller" }
-hit-bucket = { path = "../hit-bucket" }
-clap = { version = "4", features = ["derive"] }
-anyhow = "1"
-indicatif = "0.17"
-colored = "2"
-dialoguer = "0.11"
-
-# hit-uninstaller/Cargo.toml
-[dependencies]
-winreg = "0.50"
-windows = { version = "0.52", features = ["Win32_System_Threading", "Win32_Foundation"] }
-walkdir = "2"
-rayon = "1"
-regex = "1"
-
-# hit-bucket/Cargo.toml
-[dependencies]
-hit-common = { path = "../hit-common" }
-octocrab = "0.32"
-git2 = "0.18"
-serde_json = "1"
-
-# hit-plugin/Cargo.toml
-[dependencies]
-hit-common = { path = "../hit-common" }
-mlua = { version = "0.9", features = ["lua54"] }
-serde = { version = "1", features = ["derive"] }
-
-# hit-core/Cargo.toml 新增依赖
-# 用于备份与恢复
-zip = { version = "0.6", features = ["deflate"] }
-# 用于增量更新
-bsdiff = "0.1"
-```
-
----
-
-## 🚀 开发流程
-
-### 1. 初始化项目
-```bash
-cargo new hit --vcs git
-cd hit
-# 创建工作区结构
-mkdir -p crates/{hit-cli,hit-core,hit-shim,hit-uninstaller,hit-bucket,hit-common}/src
-touch Cargo.toml
-```
-
-### 2. 构建与运行
-```bash
-# 开发模式
-cargo run -- install git
-
-# 发布模式（优化体积）
-cargo build --release
-strip target/release/hit.exe  # 去掉符号信息
-```
-
-### 3. 测试
-```bash
-cargo test --workspace
-cargo test --package hit-core
-```
-
-### 4. 发布
-```powershell
-.\scripts\release.ps1 --version 0.1.0
-```
-
----
-
-## 📝 Manifest 清单格式
-
-### 基础结构（JSON）
-
-```json
-{
-  "name": "git",
-  "version": "2.40.0",
-  "description": "Distributed version control system",
-  "homepage": "https://git-scm.com",
-  "license": "GPL-2.0",
-  
-  "architecture": {
-    "64bit": {
-      "url": "https://github.com/git-for-windows/git/releases/download/v2.40.0.windows.1/PortableGit-2.40.0-64-bit.7z.exe",
-      "hash": "sha256:abc123..."
-    }
-  },
-  
-  "bin": [
-    "bin/git.exe",
-    "bin/git-lfs.exe"
-  ],
-  
-  "env_set": {
-    "GIT_INSTALL_ROOT": "$dir"
-  },
-  
-  "persist": [
-    "etc/gitconfig",
-    "share/git-core/templates"
-  ],
-  
-  "checkver": {
-    "github": "https://github.com/git-for-windows/git",
-    "regex": "v([\\d.]+)\\.windows\\.1"
-  },
-  
-  "autoupdate": {
-    "architecture": {
-      "64bit": {
-        "url": "https://github.com/git-for-windows/git/releases/download/v$version.windows.1/PortableGit-$version-64-bit.7z.exe"
-      }
-    }
-  },
-  
-  "bucket_priority": 100,
-  "bucket_maintainer": "Git for Windows Team",
-  "bucket_last_update": "2024-01-15T00:00:00Z",
-  
-  "alias": ["git", "git-cli"],
-}
-```
-
-### 扩展字段（新增）
-
-```json
-{
-  "name": "python",
-  "version": "3.12.0",
-  "description": "Python programming language",
-  
-  // 软件别名（便捷安装）
-  "alias": ["py", "python3", "python3.12"],
-  
-  // Bucket 元数据（新增）
-  "bucket_priority": 50,
-  "bucket_maintainer": "Python Official",
-  "bucket_last_update": "2024-01-20T00:00:00Z",
-  
-  // 依赖管理（自动安装依赖包）
-  "dependencies": {
-    "vc_redist": {"version": ">=14.0", "type": "runtime"},
-    "openssl": {"version": "3.0", "type": "optional"}
-  },
-  
-  // 健康检查配置（定期校验文件完整性）
-  "health_check": {
-    "enabled": true,
-    "interval_days": 7,
-    "critical_files": ["python.exe", "DLLs/"],
-    "verify_hash": true
-  },
-  
-  // 软件束定义（多个软件组合）
-  "bundle": {
-    "name": "dev-environment",
-    "description": "Python development environment",
-    "packages": [
-      {"name": "python", "version": "3.12.0"},
-      {"name": "git", "version": "2.40.0"},
-      {"name": "vscode", "version": "1.85.0"}
-    ]
-  },
-  
-  // 沙盒配置（隔离环境）
-  "shadow": {
-    "enabled": false,
-    "persist_isolated": true,
-    "env_isolated": ["PATH", "PYTHONPATH"]
-  },
-  
-  // 镜像源配置（多镜像支持）
-  "mirrors": [
-    {"name": "official", "url": "https://www.python.org/ftp/python/"},
-    {"name": "tuna", "url": "https://mirrors.tuna.tsinghua.edu.cn/python/"},
-    {"name": "aliyun", "url": "https://mirrors.aliyun.com/python/"}
-  ],
-  
-  // 生命周期策略
-  "lifecycle": {
-    "auto_archive": true,
-    "keep_versions": 2,
-    "dedup_enabled": true
-  },
-  
-  // 监控配置
-  "monitor": {
-    "track_processes": true,
-    "track_file_access": false,
-    "stats_retention_days": 30
-  },
-  
-  // 开发模式配置
-  "dev": {
-    "watch_paths": ["src/", "tests/"],
-    "auto_reload": true
-  }
-}
-```
-
----
-
-## ⚠️ 注意事项
-
-### 1. Windows 符号链接权限
-- **必须使用符号链接**：版本切换功能依赖符号链接，硬链接和复制不支持
-- **安装时自动申请权限**：首次安装时检测权限，若无开发者模式则提示开启
-- **权限检测与引导**：
-```rust
-use std::os::windows::fs::symlink_dir;
-
-fn ensure_symlink_permission() -> Result<()> {
-    let test_dir = tempdir().unwrap();
-    let test_link = test_dir.path().join("test_link");
-    
-    match symlink_dir(test_dir.path(), &test_link) {
-        Ok(_) => {
-            let _ = std::fs::remove_dir(test_link);
-            Ok(())
-        },
-        Err(e) if e.kind() == ErrorKind::PermissionDenied => {
-            anyhow!("检测到符号链接权限不足。\n\n"
-                "请选择以下方案：\n"
-                "1. 开启 Windows 开发者模式（推荐）\n"
-                "2. 以管理员身份运行 hit（仅首次安装）\n"
-                "3. 使用 'hit config set link_mode hardlink' 降级（无法版本切换）")
-        },
-        Err(e) => anyhow!(e),
-    }
-}
-```
-- **提权安装**：若检测到无权限，可自动请求 UAC 提权（仅首次）
-```rust
-// 检测是否以管理员身份运行
-fn is_admin() -> bool {
-    unsafe { windows::Win32::Security::IsUserAnAdmin() }.unwrap_or(false)
-}
-
-// 若未提权，重新以管理员启动
-if !is_admin() {
-    let mut cmd = Command::new("powershell");
-    cmd.args([
-        "-Command",
-        &format!("Start-Process hit.exe -ArgumentList '{}' -Verb RunAs", args.join(" ")),
-    ]);
-    cmd.spawn()?;
-    std::process::exit(0);
-}
-```
-
-### 2. PATH 环境变量刷新
-- 修改 `HKCU\Environment` 后需广播消息：
-```rust
-use windows::Win32::UI::WindowsAndMessaging::{SendMessageTimeoutW, HWND_BROADCAST, WM_SETTINGCHANGE};
-
-unsafe {
-    SendMessageTimeoutW(
-        HWND_BROADCAST,
-        WM_SETTINGCHANGE,
-        0,
-        LPARAM("Environment\0".as_ptr() as isize),
-        SMTO_ABORTIFHUNG,
-        5000,
-        &mut result,
-    );
-}
-```
-
-### 3. 深度卸载需要提权
-- 深度卸载功能需管理员权限，自动检测并请求 UAC
-- 普通卸载（Hit 安装的软件）无需提权
-
-### 4. 安全性注意事项
-- **软件签名验证**：建议启用签名验证，确保软件来源可信
-- **权限管理**：最小权限原则，仅在必要时请求管理员权限
-- **隐私保护**：不收集用户使用数据，配置文件本地存储
-- **安全扫描**：集成 VirusTotal 等安全扫描服务（可选）
-- **插件安全**：插件执行前进行安全检查，限制敏感操作权限
-
----
-
-## 🎯 里程碑规划
-
-### Phase 1：Scoop 基础能力实现 - 预计 3 个月
-**目标**：实现 Scoop 的所有基本命令和功能，完全兼容 Scoop bucket
-
-- [x] 项目工作区结构设计
-- [x] 核心模块划分
-- [ ] **Scoop Manifest 格式完全兼容解析**
-- [ ] **Scoop Bucket 仓库支持（Git 仓库克隆与更新）**
-- [ ] **实现 `hit install/uninstall/list` 基本命令**
-- [ ] **实现 `hit search` 搜索命令**
-- [ ] **实现 `hit info` 软件详情命令**
-- [ ] **实现 `hit update` 更新命令**
-- [ ] **实现 `hit bucket add/remove/list/update` Bucket 管理命令**
-- [ ] **Shim 代理机制（兼容 Scoop 的 shim 格式）**
-- [ ] **Persist 持久化机制（兼容 Scoop 的 persist 目录结构）**
-- [ ] **事务性安装（原子操作，失败回滚）**
-- [ ] **权限检测与自动提权机制**
-- [ ] **基础测试框架搭建**
-
-### Phase 2：Scoop 高级功能实现 - 预计 2 个月
-**目标**：实现 Scoop 的高级功能
-
-- [ ] **实现 `hit reset` 版本切换命令**
-- [ ] **实现 `hit cleanup` 清理旧版本命令**
-- [ ] **实现 `hit cache` 缓存管理命令**
-- [ ] **实现 `hit status` 状态检查命令**
-- [ ] **实现 `hit home` 打开主页命令**
-- [ ] **实现 `hit uninstall --purge` 彻底卸载命令**
-- [ ] **依赖自动解析与安装（Scoop 的 depends 字段）**
-- [ ] **Bucket 全局索引与自动选择**
-
-### Phase 3：Hit 增强功能 - 预计 3 个月
-**目标**：在 Scoop 基础上添加 Hit 独有的增强功能
-
-- [ ] 健康检查（`hit check`）
-- [ ] 修复损坏（`hit repair`）
-- [ ] 镜像源管理与速度测试
-- [ ] 交互式搜索安装（FuzzySelect）
-- [ ] 软件别名（alias）支持
-- [ ] Bucket 冲突检测与解决
-- [ ] Bucket 统计与过时检测
-- [ ] 安全扫描集成（VirusTotal）
-
-### Phase 4：高级特性 - 预计 4 个月
-- [ ] SDK 版本管理（JDK/Python/Node.js）
-- [ ] 深度卸载模块
-- [ ] Bucket 自动化更新流水线
-- [ ] 多线程下载加速
-- [ ] 软件束（Bundle）管理
-- [ ] 沙盒环境（Shadow）
-
-### Phase 5：生态与跨平台 - 预计 6 个月
-- [ ] 官方 Bucket 仓库
-- [ ] Shell 补全脚本
-- [ ] 配置同步
-- [ ] 环境诊断（`hit doctor`）
-- [ ] Linux 支持
-- [ ] macOS 支持
-
----
-
----
-
-## 🆕 新增功能详解
-
-### 1. 事务性安装（Transaction）
-- **模块**：`hit-core/transaction/`
-- **职责**：保证安装/卸载的原子性，失败自动回滚
-- **工作流程**：
-  1. 创建临时事务目录
-  2. 下载文件到临时目录
-  3. 校验哈希
-  4. 解压到临时目录
-  5. 执行预安装脚本（验证）
-  6. 原子移动：`rename` 临时目录 → 正式目录
-  7. 更新 `db.json`
-  8. 生成 Shim
-  9. 提交事务
-- **回滚机制**：任一阶段失败，清理临时文件，恢复 `db.json` 快照
-- **实现**：使用 `tempfile` 创建临时目录，`std::fs::rename` 原子移动
-
-### 2. 依赖解析（Dependencies）
-- **模块**：`hit-core/dependencies/`
-- **职责**：自动解析并安装软件依赖
-- **Manifest 字段**：
-```json
-{
-  "dependencies": {
-    "vc_redist": {
-      "version": ">=14.0",
-      "type": "runtime",
-      "optional": false
-    },
-    "openssl": {
-      "version": "3.0",
-      "type": "optional"
-    }
-  }
-}
-```
-- **依赖图**：检测循环依赖、版本冲突
-- **安装策略**：先安装依赖，再安装主包；依赖已满足则跳过
-
-### 3. Bucket 优化（Bucket Optimizations）
-- **模块**：`hit-core/`（bucket 相关子模块）
-- **职责**：解决多 bucket 冲突，提升搜索安装体验
-- **核心设计**：
-  - **全局索引**：内存缓存所有 bucket 的 manifest，合并为 `软件名 → [版本列表]`
-  - **优先级系统**：bucket 按优先级排序（main=100 > sdk=50 > extras=30）
-  - **自动选择**：安装时自动选最高版本 + 最高优先级 bucket
-  - **交互式选择**：搜索后提供 FuzzySelect 界面，上下箭头选择，Enter 直接安装
-
-- **关键功能**：
-  1. **全局搜索**：显示所有 bucket 结果，标注来源
-  2. **版本约束语法**：`@latest`、`@stable`、`@^3.12`、`@3.12.0`
-  3. **冲突检测**：`hit bucket conflict list/resolve`
-  4. **软件别名**：Manifest `alias` 字段，支持 `py` → `python`
-  5. **安装前预览**：显示版本、大小、依赖、bucket 来源
-  6. **Bucket 统计**：`hit bucket stats/outdated`
-  7. **快速安装**：`hit install` 无参数时直接弹出选择框
-
-- **Manifest 扩展**：
-```json
-{
-  "alias": ["py", "python3"],
-  "bucket_priority": 50,
-  "bucket_maintainer": "Python Official"
-}
-```
-
-- **Bucket 元数据（bucket.json）**：
-```json
-{
-  "priority": 100,
-  "maintainer": "Hit Team",
-  "package_count": 156,
-  "auto_update": true
-}
-```
-
-### 3. 健康检查（Health Check）
-- **模块**：`hit-core/health/`
-- **职责**：定期检查安装完整性，自动修复损坏
-- **子命令**：
-  - `hit check` - 检查所有软件
-  - `hit check <package>` - 检查指定软件
-  - `hit repair <package>` - 重新下载损坏文件
-- **检查项**：
-  - 文件是否存在
-  - 哈希是否匹配
-  - Shim 是否指向正确版本
-  - 关键文件是否可执行
-- **自动模式**：后台定时检查（默认 7 天），发现损坏自动修复
-
-### 4. 软件束（Bundle）
-- **模块**：`hit-core/bundle/`
-- **职责**：一键安装多个软件，适合团队环境
-- **Bundle 清单格式**：
-```json
-{
-  "name": "dev-environment",
-  "description": "Python 开发环境",
-  "version": "1.0.0",
-  "packages": [
-    {"name": "python", "version": "3.12.0", "required": true},
-    {"name": "git", "version": "latest", "required": true},
-    {"name": "vscode", "version": "stable", "required": false}
-  ],
-  "post_install": [
-    "git config --global user.name 'Your Name'",
-    "pip install -U pip setuptools"
-  ]
-}
-```
-- **命令**：
-  - `hit bundle create <name>` - 从当前环境创建束
-  - `hit bundle install <bundle>` - 安装束
-  - `hit bundle list` - 列出已安装束
-  - `hit bundle export <name>` - 导出为 JSON
-
-
-### 5. 沙盒环境（Shadow）
-- **模块**：`hit-core/shadow/`
-- **职责**：创建隔离环境，多版本软件互不干扰
-- **应用场景**：
-  - Python 多项目依赖隔离（类似 virtualenv）
-  - 测试不同版本软件
-  - 安全沙盒运行未知软件
-- **实现**：
-  - 独立 persist 目录：`~/.hit/persist/shadow/<name>/`
-  - 独立环境变量：仅沙盒内可见
-  - 通过 `hit shadow exec <name> <cmd>` 进入沙盒
-- **命令**：
-  - `hit shadow create <name> --base <package> --version <ver>`
-  - `hit shadow list`
-  - `hit shadow exec <name> <command>`
-  - `hit shadow delete <name>`
-
-
-### 6. 镜像源管理（Mirror）
-- **模块**：`hit-core/mirror/`
-- **职责**：多镜像支持，自动选择最快源
-- **功能**：
-  - 内置镜像：清华、阿里、UCloud、官方
-  - 速度测试：`hit mirror speedtest`
-  - 自动切换：下载失败时自动切换镜像
-  - 区域感知：根据地理位置选择最近镜像
-- **配置**：
-```json
-{
-  "mirrors": {
-    "python": [
-      {"name": "tuna", "url": "https://mirrors.tuna.tsinghua.edu.cn/python/", "priority": 1},
-      {"name": "aliyun", "url": "https://mirrors.aliyun.com/python/", "priority": 2}
-    ]
-  },
-  "default_mirror": "tuna"
-}
-```
-
-### 7. 生命周期管理（Lifecycle）
-- **模块**：`hit-core/lifecycle/`
-- **职责**：软件全生命周期自动化管理
-- **功能**：
-  - **归档**：`hit archive <package>` - 将旧版本移至外部存储
-  - **孤立文件清理**：`hit orphan list/clean` - 扫描无主文件
-  - **去重**：`hit dedup` - 跨软件重复文件硬链接化，节省空间
-  - **自动清理**：配置 `auto_cleanup_days`，自动删除 N 天未使用的版本
-
-### 8. 运行时监控（Monitor）
-- **模块**：`hit-core/monitor/`
-- **职责**：跟踪软件运行状态，收集资源统计
-- **功能**：
-  - `hit top` - 实时显示软件资源占用（类似 top）
-  - `hit ps <package>` - 查看软件相关进程树
-  - `hit trace <package>` - 跟踪软件文件访问（需管理员）
-  - 统计信息：平均 CPU、内存、I/O
-  - 识别冗余软件（长期未使用）
-
-### 9. 配置同步（Sync）
-- **模块**：`hit-core/sync/`
-- **职责**：跨设备同步配置和已安装列表
-- **功能**：
-  - `hit config export` - 导出配置到文件
-  - `hit config import` - 从文件导入配置
-  - 云同步：GitHub Gist、OneDrive、Dropbox
-  - 选择性同步：排除大型软件
-  - 冲突处理：时间戳优先或手动合并
-
-### 10. 开发模式（Dev）
-- **模块**：`hit-core/dev/`
-- **职责**：支持从本地目录安装，适合开发者
-- **功能**：
-  - `hit dev install <local-path>` - 从本地目录安装（不下载）
-  - `hit dev watch <package>` - 监听文件变化，自动重载
-  - 自动检测文件修改，更新 Shim 指向
-  - 适合调试自己开发的软件
-
-### 11. 备份与恢复（Backup）
-- **模块**：`hit-core/backup/`
-- **职责**：提供配置和已安装软件的备份与恢复功能
-- **功能**：
-  - `hit backup create` - 创建完整备份
-  - `hit backup restore <backup-file>` - 从备份恢复
-  - `hit backup list` - 列出所有备份
-  - **备份内容**：配置文件、已安装软件列表、Shim 配置
-  - **备份位置**：本地文件系统或云存储
-  - **增量备份**：仅备份变化的文件，节省空间
-
-### 12. 增量更新（Delta Update）
-- **模块**：`hit-core/delta/`
-- **职责**：实现软件的增量更新，提高更新速度
-- **功能**：
-  - **差异计算**：比较新旧版本，生成差异包
-  - **增量下载**：仅下载变化的部分
-  - **补丁应用**：将差异包应用到当前版本
-  - **回滚机制**：更新失败时回滚到原版本
-- **支持格式**：ZIP、7z、TAR.GZ
-- **优势**：减少下载量，提高更新速度，节省带宽
-
----
-
-## 📚 参考项目
-
-- **Scoop**：设计灵感来源，学习其 Shim 和 Persist 机制
-- **rustup**：代理转发机制的优秀实践
-- **mise**：多语言 SDK 统一管理
-- **uv**：Rust 编写的高性能包管理器
-- **Geek Uninstaller**：深度卸载的扫描策略
-- **Chocolatey**：Windows 包管理的企业级实践
-- **Homebrew**：跨平台包管理的成功案例
-- **Nix**：声明式包管理和环境隔离
-- **Bazel**：构建系统的增量更新机制
-- **Neovim**：插件系统的设计参考
-- **VirusTotal**：安全扫描集成的参考
+详情见 [REFERENCE_PROJECTS.md](./REFERENCE_PROJECTS.md)。
 
 ---
 
 ## 🔗 相关文档
 
-- [CODING_GUIDELINES.md](./CODING_GUIDELINES.md) - 编码规范
-- [AGENT.md](./AGENT.md) - AI 助手使用指南
-- [对话.md](./对话.md) - 需求讨论与技术选型记录
+| 文档 | 内容 |
+|------|------|
+| [TECH_STACK.md](./TECH_STACK.md) | 技术栈清单与各模块 Cargo.toml 依赖 |
+| [DEV_FLOW.md](./DEV_FLOW.md) | 初始化、构建、测试、发布流程 |
+| [MANIFEST_FORMAT.md](./MANIFEST_FORMAT.md) | Manifest 清单格式（Scoop 兼容 + Hit 扩展） |
+| [WINDOWS_NOTES.md](./WINDOWS_NOTES.md) | Windows 符号链接、PATH、UAC 等注意事项 |
+| [ROADMAP.md](./ROADMAP.md) | 里程碑规划与新增功能详解 |
+| [REFERENCE_PROJECTS.md](./REFERENCE_PROJECTS.md) | 参考项目与学习资源 |
+| [CODING_GUIDELINES.md](./CODING_GUIDELINES.md) | 编码规范 |
+| [TODO.md](./TODO.md) | 实现任务清单 |
+| [对话.md](./对话.md) | 需求讨论与技术选型记录 |

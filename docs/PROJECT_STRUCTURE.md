@@ -32,156 +32,63 @@ hit/
 │   ├── MANIFEST_FORMAT.md        # Manifest 清单格式
 │   ├── WINDOWS_NOTES.md          # Windows 注意事项
 │   ├── ROADMAP.md                # 路线图与新增功能详解
+│   ├── FEATURES.md               # 功能特性清单与设计理念
 │   ├── REFERENCE_PROJECTS.md     # 参考项目
-│   └── 对话.md                   # 需求讨论与技术选型记录
+│   └── TODO.md                   # 实现任务清单（Phase 1-3 权威）
 │
-├── crates/                       # Rust 工作区子模块
+├── crates/                       # Rust 工作区子模块（5-crate 方案，详见 [TODO.md](./TODO.md)）
 │   │
-│   ├── hit-cli/                  # 主命令行程序
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       ├── main.rs           # 程序入口
-│   │       ├── cli.rs            # CLI 参数解析（clap）
-│   │       ├── commands/         # 子命令实现
-│   │       │   ├── mod.rs
-│   │       │   ├── install.rs    # 安装命令
-│   │       │   ├── uninstall.rs  # 卸载命令
-│   │       │   ├── update.rs     # 更新命令
-│   │       │   ├── search.rs     # 搜索命令
-│   │       │   ├── list.rs       # 列出已安装软件
-│   │       │   ├── info.rs       # 查看软件信息
-│   │       │   ├── reset.rs      # 版本切换
-│   │       │   ├── cleanup.rs    # 清理旧版本
-│   │       │   ├── bucket.rs     # Bucket 管理
-│   │       │   ├── check.rs      # 健康检查
-│   │       │   ├── repair.rs     # 修复损坏
-│   │       │   ├── bundle.rs     # 软件束管理
-│   │       │   ├── shadow.rs     # 沙盒环境
-│   │       │   ├── mirror.rs     # 镜像源管理
-│   │       │   ├── doctor.rs     # 环境诊断
-│   │       │   ├── dev.rs        # 开发模式
-│   │       │   └── ...           # 其他子命令
-│   │       ├── config.rs         # 配置管理
-│   │       └── utils.rs          # 通用工具函数
-│   │
-│   ├── hit-core/                 # 核心业务逻辑库
+│   ├── hit-common/               # 基础类型库（lib）
 │   │   ├── Cargo.toml
 │   │   └── src/
 │   │       ├── lib.rs            # 库入口
-│   │       ├── package/          # 软件包管理
-│   │       │   ├── mod.rs
-│   │       │   ├── installer.rs  # 安装器接口与实现
-│   │       │   ├── uninstaller.rs # 卸载器接口与实现
-│   │       │   ├── manifest.rs   # Manifest 清单解析
-│   │       │   └── version.rs    # 版本管理
-│   │       ├── shim/             # Shim 代理机制
-│   │       │   ├── mod.rs
-│   │       │   ├── generator.rs  # Shim 生成器
-│   │       │   └── resolver.rs   # Shim 路径解析
-│   │       ├── persist/          # 持久化数据管理
-│   │       │   ├── mod.rs
-│   │       │   └── linker.rs     # 符号链接管理
-│   │       ├── database/         # 状态数据库
-│   │       │   ├── mod.rs
-│   │       │   └── store.rs      # JSON/SQLite 存储
-│   │       ├── environment/      # 环境变量管理
-│   │       │   ├── mod.rs
-│   │       │   └── path_manager.rs # PATH 操作
-│   │       ├── sdk/              # SDK 版本管理
-│   │       │   ├── mod.rs
-│   │       │   ├── manager.rs    # SDK 管理器
-│   │       │   └── proxy.rs      # SDK 代理转发
-│   │       ├── transaction/      # 事务管理
-│   │       │   ├── mod.rs
-│   │       │   ├── manager.rs    # 事务管理器
-│   │       │   └── rollback.rs   # 回滚机制
-│   │       ├── dependencies/     # 依赖解析
-│   │       │   ├── mod.rs
-│   │       │   ├── resolver.rs   # 依赖解析器
-│   │       │   └── conflict.rs   # 冲突检测
-│   │       ├── health/           # 健康检查
-│   │       │   ├── mod.rs
-│   │       │   ├── checker.rs    # 完整性检查
-│   │       │   └── repairer.rs   # 自动修复
-│   │       ├── bundle/           # 软件束
-│   │       │   ├── mod.rs
-│   │       │   ├── manager.rs    # 束管理器
-│   │       │   └── manifest.rs   # 束清单格式
-│   │       ├── shadow/           # 沙盒环境
-│   │       │   ├── mod.rs
-│   │       │   ├── manager.rs    # 沙盒管理器
-│   │       │   └── isolate.rs    # 隔离机制
-│   │       ├── mirror/           # 镜像源管理
-│   │       │   ├── mod.rs
-│   │       │   ├── manager.rs    # 镜像管理器
-│   │       │   └── speedtest.rs  # 速度测试
-│   │       ├── lifecycle/        # 生命周期管理
-│   │       │   ├── mod.rs
-│   │       │   ├── archive.rs    # 归档管理
-│   │       │   ├── orphan.rs     # 孤立文件清理
-│   │       │   └── dedup.rs      # 跨软件去重
-│   │       ├── monitor/          # 运行时监控
-│   │       │   ├── mod.rs
-│   │       │   ├── tracker.rs    # 进程跟踪
-│   │       │   └── stats.rs      # 资源统计
-│   │       ├── sync/             # 配置同步
-│   │       │   ├── mod.rs
-│   │       │   ├── exporter.rs   # 配置导出
-│   │       │   └── importer.rs   # 配置导入
-│   │       ├── dev/              # 开发模式
-│   │       │   ├── mod.rs
-│   │       │   ├── local.rs      # 本地目录安装
-│   │       │   └── watcher.rs    # 文件监听
-│   │       ├── backup/           # 备份与恢复
-│   │       │   ├── mod.rs
-│   │       │   ├── manager.rs    # 备份管理器
-│   │       │   └── storage.rs    # 存储后端
-│   │       └── delta/            # 增量更新
-│   │           ├── mod.rs
-│   │           ├── diff.rs       # 差异计算
-│   │           └── patch.rs      # 补丁应用
+│   │       ├── error.rs          # HitError 枚举（thiserror）
+│   │       ├── config.rs         # Config 结构体（sonic-rs 序列化）
+│   │       ├── paths.rs          # Scoop 兼容路径计算
+│   │       ├── log.rs            # tracing 日志初始化
+│   │       ├── session.rs        # Session/Context 模式（参考 ref/Hok/libscoop/session.rs）
+│   │       └── event.rs          # EventBus + Event 枚举（flume bounded channel）
 │   │
-│   ├── hit-shim/                 # Shim 代理可执行文件
+│   ├── hit-core/                 # 核心业务逻辑库（lib）
 │   │   ├── Cargo.toml
 │   │   └── src/
-│   │       └── main.rs           # Shim 启动器（转发命令到真实程序）
+│   │       ├── lib.rs            # 库入口
+│   │       ├── manifest/         # Manifest 解析（schema.rs, parser.rs, validator.rs, variables.rs）
+│   │       ├── bucket/           # Bucket 管理（git_client.rs, index.rs, registry.rs）
+│   │       ├── download/         # 下载与缓存（http.rs, cache.rs）
+│   │       ├── hash/             # 哈希校验（sha256/sha512/blake3，流式计算）
+│   │       ├── compress/         # 解压（zip.rs, sevenz.rs, tar.rs, installer.rs）
+│   │       ├── store/            # JSON 文件存储（db.json：load/save/migration/models）
+│   │       ├── install/          # 安装流水线（controller.rs, transaction.rs, persist.rs, dependency.rs, hooks.rs）
+│   │       ├── shim_mgmt/        # Shim 创建/移除/枚举
+│   │       └── win/              # Windows 平台集成（#[cfg(windows)]）
+│   │                             #   process.rs（sysinfo）, registry.rs（winreg）,
+│   │                             #   fs.rs（symlink + junction fallback）,
+│   │                             #   uac.rs（ShellExecuteW RunAs）, env.rs（WM_SETTINGCHANGE）
 │   │
-│   ├── hit-uninstaller/          # 深度卸载模块
+│   ├── hit-shim/                 # Shim 代理可执行文件（独立 bin，~200KB）
 │   │   ├── Cargo.toml
 │   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── scanner.rs        # 残留扫描器
-│   │       ├── registry_cleaner.rs # 注册表清理
-│   │       ├── file_scanner.rs   # 文件系统扫描
-│   │       └── process_killer.rs # 进程强制终止
+│   │       └── main.rs           # 读 db.json → 解析真 exe → spawn → 转发 stdio
 │   │
-│   ├── hit-bucket/               # Bucket 仓库管理
+│   ├── hit-cli/                  # CLI 入口（bin）
 │   │   ├── Cargo.toml
 │   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── repository.rs     # 仓库管理
-│   │       ├── manifest_validator.rs # 清单验证
-│   │       ├── checkver.rs       # 版本检查自动化
-│   │       └── autoupdate.rs     # 自动更新流水线
+│   │       ├── main.rs           # 程序入口
+│   │       ├── cli.rs            # clap 命令树（含 alias：i/s/u/rm/ls/st/b/c）
+│   │       ├── progress.rs       # EventBus 订阅 → indicatif / colored 渲染
+│   │       ├── tui.rs            # ratatui 交互搜索（Phase 3）
+│   │       └── commands/         # install.rs, uninstall.rs, list.rs, search.rs,
+│   │                             # info.rs, update.rs, bucket.rs, hold.rs, ...
 │   │
-│   ├── hit-common/               # 公共工具库
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── downloader.rs     # HTTP 下载器（reqwest）
-│   │       ├── hasher.rs         # 哈希计算（SHA256）
-│   │       ├── extractor.rs      # 压缩包解压（ZIP/7z）
-│   │       ├── logger.rs         # 日志输出
-│   │       └── error.rs          # 统一错误类型
-│   │
-│   └── hit-plugin/               # 插件系统
+│   └── hit-test-utils/           # 共享测试 fixture（仅 [dev-dependencies]）
 │       ├── Cargo.toml
 │       └── src/
-│           ├── lib.rs            # 库入口
-│           ├── manager.rs        # 插件管理器
-│           ├── lua_engine.rs     # Lua 脚本引擎
-│           ├── api.rs            # 插件 API 定义
-│           └── hooks.rs          # 插件钩子系统
+│           └── lib.rs            # mock_config(), sample_manifest(), temp_scoop_root()
+│
+│   > **远期规划 crate**（不在 Phase 1-3 范围，详见 ROADMAP.md Phase 4-5）：
+│   > - `hit-uninstaller` —— 深度卸载模块（注册表扫描、残留清理、进程终止）
+│   > - `hit-plugin` —— Lua 脚本插件系统
 │
 ├── ref/                          # 参考源码
 │   ├── Scoop/                    # 原版 Scoop PowerShell 源码
@@ -231,54 +138,34 @@ hit/
 
 ## 🔑 核心模块说明
 
-### 1. **hit-cli** - 命令行界面
-- **职责**：用户交互入口，解析子命令并调用核心模块
-- **关键技术**：`clap`（参数解析）、`ratatui`（TUI 界面）、`indicatif`（进度条）、`colored`（彩色输出）
-- **子命令**：
-  - `hit install <package>` - 安装软件
-  - `hit uninstall <package>` - 卸载软件
-  - `hit update [package]` - 更新软件
-  - `hit search <keyword>` - 搜索软件
-  - `hit list` - 列出已安装软件
-  - `hit info <package>` - 查看软件详情
-  - `hit reset <package> <version>` - 切换版本
-  - `hit cleanup` - 清理旧版本释放空间
-  - `hit bucket add/remove/list` - Bucket 管理
-  - `hit bucket update` - 更新所有 bucket
-  - `hit bucket conflict list/resolve` - 冲突检测与解决
-  - `hit bucket stats/outdated` - 统计与过时检测
-  - `hit bucket verify <bucket>` - 验证 bucket 完整性
-  - `hit check` - 健康检查
-  - `hit repair <package>` - 修复损坏的安装
-  - `hit bundle create/install` - 软件束管理
-  - `hit shadow create/exec/list` - 沙盒环境管理
-  - `hit mirror add/list/refresh` - 镜像源管理
-  - `hit doctor` - 环境诊断与问题修复
-  - `hit dev install/watch` - 开发模式
-  - `hit archive <package>` - 归档旧版本
-  - `hit orphan list/clean` - 孤立文件管理
-  - `hit dedup` - 跨软件去重
-  - `hit top/ps/trace` - 运行时监控
-  - `hit config export/import` - 配置同步
+> 模块架构以 [TODO.md](./TODO.md) 为 Phase 1-3 权威清单；本节提供设计意图与职责概览。
 
-### 2. **hit-core** - 核心业务逻辑
-- **职责**：实现软件安装、卸载、版本管理等核心功能
+### 1. **hit-common** - 基础类型库
+- **职责**：跨 crate 共享的基础类型、配置、路径、日志、Session 与 EventBus
 - **关键组件**：
-  - **Package Installer**：解析 Manifest → 下载 → 校验哈希 → 解压 → 创建 Shim → 配置 Persist
-  - **Shim Generator**：在 `~/.hit/shims/` 生成轻量级代理 exe
-  - **Persist Linker**：使用符号链接将配置文件重定向到 `~/.hit/persist/`
-  - **SDK Manager**：管理多版本 SDK，维护 `current` 符号链接
-  - **Path Manager**：修改用户级 PATH（`HKCU\Environment`），广播 `WM_SETTINGCHANGE`
-  - **Transaction Manager**：事务性安装，原子操作，失败回滚
-  - **Dependency Resolver**：依赖解析，自动安装依赖包，冲突检测
-  - **Health Checker**：定期检查安装完整性，自动修复损坏文件
-  - **Bundle Manager**：软件束管理，一键安装多个软件
-  - **Shadow Manager**：沙盒隔离环境，多版本独立运行
-  - **Mirror Manager**：镜像源管理，自动选择最快源
-  - **Lifecycle Manager**：软件生命周期（归档、孤立文件清理、去重）
-  - **Monitor**：运行时监控（进程跟踪、资源统计）
-  - **Sync**：配置同步（export/import/云同步）
-  - **Dev Mode**：开发模式（本地目录安装、文件监听）
+  - **HitError**：`thiserror` 统一错误枚举，覆盖 IO / Manifest / Bucket / Download / Install / Config 等类别
+  - **Config**：`sonic-rs` 序列化的用户配置（proxy, mirror, no_junction, link_mode 等）
+  - **paths**：Scoop 兼容路径计算（root_path, cache_path, apps_path, shims_path, persist_path）
+  - **Session/Context**：参考 `ref/Hok/libscoop/session.rs`，持有 `RefCell<Config>`、`OnceCell<EventBus>`、路径缓存；所有核心操作以 `&Session` 为首参数
+  - **EventBus**：`flume` bounded channel（容量 20），定义 `Event` 枚举（DownloadProgress, ExtractStart, InstallStep, BucketUpdateProgress, PromptConfirm 等）
+  - **log**：`tracing` 日志初始化
+
+### 2. **hit-core** - 核心业务逻辑库
+- **职责**：实现软件安装、卸载、版本管理等所有核心功能
+- **内部模块**：
+  - **manifest/**：Manifest 解析（schema / parser / validator / variables）
+  - **bucket/**：Bucket git 仓库克隆/更新/索引（git2 + rayon 并行）
+  - **download/**：HTTP 下载与缓存（reqwest blocking），进度通过 EventBus 上报
+  - **hash/**：sha256 / sha512 / blake3 流式哈希校验
+  - **compress/**：ZIP / 7z / TAR 解压 + NSIS / Inno Setup / MSI 静默安装
+  - **store/**：JSON 文件存储（db.json 原子写入 + 版本迁移）
+  - **install/**：安装流水线（controller / transaction / persist / dependency / hooks）
+  - **shim_mgmt/**：Shim 创建/移除/枚举
+  - **win/**（`#[cfg(windows)]`）：进程检测（sysinfo）、注册表（winreg）、文件系统（symlink + junction fallback）、UAC（ShellExecuteW RunAs）、环境变量（WM_SETTINGCHANGE）
+- **关键设计**：
+  - **事务性安装**：RAII 管理事务状态，`MoveFileEx` 原子操作，失败回滚通过删除临时目录实现
+  - **Junction fallback**：symlink_dir 失败后回退到 `junction::create`（无需管理员或开发者模式），参考 `ref/Hok/libscoop/internal/fs.rs:133-159`
+  - **依赖解析**：`petgraph` 构建依赖图，检测循环依赖
 
 ### 3. **hit-shim** - Shim 代理程序
 - **职责**：独立的轻量级 exe，负责命令转发
@@ -288,65 +175,42 @@ hit/
   3. 拼接真实路径：`~/.hit/apps/<package>/<version>/bin/<exe>`
   4. 启动真实进程并转发 stdin/stdout/stderr
   5. 返回退出码
-- **特点**：体积极小（~200KB），无外部依赖，启动速度快
+- **特点**：体积 ~200KB（仅依赖 hit-common + sonic-rs，不引入 heavy deps），启动速度快
 
-### 4. **hit-uninstaller** - 深度卸载模块
-- **职责**：清理传统安装软件的残留（需管理员权限）
-- **功能**：
-  - 读取注册表卸载信息（`winreg` crate）
-  - 执行软件自带卸载程序
-  - 并行扫描残留文件（`walkdir` + `rayon`）
-  - 清理注册表键值
-  - 强制终止进程（`windows-rs` API）
-  - 删除服务/计划任务
-- **使用场景**：`hit force-uninstall <package>`（针对非 Hit 安装的软件）
+### 4. **hit-cli** - 命令行界面
+- **职责**：用户交互入口，解析子命令并调用 hit-core
+- **关键技术**：`clap`（参数解析，含 alias：`hit i/s/u/rm/ls/st/b/c`）、`ratatui`（TUI 界面，Phase 3）、`indicatif`（进度条）、`colored`（彩色输出）
+- **子命令（Phase 1-3）**：
+  - `hit install <package>` / `i` - 安装软件
+  - `hit uninstall <package>` / `rm` - 卸载软件
+  - `hit update [package]` / `u` - 更新软件
+  - `hit search <keyword>` / `s` - 搜索软件
+  - `hit list` / `ls` - 列出已安装软件
+  - `hit info <package>` - 查看软件详情
+  - `hit status` / `st` - 状态检查
+  - `hit reset <package> <version>` - 切换版本
+  - `hit cleanup` / `c` - 清理旧版本释放空间
+  - `hit cache` - 缓存管理
+  - `hit home <package>` - 打开主页
+  - `hit which <command>` - 查找命令 shim 与真实 exe 路径
+  - `hit prefix <package>` - 显示安装路径
+  - `hit hold <pkg>` / `hit unhold <pkg>` - 版本锁定
+  - `hit config list/set` - 配置管理
+  - `hit bucket add/remove/list/update` - Bucket 管理（alias `b`）
+  - `hit check` - 健康检查（Phase 3）
+  - `hit repair <package>` - 修复损坏（Phase 3）
+  - `hit mirror add/list/refresh` - 镜像源管理（Phase 3）
 
-### 5. **hit-bucket** - Bucket 仓库管理
-- **职责**：管理软件清单仓库，解决多 bucket 冲突，优化搜索安装体验
-- **核心设计**：三层索引架构（全局索引 + Bucket 缓存 + 源仓库）
-  - **全局索引**：内存中维护 `软件名 → [版本列表]`，自动合并所有 bucket
-  - **Bucket 优先级**：main(100) > sdk(50) > extras(30) > personal(10)
-  - **自动选择**：安装时选最高版本 + 最高优先级 bucket
-- **关键功能**：
-  1. **全局搜索**：`hit search <keyword>` 显示所有 bucket 的结果，标注来源
-  2. **交互式安装**：搜索后提供 FuzzySelect 界面，上下箭头选择，Enter 直接安装
-  3. **版本约束**：支持 `@latest`、`@stable`、`@^3.12`、`@3.12.0` 等语法
-  4. **冲突检测**：`hit bucket conflict list/resolve` 管理同名软件冲突
-  5. **元数据增强**：bucket.json 包含 `priority`、`maintainer`、`package_count` 等
-  6. **过时检测**：`hit bucket outdated` 显示可更新的软件
-  7. **软件别名**：Manifest 中定义 `alias` 字段，支持 `py` → `python`
-  8. **快速安装**：`hit install`（无参数）直接弹出交互选择框
-  9. **安装前预览**：显示版本、大小、依赖、bucket 来源，确认后再安装
-  10. **Bucket 统计**：`hit bucket stats` 显示各 bucket 软件数、过时数、更新频率
+### 5. **hit-test-utils** - 共享测试 fixture
+- **职责**：为 hit-core / hit-cli 的集成测试提供 dev-dependency 工具库
+- **组件**：`mock_config()`、`sample_manifest()`、`temp_scoop_root()` 等辅助函数
+- **注意**：仅作为 `[dev-dependencies]` 引入，不会进入 release 二进制
 
-### 6. **hit-common** - 公共工具库
-- **职责**：提供跨模块复用的工具函数
-- **组件**：
-  - **Downloader**：支持断点续传、多线程加速（可选 aria2 集成）
-  - **Hasher**：计算 SHA256/BLAKE3 校验和
-  - **Extractor**：解压 ZIP/7z/TAR.GZ
-  - **Logger**：结构化日志输出
-  - **Error**：统一错误类型（`thiserror`）
+### 远期规划模块（不在 Phase 1-3 范围，详见 ROADMAP.md Phase 4-5）
 
-### 7. **hit-plugin** - 插件系统
-- **职责**：支持社区扩展功能
-- **核心设计**：
-  - **Lua 脚本引擎**：使用 `mlua` 集成 Lua 脚本
-  - **插件钩子**：安装前/后、卸载前/后、命令执行前/后
-  - **API 接口**：提供插件访问核心功能的接口
-- **插件类型**：
-  - **命令插件**：添加自定义子命令
-  - **安装插件**：自定义安装逻辑
-  - **卸载插件**：自定义卸载逻辑
-  - **监控插件**：扩展运行时监控
-- **插件目录**：`~/.hit/plugins/`
-- **示例**：
-  ```lua
-  -- 插件示例：添加自定义命令
-  function hit.command("hello")
-      print("Hello from plugin!")
-  end
-  ```
+- **hit-uninstaller** —— 深度卸载模块：注册表扫描、残留文件清理（`walkdir` + `rayon`）、进程强制终止；用于 `hit force-uninstall` 命令（针对非 Hit 安装的软件）
+- **hit-plugin** —— 插件系统：`mlua` Lua 脚本引擎、插件钩子（安装前/后、卸载前/后）
+- **hit-core 远期子模块**：`sdk/`（JDK/Python/Node.js 多版本切换）、`bundle/`（软件束）、`shadow/`（沙盒环境）、`lifecycle/`（归档/孤立/去重）、`monitor/`（hit top/ps/trace）、`sync/`（跨设备配置同步）、`dev/`（本地安装 + 文件监听）、`backup/`（备份恢复）、`delta/`（增量更新）
 
 ---
 
@@ -522,5 +386,5 @@ C:\Users\<username>\.hit\
 | [ROADMAP.md](./ROADMAP.md) | 里程碑规划与新增功能详解 |
 | [REFERENCE_PROJECTS.md](./REFERENCE_PROJECTS.md) | 参考项目与学习资源 |
 | [CODING_GUIDELINES.md](./CODING_GUIDELINES.md) | 编码规范 |
-| [TODO.md](./TODO.md) | 实现任务清单 |
-| [对话.md](./对话.md) | 需求讨论与技术选型记录 |
+| [TODO.md](./TODO.md) | 实现任务清单（Phase 1-3 权威） |
+| [FEATURES.md](./FEATURES.md) | 功能特性清单与设计理念 |

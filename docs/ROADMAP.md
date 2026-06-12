@@ -4,8 +4,8 @@
 
 **目标**：实现 Scoop 的所有基本命令和功能，完全兼容 Scoop bucket
 
-- [x] 项目工作区结构设计
-- [x] 核心模块划分
+- [ ] 项目工作区结构设计
+- [ ] 核心模块划分
 - [ ] **Scoop Manifest 格式完全兼容解析**
 - [ ] **Scoop Bucket 仓库支持（Git 仓库克隆与更新）**
 - [ ] **实现 `hit install/uninstall/list` 基本命令**

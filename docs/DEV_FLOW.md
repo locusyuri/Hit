@@ -5,8 +5,8 @@
 ```bash
 cargo new hit --vcs git
 cd hit
-# 创建工作区结构
-mkdir -p crates/{hit-cli,hit-core,hit-shim,hit-uninstaller,hit-bucket,hit-common}/src
+# 创建工作区结构（5-crate 方案，详见 TODO.md）
+mkdir -p crates/{hit-common,hit-core,hit-shim,hit-cli,hit-test-utils}/src
 touch Cargo.toml
 ```
 

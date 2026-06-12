@@ -103,9 +103,9 @@ crates/
 
 | 序号  | 任务                                                                                              | 状态 | 负责人 | 预估时间 | 依赖  |
 | ----- | ------------------------------------------------------------------------------------------------- | ---- | ------ | -------- | ----- |
-| 1.1.1 | 创建 Cargo workspace 结构：根 Cargo.toml 添加 `[workspace]`，创建 `crates/`，按 5-crate 方案初始化子 crate 骨架（空 lib.rs / main.rs） | 📋    | -      | 2天      | -     |
-| 1.1.2 | 配置 workspace 级 Cargo.toml：`[workspace.dependencies]`（serde, sonic-rs, thiserror, anyhow, tracing, flume）；`[profile.release]`（LTO, strip, opt-level=3, codegen-units=1） | 📋    | -      | 2天      | 1.1.1 |
-| 1.1.3 | 完善 .gitignore：在现有 `/target`、`.codegraph/`、`.agents/graph.bin` 基础上追加 `Cargo.lock`（库 crate 不锁）、`*.swp`、`.vs/`、`*.pdb` | 📋    | -      | 1天      | -     |
+| 1.1.1 | 创建 Cargo workspace 结构：根 Cargo.toml 添加 `[workspace]`，创建 `crates/`，按 5-crate 方案初始化子 crate 骨架（空 lib.rs / main.rs） | ✅    | -      | 已完成   | -     |
+| 1.1.2 | 配置 workspace 级 Cargo.toml：`[workspace.dependencies]`（serde, sonic-rs, thiserror, anyhow, tracing, flume）；`[profile.release]`（LTO, strip, opt-level=3, codegen-units=1） | ✅    | -      | 已完成   | 1.1.1 |
+| 1.1.3 | 完善 .gitignore：在现有 `/target`、`.codegraph/`、`.agents/graph.bin` 基础上追加 `Cargo.lock`（库 crate 不锁）、`*.swp`、`.vs/`、`*.pdb` | ✅    | -      | 已完成   | -     |
 | 1.1.4 | 创建项目文档结构（已完成：docs/ 含 10 个 .md 文件）                                               | ✅    | -      | 已完成   | -     |
 | 1.1.5 | 初始化 hit-common crate：定义 error.rs / config.rs / paths.rs / log.rs                            | 📋    | -      | 5天      | 1.1.1 |
 | 1.1.6 | 定义 HitError 枚举（hit-common/src/error.rs）：thiserror derive，覆盖 IO、Manifest、Bucket、Download、Install、Config 等错误类别；对外暴露 `type Result<T> = std::result::Result<T, HitError>` | 📋    | -      | 2天      | 1.1.5 |

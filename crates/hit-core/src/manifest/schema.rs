@@ -105,6 +105,14 @@ impl<T> OneOrMany<T> {
         }
     }
 
+    /// 借用视图：返回元素切片（不消耗所有权）。
+    pub fn as_slice(&self) -> &[T] {
+        match self {
+            OneOrMany::One(v) => std::slice::from_ref(v),
+            OneOrMany::Many(v) => v.as_slice(),
+        }
+    }
+
     /// 元素数量。
     pub fn len(&self) -> usize {
         match self {

@@ -7,7 +7,12 @@
 mod parser;
 mod schema;
 mod validator;
+pub mod variables;
 
 pub use parser::parse_str;
 pub use schema::*;
 pub use validator::validate;
+pub use variables::{
+    substitute, substitute_manifest_in_place, autoupdate_version_vars, hash_regex_templates,
+    Arch, AutoupdateVars, InstallVars, IntoVarMap, UrlContext, VarMap,
+};

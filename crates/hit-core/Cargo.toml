@@ -11,6 +11,8 @@ serde = { workspace = true }
 sonic-rs = { workspace = true }
 thiserror = { workspace = true }
 tracing = { workspace = true }
+regex = { workspace = true }
+url = { workspace = true }
 
 [dev-dependencies]
 tempfile = { workspace = true }

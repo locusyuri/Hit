@@ -46,6 +46,8 @@ junction = "1"
 sysinfo = "0.33"
 winreg = "0.55"
 windows = "0.58"
+regex = "1"
+url = "2"
 
 # hit-cli
 clap = { version = "4", features = ["derive"] }

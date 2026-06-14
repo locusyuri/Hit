@@ -9,7 +9,10 @@ mod schema;
 mod validator;
 pub mod variables;
 
-pub use parser::parse_str;
+pub use parser::{
+    collect_all_env_sets, parse_and_resolve, parse_str, supports_arch, supported_architectures,
+    FlatManifest,
+};
 pub use schema::*;
 pub use validator::validate;
 pub use variables::{

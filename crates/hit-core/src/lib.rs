@@ -10,3 +10,5 @@
 //! - `install/`：安装流水线（controller / transaction / persist / dependency / hooks）
 //! - `shim_mgmt/`：Shim 创建/移除/枚举
 //! - `win/`：Windows 平台集成（`#[cfg(windows)]`）
+
+pub mod manifest;

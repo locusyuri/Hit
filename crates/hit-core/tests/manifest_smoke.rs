@@ -36,7 +36,9 @@ fn parse_all_fixture_manifests() {
 fn validate_all_fixture_manifests() {
     for (name, body) in FIXTURES {
         let m = parse_str(body).unwrap();
-        validate(&m).unwrap_or_else(|e| panic!("{name} 验证失败：{e}"));
+        validate(&m)
+            .into_result(name)
+            .unwrap_or_else(|e| panic!("{name} 验证失败：{e}"));
     }
 }
 
@@ -93,7 +95,7 @@ fn python_manifest_bin_alias() {
 
     // bin 数组包含 tuple[2]：["python.exe", "python3"]
     let bin = m.bin.as_ref().expect("python 应有 bin");
-    assert!(bin.len() >= 1);
+    assert!(!bin.is_empty());
     let first = &bin.0[0];
     match first {
         BinItem::Aliased { path, alias, args } => {
@@ -160,7 +162,10 @@ fn persist_list_simple_strings() {
     for name in ["7zip", "nodejs"] {
         let body = FIXTURES.iter().find(|(n, _)| *n == name).unwrap().1;
         let m: Manifest = parse_str(body).unwrap();
-        let list: &PersistList = m.persist.as_ref().expect(&format!("{name} 应有 persist"));
+        let list: &PersistList = m
+            .persist
+            .as_ref()
+            .unwrap_or_else(|| panic!("{name} 应有 persist"));
         assert!(!list.is_empty(), "{name} persist 不应为空");
     }
 }

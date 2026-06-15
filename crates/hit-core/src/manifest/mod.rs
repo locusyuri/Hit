@@ -4,17 +4,19 @@
 //! 多态字段（`bin` / `persist` / `shortcuts` / `license` / `hash` / `checkver` 等）
 //! 使用手写 `Deserialize` 或 `#[serde(untagged)]` 建模。
 
+pub mod diagnostic;
 mod parser;
 mod schema;
 mod validator;
 pub mod variables;
 
+pub use diagnostic::{Diagnostic, Diagnostics, Severity};
 pub use parser::{
     collect_all_env_sets, parse_and_resolve, parse_str, supports_arch, supported_architectures,
     FlatManifest,
 };
 pub use schema::*;
-pub use validator::validate;
+pub use validator::{validate, validate_or_err};
 pub use variables::{
     substitute, substitute_manifest_in_place, autoupdate_version_vars, hash_regex_templates,
     Arch, AutoupdateVars, InstallVars, IntoVarMap, UrlContext, VarMap,

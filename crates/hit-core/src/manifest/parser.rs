@@ -9,7 +9,7 @@
 //! 对每个"可架构化"字段，取 `architecture.<arch>.<field>`；若为 `None` 则回退到顶层。
 //! 数组/Map 类字段为整体替换（不合并）。
 
-use crate::manifest::schema::{ArchSpec, Architecture, Manifest};
+use crate::manifest::schema::{ArchSpec, Architecture, HookType, Manifest, ScriptField};
 use crate::manifest::variables::Arch;
 use hit_common::error::Result;
 use std::collections::BTreeMap;
@@ -57,6 +57,27 @@ impl FlatManifest {
     /// 借用内部 Manifest。
     pub fn inner(&self) -> &Manifest {
         &self.0
+    }
+
+    /// 获取架构合并后指定钩子类型的有效脚本。
+    ///
+    /// - `PreInstall` / `PostInstall` / `PreUninstall` / `PostUninstall`：
+    ///   返回对应的 `ScriptField` 引用。
+    /// - `Installer` / `Uninstaller`：
+    ///   返回 `InstallerSpec.script` 字段。
+    ///
+    /// 对应 Scoop PS `Invoke-HookScript` 先调 `arch_specific` 获取脚本再执行
+    /// （`ref/Scoop/lib/install.ps1:147-172`）。
+    pub fn resolve_script(&self, hook: HookType) -> Option<&ScriptField> {
+        let m = &self.0;
+        match hook {
+            HookType::PreInstall => m.pre_install.as_ref(),
+            HookType::PostInstall => m.post_install.as_ref(),
+            HookType::PreUninstall => m.pre_uninstall.as_ref(),
+            HookType::PostUninstall => m.post_uninstall.as_ref(),
+            HookType::Installer => m.installer.as_ref()?.script.as_ref(),
+            HookType::Uninstaller => m.uninstaller.as_ref()?.script.as_ref(),
+        }
     }
 }
 
@@ -348,5 +369,50 @@ mod tests {
         let m = parse_str(body).unwrap();
         let sets = collect_all_env_sets(&m);
         assert_eq!(sets.len(), 3);
+    }
+
+    #[test]
+    fn resolve_script_pre_install() {
+        let body = r#"{
+            "version": "1.0",
+            "description": "test",
+            "homepage": "https://x",
+            "license": "MIT",
+            "pre_install": "Write-Host 'hi'"
+        }"#;
+        let flat = parse_and_resolve(body, Arch::X86_64).unwrap();
+        use crate::manifest::schema::ScriptField;
+        assert!(matches!(
+            flat.resolve_script(HookType::PreInstall),
+            Some(ScriptField::Single(_))
+        ));
+    }
+
+    #[test]
+    fn resolve_script_installer() {
+        let body = r#"{
+            "version": "1.0",
+            "description": "test",
+            "homepage": "https://x",
+            "license": "MIT",
+            "installer": { "script": "Expand-7zipArchive" }
+        }"#;
+        let flat = parse_and_resolve(body, Arch::X86_64).unwrap();
+        assert!(flat.resolve_script(HookType::Installer).is_some());
+    }
+
+    #[test]
+    fn resolve_script_missing_returns_none() {
+        let body = r#"{
+            "version": "1.0",
+            "description": "test",
+            "homepage": "https://x",
+            "license": "MIT"
+        }"#;
+        let flat = parse_and_resolve(body, Arch::X86_64).unwrap();
+        assert!(flat.resolve_script(HookType::PreInstall).is_none());
+        assert!(flat.resolve_script(HookType::PostInstall).is_none());
+        assert!(flat.resolve_script(HookType::Installer).is_none());
+        assert!(flat.resolve_script(HookType::Uninstaller).is_none());
     }
 }

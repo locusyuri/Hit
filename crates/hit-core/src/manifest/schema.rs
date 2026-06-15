@@ -84,6 +84,22 @@ pub struct Manifest {
     pub alias: Option<Vec<String>>,
 }
 
+impl Manifest {
+    /// 返回 depends 列表的统一视图（`Vec<&str>`）。
+    ///
+    /// - `None` → 空 Vec
+    /// - `One("perl")` → `["perl"]`
+    /// - `Many(["a", "b"])` → `["a", "b"]`
+    ///
+    /// 对应 Scoop PS `@($manifest.depends)`（`ref/Scoop/lib/depends.ps1:45`）。
+    pub fn depends_list(&self) -> Vec<&str> {
+        match &self.depends {
+            None => Vec::new(),
+            Some(om) => om.as_slice().iter().map(String::as_str).collect(),
+        }
+    }
+}
+
 // ============================================================================
 // 通用多态：OneOrMany<T>
 // ============================================================================
@@ -432,6 +448,21 @@ pub enum PersistItem {
     Renamed { src: String, dst: String },
 }
 
+impl PersistItem {
+    /// 规范化为 (source, target) 路径对。
+    ///
+    /// `Simple("etc")` → `("etc", "etc")`（同名映射）
+    /// `Renamed { src: "data", dst: "backup" }` → `("data", "backup")`
+    ///
+    /// 对应 Scoop PS `persist_def`（`ref/Scoop/lib/install.ps1:429-443`）。
+    pub fn source_and_target(&self) -> (&str, &str) {
+        match self {
+            PersistItem::Simple(p) => (p.as_str(), p.as_str()),
+            PersistItem::Renamed { src, dst } => (src.as_str(), dst.as_str()),
+        }
+    }
+}
+
 impl Serialize for PersistList {
     fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         use serde::ser::SerializeSeq;
@@ -649,6 +680,20 @@ pub struct InstallerSpec {
     pub keep: Option<bool>,
 }
 
+/// 生命周期钩子类型（对应 Scoop PS `Invoke-HookScript` ValidateSet）。
+///
+/// 安装顺序：PreInstall → Installer → PostInstall
+/// 卸载顺序：PreUninstall → Uninstaller → PostUninstall
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HookType {
+    PreInstall,
+    Installer,
+    PostInstall,
+    PreUninstall,
+    Uninstaller,
+    PostUninstall,
+}
+
 // ============================================================================
 // Checkver / Autoupdate
 // ============================================================================
@@ -763,5 +808,58 @@ mod tests {
         assert_eq!(stem("bin\\git.exe"), "git");
         assert_eq!(stem("python.exe"), "python");
         assert_eq!(stem("foo"), "foo");
+    }
+
+    #[test]
+    fn persist_item_source_and_target_simple() {
+        let p = PersistItem::Simple("etc".into());
+        assert_eq!(p.source_and_target(), ("etc", "etc"));
+    }
+
+    #[test]
+    fn persist_item_source_and_target_renamed() {
+        let p = PersistItem::Renamed {
+            src: "data".into(),
+            dst: "backup".into(),
+        };
+        assert_eq!(p.source_and_target(), ("data", "backup"));
+    }
+
+    #[test]
+    fn manifest_depends_list_none() {
+        let m = Manifest::default();
+        assert!(m.depends_list().is_empty());
+    }
+
+    #[test]
+    fn manifest_depends_list_single() {
+        let m = Manifest {
+            depends: Some(OneOrMany::One("perl".into())),
+            ..Default::default()
+        };
+        assert_eq!(m.depends_list(), vec!["perl"]);
+    }
+
+    #[test]
+    fn manifest_depends_list_many() {
+        let m = Manifest {
+            depends: Some(OneOrMany::Many(vec!["a".into(), "b/c".into()])),
+            ..Default::default()
+        };
+        assert_eq!(m.depends_list(), vec!["a", "b/c"]);
+    }
+
+    #[test]
+    fn hook_type_variants() {
+        let hooks = [
+            HookType::PreInstall,
+            HookType::Installer,
+            HookType::PostInstall,
+            HookType::PreUninstall,
+            HookType::Uninstaller,
+            HookType::PostUninstall,
+        ];
+        assert_eq!(hooks.len(), 6);
+        assert_ne!(hooks[0], hooks[1]);
     }
 }

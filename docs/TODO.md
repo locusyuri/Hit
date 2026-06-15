@@ -119,9 +119,9 @@ crates/
 | ----- | ----------------------------------------------------------------------- | ---- | ------ | -------- | ----- |
 | 1.2.1 | 分析 Scoop Manifest JSON Schema（参考 `ref/Main/` 真实 manifest）       | ✅    | -      | 已完成   | -     |
 | 1.2.2 | 定义 Manifest 数据结构（hit-core/src/manifest/schema.rs，serde derive）：完整反序列化 Scoop 字段（architecture/bin/env_set/persist/depends/pre_install/post_install/pre_uninstall/shortcuts/checkver/autoupdate 等）；**Hit 扩展字段**（alias, dependencies, health_check, mirrors 等）在此阶段声明但标记 `#[serde(default, skip_serializing_if)]` 跳过解析 | ✅    | -      | 已完成   | 1.2.1 |
-| 1.2.3 | 实现变量替换引擎（hit-core/src/manifest/variables.rs）：支持 `$version`, `$architecture`, `$url`, `$dir`, `$appdir`, `$scoopdir`, `$persist_dir` 等 Scoop 内置变量；递归替换 url、hash、bin、env_set 中的变量引用 | 📋    | -      | 5天      | 1.2.2 |
-| 1.2.4 | 实现 Manifest 解析器（hit-core/src/manifest/parser.rs）                 | 📋    | -      | 5天      | 1.2.2 |
-| 1.2.5 | 实现 Manifest 验证器（hit-core/src/manifest/validator.rs）              | 📋    | -      | 3天      | 1.2.2 |
+| 1.2.3 | 实现变量替换引擎（hit-core/src/manifest/variables.rs）：支持 `$version`, `$architecture`, `$url`, `$dir`, `$appdir`, `$scoopdir`, `$persist_dir` 等 Scoop 内置变量；递归替换 url、hash、bin、env_set 中的变量引用 | ✅    | -      | 已完成   | 1.2.2 |
+| 1.2.4 | 实现 Manifest 解析器（hit-core/src/manifest/parser.rs）                 | ✅    | -      | 已完成   | 1.2.2 |
+| 1.2.5 | 实现 Manifest 验证器（hit-core/src/manifest/validator.rs）              | ✅    | -      | 已完成   | 1.2.2 |
 | 1.2.6 | 支持 Scoop 特殊字段（architecture、depends、persist、pre/post_install） | 📋    | -      | 5天      | 1.2.2 |
 | 1.2.7 | 编写 Manifest 解析单元测试（hit-core/tests/manifest_test.rs）：使用 `ref/Main/` 中的真实 manifest JSON 作为测试 fixtures，覆盖 git.json、python.json、7zip.json 等代表性清单 | 📋    | -      | 3天      | 1.2.2-1.2.5 |
 

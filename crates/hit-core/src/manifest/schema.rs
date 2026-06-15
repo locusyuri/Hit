@@ -27,7 +27,7 @@ use std::collections::BTreeMap;
 /// `version` / `description` / `homepage` / `license`。
 ///
 /// 其他字段均为可选，使用 `Option<T>` + `#[serde(default)]` 容忍缺省。
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct Manifest {
     // -------- 必填 --------
@@ -634,7 +634,7 @@ impl<'de> Deserialize<'de> for ShortcutItem {
 // ============================================================================
 
 /// 顶层 `architecture` 字段：按 CPU 架构拆分下载/安装参数。
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct Architecture {
     #[serde(rename = "64bit")]
@@ -645,7 +645,7 @@ pub struct Architecture {
 }
 
 /// 单一架构分支的字段集合（与顶层部分重叠）。
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct ArchSpec {
     pub url: Option<OneOrMany<String>>,
@@ -671,7 +671,7 @@ pub struct ArchSpec {
 /// - `script`：PowerShell 脚本。
 /// - `file` + `args`：调用外部安装程序。
 /// - `keep`：安装后保留安装包。
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct InstallerSpec {
     pub script: Option<ScriptField>,
@@ -699,7 +699,7 @@ pub enum HookType {
 // ============================================================================
 
 /// `checkver` 字段：可以是 github shorthand 字符串或完整对象。
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CheckverField {
     /// 罕见 shorthand（16 例），通常当作 github 仓库或脚本标记。
@@ -709,7 +709,7 @@ pub enum CheckverField {
 
 /// `checkver` 完整对象。字段组互斥（`github` / `url` / `script` / `sourceforge`），
 /// 但使用扁平 `Option` 以兼容脏数据。
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct Checkver {
     pub github: Option<String>,
@@ -727,7 +727,7 @@ pub struct Checkver {
 }
 
 /// `autoupdate` 字段。
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct Autoupdate {
     pub architecture: Option<Architecture>,
@@ -740,7 +740,7 @@ pub struct Autoupdate {
 /// `autoupdate.hash`：普通 hash 或抓取对象 `{ url, regex }`。
 ///
 /// 抓取对象用于从指定 URL 用正则提取新版本对应的 hash（如 release notes 中的 sha256）。
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum AutoupdateHash {
     /// 抓取对象（`{ url, regex? }`），必须在 Plain 之前以优先匹配 object。
@@ -758,7 +758,7 @@ pub enum AutoupdateHash {
 // ============================================================================
 
 /// `psmodule` 字段：PowerShell 模块声明。
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct PowerShellModule {
     pub name: String,

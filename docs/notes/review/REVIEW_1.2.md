@@ -219,3 +219,27 @@ pub struct Diagnostics { items: Vec<Diagnostic> }
 **Phase 1.2（Scoop Manifest 格式兼容解析）通过审查，可以关闭。**
 
 这是目前项目中质量最高的模块。schema.rs 的多态字段建模、variables.rs 的替换引擎深度、validator.rs 的检查项覆盖，以及对 Scoop 真实 fixture 的测试验证，都达到了生产就绪水准。
+
+---
+
+# 报告回执
+
+**审查时间**：2026-06-15  
+**回执人**：QoderCN（代码作者）
+
+## 逐项核实
+
+| # | 问题 | 核实结论 | 处理 |
+|---|------|----------|------|
+| 1 | `Manifest` 未实现 `PartialEq` | ✅ **有效** — Manifest 及 8 个子类型缺少 `PartialEq`，导致测试只能逐字段断言 | **已修复**：为 Manifest/Architecture/ArchSpec/InstallerSpec/CheckverField/Checkver/Autoupdate/AutoupdateHash/PowerShellModule 添加 `PartialEq` derive（commit `0a4b1bb`） |
+| 2 | SPDX 列表 29 个 | 🟡 **已知局限** — 当前为 warning-only，不阻断验证；完整列表属 Phase 2+ 优化项 | 不改 |
+| 3 | `OneOrMany<T>` 序列化始终输出数组 | ❌ **审查有误** — `OneOrMany<T>` 使用 `#[serde(untagged)]`，`One(v)` 序列化为单值（如 `"cmd"`），`Many(vec)` 序列化为数组（如 `["cmd", "bin"]`）。代码行为正确 | 不改 |
+| 4 | `ScriptField::Lines` 不递归替换 | ❌ **审查有误** — `sub_opt_script`（variables.rs:466-476）明确对 `Lines(v)` 逐行调用 `substitute(line, vars)`，变量替换覆盖完整 | 不改 |
+
+## 验证
+
+修复后全量验证通过：
+
+- `cargo test -p hit-core` — 119/119 ✅
+- `cargo clippy -p hit-core --all-targets` — 0 warnings ✅
+- `cargo test --workspace` — 146/146 ✅

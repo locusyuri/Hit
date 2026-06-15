@@ -122,8 +122,8 @@ crates/
 | 1.2.3 | 实现变量替换引擎（hit-core/src/manifest/variables.rs）：支持 `$version`, `$architecture`, `$url`, `$dir`, `$appdir`, `$scoopdir`, `$persist_dir` 等 Scoop 内置变量；递归替换 url、hash、bin、env_set 中的变量引用 | ✅    | -      | 已完成   | 1.2.2 |
 | 1.2.4 | 实现 Manifest 解析器（hit-core/src/manifest/parser.rs）                 | ✅    | -      | 已完成   | 1.2.2 |
 | 1.2.5 | 实现 Manifest 验证器（hit-core/src/manifest/validator.rs）              | ✅    | -      | 已完成   | 1.2.2 |
-| 1.2.6 | 支持 Scoop 特殊字段（architecture、depends、persist、pre/post_install） | 📋    | -      | 5天      | 1.2.2 |
-| 1.2.7 | 编写 Manifest 解析单元测试（hit-core/tests/manifest_test.rs）：使用 `ref/Main/` 中的真实 manifest JSON 作为测试 fixtures，覆盖 git.json、python.json、7zip.json 等代表性清单 | 📋    | -      | 3天      | 1.2.2-1.2.5 |
+| 1.2.6 | 支持 Scoop 特殊字段（architecture、depends、persist、pre/post_install） | ✅    | -      | 已完成   | 1.2.2 |
+| 1.2.7 | 编写 Manifest 解析单元测试（hit-core/tests/manifest_test.rs）：使用 `ref/Main/` 中的真实 manifest JSON 作为测试 fixtures，覆盖 git.json、python.json、7zip.json 等代表性清单 | ✅    | -      | 已完成   | 1.2.2-1.2.5 |
 
 ### 1.3 hit-core/bucket：Scoop Bucket 仓库支持
 

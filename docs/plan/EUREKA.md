@@ -24,7 +24,7 @@
 
 ## 评审意见
 
-以下是对上述灵感的可行性分析与建议。
+以下是对灵感池中所有灵感的可行性分析与建议。
 
 ### ✅ 可直接实施（低风险，高价值）
 
@@ -39,6 +39,8 @@
 
 | # | 灵感 | 分析 & 建议 |
 |---|------|------------|
-| 5 | **TOML 配置** | 当前 config 已是 JSON + `sonic-rs`，切换到 TOML 涉及到迁移。`toml_edit` 保留注释的优势仅在用户手动编辑时体现——如果主要修改途径是 TUI/CLI，普通 toml crate 就够了。**建议**：Phase 1 先用 JSON，等配置结构稳定后再迁移。 |
-| 6 | **持久化搜索索引** | 思路正确，Scoop 慢的根因就是每次遍历所有 JSON。但需明确：索引格式用 `redb`（KV）做 `name → [bucket, version, desc]` 映射足够，不需要倒排索引，关键词搜索走 `LIKE` 扫描 KV。**建议**：默认启用而非可选，`hit bucket update` 后自动增量更新。备选方案可用 SQLite（已有 rusqlite 经验）。适合 Phase 2-3。 |
-| 7 | **高频旧版本专用仓库** | Scoop 已有 `versions` bucket，**不建议自建**。在首次启动导入时默认添加 `versions` bucket 即可，维护成本远低于自建。 |
+| 5 | **i18n 国际化** | 低优先级，属于"有更好没有也不影响核心功能"的增强。**建议**：Phase 1-3 不考虑，等 CLI 输出稳定后再做。翻译文件的维护成本高于实现成本。 |
+| 6 | **代管其它包管理器** | 需要先确定支持的包管理器范围和优先级（npm/pnpm/bun/uv/...），每个的实现方式和输出格式都不同，解析成本较高。**建议**：做成插件化的"外部包管理器适配器"，每个管理器一个 adapter，通过 SPI 注册。`hit list` 统一调用所有 adapter 收集结果，超时控制每个 adapter 不超过 3 秒。适合 Phase 4+。 |
+| 7 | **TOML 配置** | 当前 config 已是 JSON + `sonic-rs`，切换到 TOML 涉及到迁移。`toml_edit` 保留注释的优势仅在用户手动编辑时体现——如果主要修改途径是 TUI/CLI，普通 toml crate 就够了。**建议**：Phase 1 先用 JSON，等配置结构稳定后再迁移。 |
+| 8 | **持久化搜索索引** | 思路正确，Scoop 慢的根因就是每次遍历所有 JSON。但需明确：索引格式用 `redb`（KV）做 `name → [bucket, version, desc]` 映射足够，不需要倒排索引，关键词搜索走 `LIKE` 扫描 KV。**建议**：默认启用而非可选，`hit bucket update` 后自动增量更新。备选方案可用 SQLite（已有 rusqlite 经验）。适合 Phase 2-3。 |
+| 9 | **高频旧版本专用仓库** | Scoop 已有 `versions` bucket，**不建议自建**。在首次启动导入时默认添加 `versions` bucket 即可，维护成本远低于自建。 |

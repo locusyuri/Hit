@@ -113,6 +113,21 @@ Rust CLI 内置子命令简写，无需 shell 包装：
 - **优先级系统**：main(100) > sdk(50) > extras(30)
 - **软件别名**：`py` → `python`
 - **安装前预览**：版本、大小、依赖、来源
+- **浅克隆**：默认 `depth=1` 浅克隆加速拉取，按需通过 `hit bucket config <name> --full-clone` 切换全量
+- **快速创建**：`hit bucket create` 交互式引导，初始化目录结构、生成 `bucket.json`，可配合 `gh` CLI 推送至 GitHub
+
+### 首次启动引导
+
+首次运行 `hit`（检测到 `config.json` 不存在）时显示欢迎引导：
+
+```
+👋 欢迎使用 Hit！请选择快速开始方式：
+  1. 快速开始（导入 main + extras + versions bucket）
+  2. 自定义选择
+  3. 跳过
+```
+
+降低新手入门门槛，快速进入可用状态。
 
 ### 远期功能（Phase 3+）
 

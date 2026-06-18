@@ -16,7 +16,7 @@
 | Bucket | **gix** | Git 仓库操作 | ⬆️ **从 git2 迁移到 gix**（纯 Rust，编译快） |
 | Downloader | reqwest | HTTP 下载 | ✅ 功能最全，async/blocking 双模式 |
 | Downloader | blake3/sha2 | 哈希计算 | ✅ 合理选择 |
-| Compression | zip / sevenz-rust / tar | 压缩解压 | ⚠️ sevenz-rust 维护较慢，关注替代 |
+| Compression | zip + sevenz-rust + tar + flate2 + lzma-rs | 压缩解压 | ✅ 分层方案（见下方详解） |
 | Store | 纯 JSON 文件 | 数据存储 | ✅ Phase 1-2 足够，后续可按需升级 |
 | Windows | windows | Windows API | ✅ 官方 SDK 绑定 |
 | Windows | winreg | 注册表操作 | ✅ 成熟稳定 |
@@ -83,6 +83,25 @@
 
 当前阶段（Phase 1-2），Hit 的存储需求仅为安装清单和配置，`db.json` 单文件足够。
 
+### 📦 解压分层策略
+
+| 格式 | 方案 | 纯 Rust | 说明 |
+|------|------|:-------:|------|
+| `.7z` / 7z SFX `.exe` | `sevenz-rust` | ✅ | 现有依赖，支持 7z 格式提取 |
+| `.zip` `.nupkg` `.appx` | `zip` v2 | ✅ | 现有依赖，nupkg/appx 即 ZIP |
+| `.tar.gz` / `.tgz` | `tar` + `flate2`（rust_backend） | ✅ | 纯 Rust deflate，避免 zlib C 依赖 |
+| `.tar.xz` / `.txz` | `tar` + `lzma-rs` | ✅ | 纯 Rust LZMA，慢一点但零 C 依赖 |
+| `.tar` / `.tar.bz2` | `tar` + `bzip2`（如有需要） | ✅ | 可后续按需追加 |
+| NSIS / Inno Setup `.exe` | `std::process::Command` 静默运行 | ✅ | `/S`（NSIS）/ `/VERYSILENT`（Inno），不提取 |
+| NSIS/Inno SFX 强制提取（极少数） | 短期保留捆绑 7z.exe 兜底 | ⚠️ | 仅极少数 manifest 需要强制解包安装器 |
+
+**设计原则**：
+
+1. **优先 Rust 库**——95%+ 的 manifest 是普通 zip/7z/tar.gz，Rust 库无进程开销、原生进度上报
+2. **安装器走静默运行**——NSIS/Inno 不是压缩包，不该"提取"而是执行
+3. **7z.exe 仅兜底**——只在遇到 Rust 库不处理的极少数 SFX 强制提取场景时使用。可捆绑在安装脚本中由用户选择是否启用
+4. **格式探测**——不依赖扩展名，用文件魔数（magic bytes）判断真实格式
+
 ---
 
 ## 各依赖详细分析
@@ -108,9 +127,9 @@
 
 | 依赖 | 问题 | 建议 |
 |------|------|------|
-| **sevenz-rust** | 更新频率低，最后一次发布间隔较长 | 关注其维护状态；备选：`sevenz` 或直接调 7z.exe（不推荐） |
 | **once_cell** | std::sync::OnceLock 已在 Rust 1.70 稳定 | 新代码可直接用 `std::sync::OnceLock`，逐步减少 once_cell 依赖 |
 | **blake3** | 仅用于 Manifest hash 校验，sha2 已覆盖多数场景 | 可在 Phase 2 评估是否真正需要，不需要可移除 |
+| **lzma-rs** | 纯 Rust LZMA，速度不如 C 实现 | .tar.xz 使用率低（<1% manifest），性能影响可忽略 |
 
 ### 🟢 备选方案观察
 

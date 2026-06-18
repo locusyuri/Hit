@@ -12,7 +12,7 @@
 - **深度卸载**：集成类似 Geek Uninstaller 的残留扫描清理功能
 - **便携化**：解压即用，卸载干净
 
-> 完整功能列表请参阅 [docs/plan/FEATURES.md](docs/plan/FEATURES.md)。
+> 完整功能列表请参阅 [docs/plan/PROJECT.md](docs/plan/PROJECT.md)。
 
 ## 快速开始
 
@@ -74,7 +74,7 @@ hit/
 └── scripts/          # 辅助脚本
 ```
 
-详细文档请参阅 [docs/plan/PROJECT_STRUCTURE.md](docs/plan/PROJECT_STRUCTURE.md)。
+详细文档请参阅 [docs/plan/PROJECT.md](docs/plan/PROJECT.md)。
 
 ## 开发
 

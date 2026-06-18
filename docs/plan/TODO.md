@@ -102,7 +102,7 @@ crates/
 ### 1.1 项目初始化与基础架构
 
 | 序号  | 任务                                                                                              | 状态 | 依赖  |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.1.1 | 创建 Cargo workspace 结构：根 Cargo.toml 添加 `[workspace]`，创建 `crates/`，按 5-crate 方案初始化子 crate 骨架（空 lib.rs / main.rs） | ✅ | -     |
 | 1.1.2 | 配置 workspace 级 Cargo.toml：`[workspace.dependencies]`（serde, sonic-rs, thiserror, anyhow, tracing, flume）；`[profile.release]`（LTO, strip, opt-level=3, codegen-units=1） | ✅ | 1.1.1 |
 | 1.1.3 | 完善 .gitignore：在现有 `/target`、`.codegraph/`、`.agents/graph.bin` 基础上追加 `Cargo.lock`（库 crate 不锁）、`*.swp`、`.vs/`、`*.pdb` | ✅ | -     |
@@ -116,7 +116,7 @@ crates/
 ### 1.2 hit-core/manifest：Scoop Manifest 格式兼容解析
 
 | 序号  | 任务                                                                    | 状态 | 依赖  |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.2.1 | 分析 Scoop Manifest JSON Schema（参考 `ref/Main/` 真实 manifest）       | ✅ | -     |
 | 1.2.2 | 定义 Manifest 数据结构（hit-core/src/manifest/schema.rs，serde derive）：完整反序列化 Scoop 字段（architecture/bin/env_set/persist/depends/pre_install/post_install/pre_uninstall/shortcuts/checkver/autoupdate 等）；**Hit 扩展字段**（alias, dependencies, health_check, mirrors 等）在此阶段声明但标记 `#[serde(default, skip_serializing_if)]` 跳过解析 | ✅ | 1.2.1 |
 | 1.2.3 | 实现变量替换引擎（hit-core/src/manifest/variables.rs）：支持 `$version`, `$architecture`, `$url`, `$dir`, `$appdir`, `$scoopdir`, `$persist_dir` 等 Scoop 内置变量；递归替换 url、hash、bin、env_set 中的变量引用 | ✅ | 1.2.2 |
@@ -128,7 +128,7 @@ crates/
 ### 1.3 hit-core/bucket：Scoop Bucket 仓库支持
 
 | 序号  | 任务                                                                                   | 状态 | 依赖  |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.3.1 | 实现 Git 仓库克隆（hit-core/src/bucket/git_client.rs，gix crate）：clone with progress；支持 proxy 配置（从 Session config 读取）；进度通过 EventBus 发送 `BucketUpdateProgress` 事件；**默认浅克隆（depth=1）**，支持 `--full-clone` 切换 | 📋 | 1.1.7, 1.1.8 |
 | 1.3.2 | 实现 Bucket 更新（git pull）                                                           | 📋 | 1.3.1 |
 | 1.3.3 | 实现 Bucket 列表管理                                                                   | 📋 | 1.3.1 |
@@ -139,7 +139,7 @@ crates/
 ### 1.4 hit-core/download：下载与哈希校验
 
 | 序号  | 任务                                                                                   | 状态 | 依赖  |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.4.1 | 实现 HTTP 下载器（hit-core/src/download/http.rs，reqwest blocking client）：支持 proxy 配置（Session config）；下载进度通过 EventBus 发送 `DownloadProgress` 事件（已下载字节/总字节/速率） | 📋 | 1.1.7, 1.1.8 |
 | 1.4.2 | 实现缓存管理（hit-core/src/download/cache.rs）                                         | 📋 | 1.4.1 |
 | 1.4.3 | 实现哈希校验（hit-core/src/hash/mod.rs）：支持 sha256、sha512、blake3；流式计算（避免大文件内存问题）；校验失败返回 `HashMismatch` 错误（含 expected/actual/path 上下文） | 📋 | -     |
@@ -149,7 +149,7 @@ crates/
 ### 1.5 hit-core/compress：解压模块
 
 | 序号  | 任务                                                                                   | 状态 | 依赖 |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.5.1 | 实现 ZIP 解压（hit-core/src/compress/zip.rs，zip crate）                               | 📋 | -    |
 | 1.5.2 | 实现 7z 解压（hit-core/src/compress/sevenz.rs，sevenz-rust2）                           | 📋 | -    |
 | 1.5.3 | 实现 TAR 解压（hit-core/src/compress/tar.rs，tar + flate2）                            | 📋 | -    |
@@ -158,7 +158,7 @@ crates/
 ### 1.6 hit-core/win：Windows 平台集成
 
 | 序号  | 任务                                                                                   | 状态 | 依赖  |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.6.1 | 实现进程管理（hit-core/src/win/process.rs，sysinfo crate）：检测运行中的进程；安装前检查目标进程是否在运行；支持优雅终止和强制终止 | 📋 | -     |
 | 1.6.2 | 实现注册表操作（hit-core/src/win/registry.rs，winreg crate）：读写 `HKCU\Environment`（PATH 管理）；读写 `HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall`（已安装软件检测） | 📋 | -     |
 | 1.6.3 | 实现文件系统操作（hit-core/src/win/fs.rs）：**Junction + HardLink 单一策略**（与 Scoop 原版一致）—— 创建 `current` 目录链接时使用 `junction::create`（无需管理员或开发者模式）；`persist/` 下文件链接使用 `std::fs::hard_link`；当 `no_junction=true` 时跳过 `current` 链接创建，shim 直接指向具体版本路径；实现 remove_junction / remove_hardlink 函数（按链接类型清理） | 📋 | -     |
@@ -169,7 +169,7 @@ crates/
 ### 1.7 hit-shim：Shim 代理机制（独立 bin）
 
 | 序号  | 任务                                                                                   | 状态 | 依赖        |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.7.1 | 创建 hit-shim 独立 binary crate：`crates/hit-shim/Cargo.toml` 仅依赖 hit-common + sonic-rs，不使用 workspace 默认 heavy dependencies；`[profile.release]` 单独优化体积 | 📋 | 1.1.1       |
 | 1.7.2 | 实现命令转发逻辑：根据 shim 文件名查找 `~/.hit/apps/<name>/current/<binary>`；使用 `std::process::Command` 启动真实进程；完整转发 stdin/stdout/stderr 和所有命令行参数 | 📋 | 1.6.3       |
 | 1.7.3 | 读取 db.json 获取当前版本（hit-shim/src/main.rs）：反序列化 hit-common 中定义的 `ShimResolveInfo` 结构体（app name → version → install path 的最小映射）；解析 shim 自身文件名确定目标 app | 📋 | 1.1.5       |
@@ -179,7 +179,7 @@ crates/
 ### 1.8 hit-core/install：核心安装逻辑
 
 | 序号  | 任务                                                                                   | 状态 | 依赖                |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.8.0 | 集成 Session 与 install 流程：所有安装/卸载函数签名以 `session: &Session` 为首参数；通过 `session.event_bus()` 发送安装步骤进度事件（PackageResolveStart, PackageDownloadStart, PackageExtractStart, PackageCommitStart, PackageSyncDone 等） | 📋 | 1.1.7, 1.1.8        |
 | 1.8.1 | 实现事务管理器（hit-core/src/install/transaction.rs）：RAII 模式管理事务状态            | 📋 | -                   |
 | 1.8.2 | 创建临时事务目录（tempfile crate）                                                     | 📋 | 1.6.3               |
@@ -192,7 +192,7 @@ crates/
 ### 1.9 hit-core/store：数据存储
 
 | 序号  | 任务                                                                                   | 状态 | 依赖     |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.9.1 | 实现 JSON 文件存储（hit-core/src/store/mod.rs）：定义 `Db` 结构体（对应 db.json），使用 sonic-rs 序列化/反序列化；实现 `Db::load()` / `Db::save()` 原子写入（写临时文件后 rename） | 📋 | sonic-rs |
 | 1.9.2 | 定义数据模型（hit-core/src/store/models.rs）：`InstalledPackage`（version, bucket, install_date, shims, persist_files, held）、`BucketInfo`（name, url, last_update）、`HitConfig`（proxy, mirror, aria2_enabled, no_junction, root_path） | 📋 | -        |
 | 1.9.3 | 实现数据库迁移（hit-core/src/store/migration.rs）：db.json 包含 `version` 字段；加载时检查版本号，自动执行迁移逻辑（字段重命名、默认值填充） | 📋 | -        |
@@ -203,7 +203,7 @@ crates/
 #### 1.10.1 CLI 框架搭建
 
 | 序号     | 任务                                                                                   | 状态 | 依赖               |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.10.1.1 | 使用 clap 定义命令结构（hit-cli/src/cli.rs）：`#[derive(Parser)]` 与 `#[derive(Subcommand)]` 定义子命令枚举；**添加命令简写别名**：`install` 加 `#[clap(alias = "i")]`、`search` 加 `alias = "s"`、`update` 加 `alias = "u"`、`uninstall` 加 `alias = "rm"`、`list` 加 `alias = "ls"`、`status` 加 `alias = "st"`、`bucket` 加 `alias = "b"`、`cleanup` 加 `alias = "c"`（参考 `ref/Hok/src/cmd/mod.rs`） | 📋 | -                  |
 | 1.10.1.2 | 实现命令路由分发：各子命令模块接收 `&Session` 参数                                      | 📋 | 1.10.1.1, 1.1.7    |
 | 1.10.1.3 | 添加进度条和彩色输出（indicatif, colored）                                             | 📋 | indicatif, colored |
@@ -212,7 +212,7 @@ crates/
 #### 1.10.2 install 命令
 
 | 序号     | 任务                      | 状态 | 依赖              |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.10.2.1 | 解析软件名和版本约束      | 📋 | hit-core/bucket   |
 | 1.10.2.2 | 搜索 Bucket 获取 Manifest | 📋 | hit-core/bucket   |
 | 1.10.2.3 | 调用 hit-core 执行安装    | 📋 | hit-core/install  |
@@ -220,21 +220,21 @@ crates/
 #### 1.10.3 uninstall 命令
 
 | 序号     | 任务                   | 状态 | 依赖             |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.10.3.1 | 查找已安装软件         | 📋 | hit-core/store   |
 | 1.10.3.2 | 调用 hit-core 执行卸载 | 📋 | hit-core/install |
 
 #### 1.10.4 list 命令
 
 | 序号     | 任务                     | 状态 | 依赖             |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.10.4.1 | 读取数据库中的已安装列表 | 📋 | hit-core/store   |
 | 1.10.4.2 | 格式化输出（表格形式）   | 📋 | -                |
 
 #### 1.10.5 search 命令
 
 | 序号     | 任务               | 状态 | 依赖            |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.10.5.1 | 遍历 Bucket 索引   | 📋 | hit-core/bucket |
 | 1.10.5.2 | 实现关键词模糊匹配 | 📋 | -               |
 | 1.10.5.3 | 显示匹配结果       | 📋 | -               |
@@ -242,14 +242,14 @@ crates/
 #### 1.10.6 info 命令
 
 | 序号     | 任务               | 状态 | 依赖            |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.10.6.1 | 查找软件 Manifest  | 📋 | hit-core/bucket |
 | 1.10.6.2 | 格式化显示软件详情 | 📋 | -               |
 
 #### 1.10.7 update 命令
 
 | 序号     | 任务                 | 状态 | 依赖                            |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.10.7.1 | 更新所有 Bucket      | 📋 | hit-core/bucket                 |
 | 1.10.7.2 | 检查已安装软件新版本 | 📋 | hit-core/store, hit-core/bucket |
 | 1.10.7.3 | 执行软件升级         | 📋 | hit-core/install                |
@@ -257,31 +257,31 @@ crates/
 #### 1.10.8 bucket 命令
 
 | 序号     | 任务                            | 状态 | 依赖            |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 1.10.8.1 | bucket add - 添加新 Bucket      | 📋 | hit-core/bucket |
 | 1.10.8.2 | bucket remove - 移除 Bucket     | 📋 | hit-core/bucket |
 | 1.10.8.3 | bucket list - 列出所有 Bucket   | 📋 | hit-core/bucket |
 | 1.10.8.4 | bucket update - 更新指定 Bucket | 📋 | hit-core/bucket |
 | 1.10.8.5 | bucket create - 交互式创建 Bucket：初始化目录结构、生成 bucket.json、可选配合 `gh` CLI 推送至 GitHub | 📋 | hit-core/bucket |
 
-### 1.12 首次启动引导
+### 1.11 首次启动引导
 
 | 序号   | 任务                                                                                   | 状态 | 依赖          |
 | ------ | -------------------------------------------------------------------------------------- | ---- | ------------- |
-| 1.12.1 | 检测首次运行：`config.json` 不存在时标记为首次启动                                      | 📋 | hit-common/config |
-| 1.12.2 | 实现欢迎界面：提供快速开始（导入 main + extras + versions）、自定义选择、跳过三选项     | 📋 | hit-cli |
-| 1.12.3 | 快速开始模式：自动添加 Scoop 官方 bucket（main, extras, versions）                     | 📋 | 1.3.5 |
+| 1.11.1 | 检测首次运行：`config.json` 不存在时标记为首次启动                                      | 📋 | hit-common/config |
+| 1.11.2 | 实现欢迎界面：提供快速开始（导入 main + extras + versions）、自定义选择、跳过三选项     | 📋 | hit-cli |
+| 1.11.3 | 快速开始模式：自动添加 Scoop 官方 bucket（main, extras, versions）                     | 📋 | 1.3.5 |
 
-### 1.11 基础测试框架
+### 1.12 基础测试框架
 
 | 序号   | 任务                                                                                   | 状态 | 依赖                 |
-| ---- | ----- |
-| 1.11.1 | 设置单元测试框架                                                                       | 📋 | -                    |
-| 1.11.2 | 编写 Manifest 解析测试                                                                 | 📋 | hit-core/manifest    |
-| 1.11.3 | 编写 Bucket 管理测试                                                                   | 📋 | hit-core/bucket      |
-| 1.11.4 | 编写安装卸载集成测试：使用 hit-test-utils 创建临时 Scoop root；测试完整安装流水线（manifest → download → extract → shim → db.json 更新）；测试卸载清理；测试安装失败回滚（模拟下载中断、哈希不匹配） | 📋 | hit-core/install     |
-| 1.11.5 | 编写 EventBus 事件流测试：验证安装流程中事件按正确顺序发送（ResolveStart → DownloadStart → DownloadProgress... → ExtractStart → CommitStart → SyncDone） | 📋 | 1.1.8                |
-| 1.11.6 | 编写 junction / hard_link 测试：验证 `current` 目录通过 `junction::create` 正确创建；验证 persist 文件通过 `std::fs::hard_link` 正确创建；验证 `no_junction` 配置生效时跳过 `current` 链接创建、shim 直接指向版本路径 | 📋 | 1.6.3, 1.6.6         |
+| :--- | --- | :--: | --- |
+| 1.12.1 | 设置单元测试框架                                                                       | 📋 | -                    |
+| 1.12.2 | 编写 Manifest 解析测试                                                                 | 📋 | hit-core/manifest    |
+| 1.12.3 | 编写 Bucket 管理测试                                                                   | 📋 | hit-core/bucket      |
+| 1.12.4 | 编写安装卸载集成测试：使用 hit-test-utils 创建临时 Scoop root；测试完整安装流水线（manifest → download → extract → shim → db.json 更新）；测试卸载清理；测试安装失败回滚（模拟下载中断、哈希不匹配） | 📋 | hit-core/install     |
+| 1.12.5 | 编写 EventBus 事件流测试：验证安装流程中事件按正确顺序发送（ResolveStart → DownloadStart → DownloadProgress... → ExtractStart → CommitStart → SyncDone） | 📋 | 1.1.8                |
+| 1.12.6 | 编写 junction / hard_link 测试：验证 `current` 目录通过 `junction::create` 正确创建；验证 persist 文件通过 `std::fs::hard_link` 正确创建；验证 `no_junction` 配置生效时跳过 `current` 链接创建、shim 直接指向版本路径 | 📋 | 1.6.3, 1.6.6         |
 
 ---
 
@@ -290,7 +290,7 @@ crates/
 ### 2.1 高级命令实现
 
 | 序号  | 任务                                                                                   | 状态 | 依赖                            |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 2.1.1 | `hit reset` - 版本切换                                                                 | 📋 | hit-core/install                |
 | 2.1.2 | `hit cleanup` - 清理旧版本                                                             | 📋 | hit-core/store                  |
 | 2.1.3 | `hit cache` - 缓存管理                                                                 | 📋 | hit-core/download               |
@@ -307,7 +307,7 @@ crates/
 ### 2.2 依赖解析增强
 
 | 序号  | 任务                          | 状态 | 依赖              |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 2.2.1 | 解析 Manifest 的 depends 字段 | 📋 | hit-core/manifest |
 | 2.2.2 | 构建依赖图                    | 📋 | petgraph          |
 | 2.2.3 | 检测循环依赖                  | 📋 | 2.2.2             |
@@ -316,7 +316,7 @@ crates/
 ### 2.3 Bucket 全局索引
 
 | 序号  | 任务                              | 状态 | 依赖              |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 2.3.1 | 构建内存索引（软件名 → 版本列表） | 📋 | hit-core/bucket   |
 | 2.3.2 | 实现优先级系统                    | 📋 | hit-core/bucket   |
 | 2.3.3 | 安装时自动选择最佳版本            | 📋 | hit-core/install  |
@@ -328,7 +328,7 @@ crates/
 ### 3.1 健康检查
 
 | 序号  | 任务                   | 状态 | 依赖              |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 3.1.1 | 实现文件完整性检查     | 📋 | hit-core/download |
 | 3.1.2 | 检查 Shim 指向是否正确 | 📋 | hit-shim          |
 | 3.1.3 | 实现自动修复功能       | 📋 | hit-core/install  |
@@ -336,7 +336,7 @@ crates/
 ### 3.2 镜像源管理
 
 | 序号  | 任务           | 状态 | 依赖              |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 3.2.1 | 配置多镜像源   | 📋 | hit-common        |
 | 3.2.2 | 实现速度测试   | 📋 | hit-core/download |
 | 3.2.3 | 自动选择最快源 | 📋 | 3.2.2             |
@@ -346,7 +346,7 @@ crates/
 > ratatui 选型已在 TECH_STACK.md 确认，替换原 dialoguer 方案。
 
 | 序号  | 任务                     | 状态 | 依赖    |
-| ---- | ----- |
+| :--- | --- | :--: | --- |
 | 3.3.1 | 集成 TUI 交互界面（ratatui） | 📋 | ratatui |
 | 3.3.2 | 上下箭头选择，Enter 安装 | 📋 | 3.3.1   |
 

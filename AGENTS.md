@@ -11,22 +11,18 @@ Hit 是一个用 Rust 编写的现代 Windows 包管理器，完全兼容 Scoop 
 实现功能时请按需阅读 `docs/` 下的文档（使用 `@docs/<file>` 按需加载内容，避免一次性读取全部）：
 
 - `@docs/TODO.md` — 具体实现任务清单与进度（根目录）
-- `@docs/plan/ROADMAP.md` — 分阶段路线图（Phase 1-5）
-- `@docs/plan/PROJECT_STRUCTURE.md` — 项目整体结构与模块划分
-- `@docs/plan/FEATURES.md` — Hit 的功能特性清单与设计理念
+- `@docs/plan/PROJECT.md` — 项目描述：功能特性、目录结构、模块职责
 - `@docs/plan/TECH_STACK.md` — 各模块的核心依赖清单
 - `@docs/guides/DEV_FLOW.md` — 开发流程与构建/测试命令
-- `@docs/guides/CODING_GUIDELINES.md` — 编码规范
-- `@docs/guides/WINDOWS_NOTES.md` — Windows 符号链接、权限、注册表等特有注意事项
 - `@docs/spec/MANIFEST_FORMAT.md` — Scoop Manifest 格式规范及 Hit 扩展字段（兼容性实现必读）
 - `@docs/spec/REFERENCE_PROJECTS.md` — `ref/` 目录下参考项目（Scoop / Hok / Main）的用途说明
-- `@docs/notes/EUREKA.md` — 灵感速记（一句话点子，详细设计待展开）
+- `@docs/plan/EUREKA.md` — 灵感速记（一句话点子，详细设计待展开）
 
 > **行为基准**：Scoop 原版 PowerShell 源码位于 `ref/Scoop/`，Rust 架构参考为 `ref/Hok/`，manifest 兼容性测试参照 `ref/Main/`。
 
 ## 工作区结构
 
-项目计划为 Cargo workspace，包含约 10 个 crate 位于 `crates/` 目录下。新建 crate 遵循 `hit-<name>` 命名规范（如 `hit-cli`、`hit-core`、`hit-downloader`）。
+项目为 Cargo workspace，目前包含 5 个 crate 位于 `crates/` 目录下。新建 crate 遵循 `hit-<name>` 命名规范（如 `hit-cli`、`hit-core`）。
 
 ## Windows 特有注意事项
 

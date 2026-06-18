@@ -1,0 +1,13 @@
+docs: 修复跨文档不一致问题
+
+- AGENTS.md: crate 数量 10→5，引用列表删除不存在文件
+- OVERVIEW.md: 删除 ROADMAP.md / WINDOWS_NOTES.md 引用
+- README.md: FEATURES.md → PROJECT.md, PROJECT_STRUCTURE.md → PROJECT.md
+- TODO.md: 修正 1.11/1.12 编号顺序，修复表格分隔行(2列→4列)
+- PROJECT.md: "远期功能"表格补充 Phase 阶段标注
+- EUREKA.md: 删除对 FEATURES.md / ROADMAP.md 的引用
+- REVIEW_1.1.md: 文档列表和引用同步更新
+- DEV_FLOW.md / REFERENCE_PROJECTS.md / MANIFEST_FORMAT.md:
+  PROJECT_STRUCTURE.md → PROJECT.md
+
+Co-Authored-By: AtomCode (deepseek-v4-flash) <noreply@atomgit.com>

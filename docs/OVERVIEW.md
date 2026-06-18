@@ -13,13 +13,11 @@ docs/
 ├── plan/                 # 项目规划 —— 做什么、为什么做
 │   ├── PROJECT.md        # 项目描述：功能特性 + 目录结构 + 模块职责 + 数据布局
 │   ├── TODO.md           # 实现任务清单（Phase 1-3 权威，逐项追踪）
-│   ├── ROADMAP.md        # 路线图：阶段划分、里程碑、新增功能详解
 │   └── EUREKA.md         # 灵感速记：一句话点子 + 评审意见
 │
 ├── guides/               # 开发指南 —— 怎么做
 │   ├── DEV_FLOW.md       # 开发流程：初始化、构建、测试、发布
-│   ├── TECH_STACK.md     # 技术栈：依赖分析、库选择理由、备选方案对比
-│   └── WINDOWS_NOTES.md  # Windows 注意事项：符号链接、PATH、UAC
+│   └── TECH_STACK.md     # 技术栈：依赖分析、库选择理由、备选方案对比
 │
 ├── spec/                 # 规范 —— 兼容什么、参考什么
 │   ├── MANIFEST_FORMAT.md  # Manifest 清单格式（Scoop 兼容 + Hit 扩展）
@@ -38,13 +36,11 @@ docs/
 |------|------|------|
 | **PROJECT.md** | 项目的"README for developers"——描述功能、结构、模块、数据布局 | 新加入开发者、架构审查 |
 | **TODO.md** | **Phase 1-3 的权威任务清单**，逐项追踪完成状态 | 日常开发、进度跟踪 |
-| **ROADMAP.md** | 阶段划分与里程碑，含新增功能详解设计 | 规划评审 |
 | **EUREKA.md** | 灵感池 + 可行性评审。新想法先写到这里 | 任何时候有想法时 |
 | **DEV_FLOW.md** | 构建、测试、发布的具体命令 | 日常开发 |
 | **TECH_STACK.md** | 依赖分析、库选择理由、备选方案对比 | 架构决策 |
 | **MANIFEST_FORMAT.md** | Scoop 兼容的 JSON 格式 + Hit 扩展字段 | manifest 相关开发 |
 | **REFERENCE_PROJECTS.md** | 项目内参考源码的说明 | 学习参考 |
-| **WINDOWS_NOTES.md** | 符号链接、PATH 广播、UAC 等平台细节 | Windows 平台开发 |
 | **REVIEW_*.md** | 代码审查报告 | 审查后的决策跟进 |
 
 ---

@@ -205,17 +205,13 @@ Cargo.lock
 
 | 文件 | 内容 |
 |------|------|
-| PROJECT_STRUCTURE.md | 项目结构与模块说明 |
-| FEATURES.md | 功能特性 |
+| PROJECT.md | 项目描述：功能特性、目录结构、模块职责 |
 | TECH_STACK.md | 技术栈分析与评估 |
 | DEV_FLOW.md | 开发流程 |
 | MANIFEST_FORMAT.md | Manifest 清单格式 |
-| WINDOWS_NOTES.md | Windows 注意事项 |
-| ROADMAP.md | 路线图与新增功能详解 |
 | REFERENCE_PROJECTS.md | 参考项目 |
-| CODING_GUIDELINES.md | 编码规范 |
 | TODO.md | 实现任务清单 |
-| 对话.md | 需求讨论记录 |
+| EUREKA.md | 灵感速记 |
 
 结构完整，覆盖开发所需全部文档。
 
@@ -366,7 +362,7 @@ pub fn init(level: Level) {
 
 | # | 决策 | 状态 | 实施要点 |
 |---|------|:----:|----------|
-| 1️⃣ | LinkMode 简化：只用 Junction | ✅ | `config.rs` 删除 `LinkMode` 枚举与 `link_mode` 字段，新增 `root_path: Option<String>`；`lib.rs` 移除 re-export；`session.rs` 测试改断言 `no_junction=false`；`test-utils` 同步；联动 `PROJECT_STRUCTURE.md` / `WINDOWS_NOTES.md` / `TODO.md` 1.6.3（改为 junction 优先） |
+| 1️⃣ | LinkMode 简化：只用 Junction | ✅ | `config.rs` 删除 `LinkMode` 枚举与 `link_mode` 字段，新增 `root_path: Option<String>`；`lib.rs` 移除 re-export；`session.rs` 测试改断言 `no_junction=false`；`test-utils` 同步；联动 `PROJECT.md` / `TODO.md` 1.6.3（改为 junction 优先） |
 | 2️⃣ | 路径回退策略 | ✅ | `paths::root_path()` 实现 `HIT_ROOT` → `SCOOP` → `USERPROFILE`/`HOME` + `.hit` → panic；`session::PathCache::new(&config)` 把 `config.root_path` 优先级提升到最高（最终顺序：config.root_path > HIT_ROOT > SCOOP > USERPROFILE/HOME）；新增 7 个 paths 单元测试（含 `catch_unwind` 验证 panic 路径） |
 | 3️⃣ | PowerShell 安装脚本 | ✅ | `scripts/install-hit.ps1` ~200 行，PS 5.1 兼容（规避 `??` 语法）；`-Path`/`-Mirror`/`-Version`/`-Force`/`-FromLocal` 五参数；回退链、zip 下载解压、Scoop 兼容目录布局、`HKCU\Environment\Path` 注册、`WM_SETTINGCHANGE` 广播；README.md 新增 `irm https://get.hit.sh \| iex`；DEV_FLOW.md 新增第 5 节 |
 

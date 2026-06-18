@@ -1,0 +1,7 @@
+refactor(skills): 合并 code-reviewer 到 code-review，使用中文
+
+- code-review 原为编排 skill（加载子 skill），现内嵌 Rust 审查清单
+- 审查清单翻译为中文，整合 code-reviewer 全部检查项
+- 删除 code-reviewer 子 skill（SKILL.md + 目录）
+
+Co-Authored-By: AtomCode (deepseek-v4-flash) <noreply@atomgit.com>

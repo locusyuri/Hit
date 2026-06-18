@@ -2,12 +2,11 @@
 name: code-review
 description: >
   Hit 项目代码审查专用 skill。按 TODO.md 阶段对完成代码做结构化审查，
-  调用子 skill（code-reviewer / security-reviewer）获取专业意见，
-  按标准报告格式输出审查报告。
+  覆盖 Rust 代码质量、安全审计，按标准报告格式输出审查报告。
 license: MIT
 compatibility: Hit 项目
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
 allowed-tools: Bash(cargo:*) Bash(git:*) Read Write Edit Glob Grep
 user_invocable: true
 disable_model_invocation: false
@@ -17,15 +16,58 @@ disable_model_invocation: false
 
 按 TODO.md 中指定的 Phase/模块进行结构化代码审查。
 
+---
+
+## Rust 代码审查清单
+
+### 错误处理
+- 库代码使用 `thiserror` 定义错误类型，CLI 代码使用 `anyhow` 传播错误
+- 库代码优先用 `Result<T, AppError>`，避免 `unwrap()`/`expect()`
+- CLI 代码可使用 `.context()` / `.with_context()`（来自 anyhow）
+- CLI 输出给用户的错误消息使用中文
+
+### 命名规范与风格
+- 函数/变量用 `snake_case`，类型/trait/枚举用 `PascalCase`
+- 模块层次：`hit_xxx::submodule::function`
+- import 分组：标准库 → 外部 crate → 内部 crate → 当前 crate
+- 函数尽量控制在 50 行以内
+
+### 模块接口一致性
+- 跨 crate 类型实现 `Debug + Clone + PartialEq`
+- 公开 API 函数必须写文档注释（`///`）
+- 内部函数使用 `pub(crate)` 而非 `pub`
+
+### 性能
+- 优先用迭代器而非索引循环
+- 并行文件扫描用 `rayon::par_iter()`
+- 避免对大数据结构调用 `clone()`，优先用引用
+- 借用 vs 所有权不确定时用 `Cow<'_, str>`
+
+### 测试
+- 单元测试写在同文件 `#[cfg(test)] mod tests { ... }` 内
+- 集成测试放在 `tests/` 目录
+- 测试命名：`fn test_<函数名>_<场景>()`
+- 覆盖错误路径，不止是 happy path
+
+### 安全审查（整合自 security-reviewer）
+- 路径操作使用 `canonicalize()` 防止路径穿越
+- 子进程调用使用参数数组而非拼接字符串（防命令注入）
+- 符号链接/junction 操作前校验目标路径合法性
+- 注册表操作限制在 `HKCU` 范围，避免 `HKLM`（需提权）
+- 临时文件使用 `tempfile` crate 而非手动构造路径
+- 下载 URL 校验 scheme 为 `https://`，防止 protocol confusion
+
+---
+
 ## 工作流程
 
-### Step 0：调用子 skill 获取专业审查视角
+### Step 0：加载安全审查子 skill
 
-在正式开始之前，先加载以下子 skill 获取专业审查标准。这些 skill 会提供各个维度的
-审查清单，在后续分析代码时逐条对照：
+在正式开始之前，先加载 **security-reviewer** skill 获取安全审查清单：
 
-1. **code-reviewer** — Rust 代码质量、错误处理、模块接口、性能、测试规范
-2. **security-reviewer** — 安全漏洞（路径穿越、命令注入、注册表、符号链接等）
+```
+use_skill name: security-reviewer
+```
 
 ### Step 1：确认审查范围
 
@@ -67,12 +109,16 @@ cargo test -p <crate-name>
 - 变量替换/路径操作等逻辑是否正确
 - 测试是否覆盖真实 Scoop manifest fixture
 
-### Step 4：对照子 skill 的审查清单
+### Step 4：逐条对照审查清单
 
-在阅读代码过程中，对照 Step 0 加载的子 skill 逐项检查：
+在阅读代码过程中，逐条对照上方的审查清单：
 
-- **code-reviewer checklist**：错误处理、命名规范、模块接口、性能、测试
-- **security-reviewer scope**：路径穿越、命令注入、符号链接等
+- **错误处理** — HitError 使用、unwrap 避免、中文错误消息
+- **命名规范** — snake_case / PascalCase、import 分组
+- **模块接口** — pub/crate 可见性、doc 注释
+- **性能** — 迭代器、rayon、clone 避免
+- **测试** — 覆盖率、错误路径
+- **安全** — 路径穿越、命令注入、符号链接、注册表
 
 ### Step 5：输出审查报告
 
@@ -93,10 +139,10 @@ cargo test -p <crate-name>
 ```
 # 代码审查报告 — Phase <N> <模块名>
 
-**审查者**：AtomCode code-reviewer  
-**时间**：<日期>  
-**范围**：仅 TODO.md §<章节>（任务 <编号>）  
-**文件**：<涉及的文件列表>  
+**审查者**：AtomCode code-review
+**时间**：<日期>
+**范围**：仅 TODO.md §<章节>（任务 <编号>）
+**文件**：<涉及的文件列表>
 **基线**：`cargo check` ✅ | `cargo test` ✅ (N/N) | `cargo clippy` ✅
 
 ---

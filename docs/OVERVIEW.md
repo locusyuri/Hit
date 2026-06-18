@@ -34,13 +34,13 @@ docs/
 
 | 文档 | 定位 | 读者 |
 |------|------|------|
-| **PROJECT.md** | 项目的"README for developers"——描述功能、结构、模块、数据布局 | 新加入开发者、架构审查 |
-| **TODO.md** | **Phase 1-3 的权威任务清单**，逐项追踪完成状态 | 日常开发、进度跟踪 |
-| **EUREKA.md** | 灵感池 + 可行性评审。新想法先写到这里 | 任何时候有想法时 |
-| **DEV_FLOW.md** | 构建、测试、发布的具体命令 | 日常开发 |
-| **TECH_STACK.md** | 依赖分析、库选择理由、备选方案对比 | 架构决策 |
-| **MANIFEST_FORMAT.md** | Scoop 兼容的 JSON 格式 + Hit 扩展字段 | manifest 相关开发 |
-| **REFERENCE_PROJECTS.md** | 项目内参考源码的说明 | 学习参考 |
+| [**PROJECT.md**](plan/PROJECT.md) | 项目的"README for developers"——描述功能、结构、模块、数据布局 | 新加入开发者、架构审查 |
+| [**TODO.md**](plan/TODO.md) | **Phase 1-3 的权威任务清单**，逐项追踪完成状态 | 日常开发、进度跟踪 |
+| [**EUREKA.md**](plan/EUREKA.md) | 灵感池 + 可行性评审。新想法先写到这里 | 任何时候有想法时 |
+| [**DEV_FLOW.md**](guides/DEV_FLOW.md) | 构建、测试、发布的具体命令 | 日常开发 |
+| [**TECH_STACK.md**](guides/TECH_STACK.md) | 依赖分析、库选择理由、备选方案对比 | 架构决策 |
+| [**MANIFEST_FORMAT.md**](spec/MANIFEST_FORMAT.md) | Scoop 兼容的 JSON 格式 + Hit 扩展字段 | manifest 相关开发 |
+| [**REFERENCE_PROJECTS.md**](spec/REFERENCE_PROJECTS.md) | 项目内参考源码的说明 | 学习参考 |
 | **REVIEW_*.md** | 代码审查报告 | 审查后的决策跟进 |
 
 ---

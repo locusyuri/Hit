@@ -14,7 +14,7 @@
 ### Scoop PowerShell 模块 → Rust 模块映射
 
 | Scoop 模块           | 功能描述                     | 对应 Rust 位置           |
-
+|----------------------|------------------------------|--------------------------|
 | `lib/core.ps1`       | 基础工具、配置管理、路径处理 | `hit-common` crate       |
 | `lib/manifest.ps1`   | Manifest 解析与验证          | `hit-core::manifest`     |
 | `lib/install.ps1`    | 安装流程控制                 | `hit-core::install`      |
@@ -75,7 +75,7 @@ crates/
 #### 合并/拆分理由
 
 | 原 10-crate 方案 | 5-crate 方案处置 | 理由 |
-
+|-----------------|------------------|------|
 | `hit-manifest`   | 并入 `hit-core::manifest` | 解析与 install 强耦合，独立 crate 会反复协商 API |
 | `hit-bucket`     | 并入 `hit-core::bucket` | 操作仅被 install/search/update 调用，无需 pub 边界 |
 | `hit-downloader` | 并入 `hit-core::download` + `hit-core::hash` | 单一调用点 |
@@ -87,7 +87,7 @@ crates/
 ### Rust 优势利用
 
 | Rust 特性  | 应用场景             | 带来的好处                 |
-
+| :--- | --- | --- |
 | 类型安全   | Manifest 数据结构    | 编译期检查，避免运行时错误 |
 | 所有权系统 | 文件操作、资源管理   | 自动资源清理，无内存泄漏   |
 | 并发支持   | 并行下载、索引构建   | 提升性能                   |
@@ -357,7 +357,7 @@ crates/
 > 以下功能不在 Phase 1-3 范围内，详见 [PROJECT.md](./PROJECT.md) 远期功能章节。
 
 | 功能领域         | 简述                                  | ROADMAP   |
-
+| :--- | --- | --- |
 | SDK 多版本管理   | JDK/Python/Node.js 多版本共存与切换   | Phase 4   |
 | 深度卸载         | 注册表扫描、残留文件清理、进程终止    | Phase 4   |
 | 软件束 (Bundle)  | 一键安装多个软件，导出/导入配置       | Phase 4   |

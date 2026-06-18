@@ -16,7 +16,7 @@
 | Bucket | **gix** | Git 仓库操作 | ⬆️ **从 git2 迁移到 gix**（纯 Rust，编译快） |
 | Downloader | reqwest | HTTP 下载 | ✅ 功能最全，async/blocking 双模式 |
 | Downloader | blake3/sha2 | 哈希计算 | ✅ 合理选择 |
-| Compression | zip + sevenz-rust + tar + flate2 + lzma-rs | 压缩解压 | ✅ 分层方案（见下方详解） |
+| Compression | zip + sevenz-rust2 + tar + flate2 + lzma-rs | 压缩解压 | ✅ 分层方案（见下方详解） |
 | Store | 纯 JSON 文件 | 数据存储 | ✅ Phase 1-2 足够，后续可按需升级 |
 | Windows | windows | Windows API | ✅ 官方 SDK 绑定 |
 | Windows | winreg | 注册表操作 | ✅ 成熟稳定 |
@@ -87,7 +87,7 @@
 
 | 格式 | 方案 | 纯 Rust | 说明 |
 |------|------|:-------:|------|
-| `.7z` / 7z SFX `.exe` | `sevenz-rust` | ✅ | 现有依赖，支持 7z 格式提取 |
+| `.7z` / 7z SFX `.exe` | `sevenz-rust2` | ✅ | sevenz-rust 的活跃 fork，持续维护 |
 | `.zip` `.nupkg` `.appx` | `zip` v2 | ✅ | 现有依赖，nupkg/appx 即 ZIP |
 | `.tar.gz` / `.tgz` | `tar` + `flate2`（rust_backend） | ✅ | 纯 Rust deflate，避免 zlib C 依赖 |
 | `.tar.xz` / `.txz` | `tar` + `lzma-rs` | ✅ | 纯 Rust LZMA，慢一点但零 C 依赖 |

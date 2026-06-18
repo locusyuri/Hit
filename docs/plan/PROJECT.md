@@ -148,12 +148,10 @@ hit/
 │   ├── TODO.md                   # 实现任务清单（Phase 1-3 权威）
 │   ├── plan/                     # 项目规划
 │   │   ├── PROJECT.md            # 项目描述（本文件）
-│   │   ├── ROADMAP.md            # 路线图与新增功能详解
 │   │   └── EUREKA.md             # 灵感速记
 │   ├── guides/                   # 开发指南
 │   │   ├── DEV_FLOW.md           # 开发流程
-│   │   ├── TECH_STACK.md         # 技术栈清单
-│   │   └── WINDOWS_NOTES.md      # Windows 注意事项
+│   │   └── TECH_STACK.md         # 技术栈清单
 │   ├── spec/                     # 规范与参考
 │   │   ├── MANIFEST_FORMAT.md    # Manifest 清单格式
 │   │   └── REFERENCE_PROJECTS.md # 参考项目
@@ -182,7 +180,7 @@ hit/
 │   │       ├── bucket/           # Bucket 管理（git_client / index / registry）
 │   │       ├── download/         # HTTP 下载与缓存
 │   │       ├── hash/             # 哈希校验（sha256 / sha512 / blake3）
-│   │       ├── compress/         # 解压（zip / sevenz / tar / installer）
+│   │       ├── compress/         # 解压（zip / sevenz-rust2 / tar / flate2 / lzma-rs / installer）
 │   │       ├── store/            # JSON 文件存储（db.json）
 │   │       ├── install/          # 安装流水线（controller / transaction / persist / dependency）
 │   │       ├── shim_mgmt/        # Shim 创建/移除/枚举
@@ -245,10 +243,10 @@ hit/
 
 实现软件安装、卸载、版本管理等核心功能：
 - **manifest/**：Scoop Manifest 解析（schema / parser / validator / variables）
-- **bucket/**：Bucket git 仓库克隆/更新/索引（git2 + rayon 并行）
+- **bucket/**：Bucket git 仓库克隆/更新/索引（gix + rayon 并行）
 - **download/**：HTTP 下载与缓存（reqwest blocking），进度通过 EventBus 上报
 - **hash/**：sha256 / sha512 / blake3 流式哈希校验
-- **compress/**：ZIP / 7z / TAR 解压 + NSIS / Inno Setup / MSI 静默安装
+- **compress/**：分层解压策略——ZIP/7z/TAR/XZ 用纯 Rust 库（zip + sevenz-rust2 + tar + flate2 + lzma-rs），NSIS/Inno Setup 用静默运行，7z.exe 仅作 SFX 强制提取兜底
 - **store/**：JSON 文件存储（db.json 原子写入 + 版本迁移）
 - **install/**：安装流水线（controller / transaction / persist / dependency / hooks）
 - **shim_mgmt/**：Shim 创建/移除/枚举

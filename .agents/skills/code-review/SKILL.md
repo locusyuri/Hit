@@ -167,7 +167,7 @@ cargo test -p <crate-name>
 
 ## 模块结构总览
 
-```
+\`\`\`
 src/<module>/
 ├── mod.rs    # 模块入口
 ├── xxx.rs    # 子模块说明
@@ -175,7 +175,7 @@ src/<module>/
 tests/
 ├── test_xxx.rs
 └── ...
-```
+\`\`\`
 
 ---
 

@@ -54,7 +54,7 @@ crates/
 │       ├── shim_mgmt/    # Shim 创建/移除/枚举
 │       └── win/          # Windows 平台集成（#[cfg(windows)]）
 │                         #   process.rs（sysinfo）, registry.rs（winreg）,
-│                         #   fs.rs（symlink + junction fallback）,
+│                         #   fs.rs（junction + hard_link）,
 │                         #   uac.rs（ShellExecuteW RunAs）, env.rs（WM_SETTINGCHANGE）
 ├── hit-shim/             # Shim 代理（独立 bin，~200KB）
 │   └── src/
@@ -161,10 +161,10 @@ crates/
 | ----- | -------------------------------------------------------------------------------------- | ---- | ------ | -------- | ----- |
 | 1.6.1 | 实现进程管理（hit-core/src/win/process.rs，sysinfo crate）：检测运行中的进程；安装前检查目标进程是否在运行；支持优雅终止和强制终止 | 📋    | -      | 3天      | -     |
 | 1.6.2 | 实现注册表操作（hit-core/src/win/registry.rs，winreg crate）：读写 `HKCU\Environment`（PATH 管理）；读写 `HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall`（已安装软件检测） | 📋    | -      | 3天      | -     |
-| 1.6.3 | 实现文件系统操作（hit-core/src/win/fs.rs）：**junction 优先策略** —— 创建 `current` 目录时优先使用 `junction::create`（无需管理员或开发者模式）；仅在 `no_junction=false` 且用户显式要求 symlink 时才尝试 `std::os::windows::fs::symlink_dir`，失败仍回退到 junction；_file 失败后回退到 `std::fs::hard_link`；实现 remove_symlink / remove_junction 函数（自动检测文件/目录类型）；参考 `ref/Hok/crates/libscoop/src/internal/fs.rs:133-159` | 📋    | -      | 4天      | -     |
-| 1.6.4 | 实现 UAC 提权（hit-core/src/win/uac.rs）：`is_admin()` 检测当前是否管理员；`elevate_self()` 使用 ShellExecuteW + RunAs verb 重新以管理员启动自身；仅在需要 symlink（非 junction）时触发 | 📋    | -      | 5天      | -     |
+| 1.6.3 | 实现文件系统操作（hit-core/src/win/fs.rs）：**Junction + HardLink 单一策略**（与 Scoop 原版一致）—— 创建 `current` 目录链接时使用 `junction::create`（无需管理员或开发者模式）；`persist/` 下文件链接使用 `std::fs::hard_link`；当 `no_junction=true` 时跳过 `current` 链接创建，shim 直接指向具体版本路径；实现 remove_junction / remove_hardlink 函数（按链接类型清理） | 📋    | -      | 4天      | -     |
+| 1.6.4 | 实现 UAC 提权（hit-core/src/win/uac.rs）：`is_admin()` 检测当前是否管理员；`elevate_self()` 使用 ShellExecuteW + RunAs verb 重新以管理员启动自身；仅在写系统级路径（如 `Program Files`）或注册表 `HKLM` 时触发，链接创建本身不触发提权 | 📋    | -      | 5天      | -     |
 | 1.6.5 | 实现环境变量管理（hit-core/src/win/env.rs）：修改用户级 PATH（添加/移除 shims 目录）；广播 `WM_SETTINGCHANGE` 消息通知其他进程刷新环境变量（使用 SendMessageTimeoutW） | 📋    | -      | 3天      | -     |
-| 1.6.6 | 实现 `no_junction` 配置支持：Config 中添加 `no_junction: Option<bool>` 字段；当 `no_junction=true` 时，跳过 `current` 目录符号链接创建，shim 直接指向具体版本路径（兼容 Scoop 同名配置项） | 📋    | -      | 1天      | 1.1.5, 1.6.3 |
+| 1.6.6 | 实现 `no_junction` 配置支持：Config 中添加 `no_junction: Option<bool>` 字段；当 `no_junction=true` 时，跳过 `current` 目录 junction 链接创建，shim 直接指向具体版本路径（兼容 Scoop 同名配置项） | 📋    | -      | 1天      | 1.1.5, 1.6.3 |
 
 ### 1.7 hit-shim：Shim 代理机制（独立 bin）
 
@@ -186,7 +186,7 @@ crates/
 | 1.8.3 | 实现原子移动（rename，使用 Windows `MoveFileEx` API）                                  | 📋    | -      | 2天      | 1.6.3               |
 | 1.8.4 | 实现失败回滚机制：删除临时目录，保留已安装状态不变                                     | 📋    | -      | 3天      | 1.8.1               |
 | 1.8.5 | 实现安装流程控制器（hit-core/src/install/controller.rs）：编排完整安装流水线：解析 manifest → 解析依赖 → 下载 → 校验哈希 → 解压 → 创建 shim → 设置 persist → 更新 db.json → 执行 post_install 脚本；每步通过 EventBus 发送进度事件 | 📋    | -      | 7天      | 所有上游模块        |
-| 1.8.6 | 实现 Persist 持久化机制（hit-core/src/install/persist.rs）：使用 symlink_dir（含 junction fallback，依赖 1.6.3）将 app 目录中的配置文件/目录链接到 `~/.hit/persist/<app>/`；卸载时保留 persist 目录；版本切换时更新链接指向 | 📋    | -      | 5天      | 1.6.3               |
+| 1.8.6 | 实现 Persist 持久化机制（hit-core/src/install/persist.rs）：使用 junction（目录）+ hard_link（文件）将 app 目录中的配置文件/目录链接到 `~/.hit/persist/<app>/`（依赖 1.6.3，与 Scoop 原版一致）；卸载时保留 persist 目录；版本切换时更新链接指向 | 📋    | -      | 5天      | 1.6.3               |
 | 1.8.7 | 实现依赖解析器（hit-core/src/install/dependency.rs）：解析 Manifest 的 depends 字段    | 📋    | -      | 5天      | 1.2.2               |
 
 ### 1.9 hit-core/store：数据存储
@@ -272,7 +272,7 @@ crates/
 | 1.11.3 | 编写 Bucket 管理测试                                                                   | 📋    | -      | 3天      | hit-core/bucket      |
 | 1.11.4 | 编写安装卸载集成测试：使用 hit-test-utils 创建临时 Scoop root；测试完整安装流水线（manifest → download → extract → shim → db.json 更新）；测试卸载清理；测试安装失败回滚（模拟下载中断、哈希不匹配） | 📋    | -      | 5天      | hit-core/install     |
 | 1.11.5 | 编写 EventBus 事件流测试：验证安装流程中事件按正确顺序发送（ResolveStart → DownloadStart → DownloadProgress... → ExtractStart → CommitStart → SyncDone） | 📋    | -      | 2天      | 1.1.8                |
-| 1.11.6 | 编写 junction fallback 测试：在开发者模式关闭的环境下，验证 symlink_dir 正确回退到 `junction::create`；验证 `no_junction` 配置生效时跳过链接创建 | 📋    | -      | 2天      | 1.6.3, 1.6.6         |
+| 1.11.6 | 编写 junction / hard_link 测试：验证 `current` 目录通过 `junction::create` 正确创建；验证 persist 文件通过 `std::fs::hard_link` 正确创建；验证 `no_junction` 配置生效时跳过 `current` 链接创建、shim 直接指向版本路径 | 📋    | -      | 2天      | 1.6.3, 1.6.6         |
 
 ---
 
@@ -392,7 +392,7 @@ crates/
 | Core        | petgraph             | 依赖图                  |
 | Core        | rayon                | 并行索引构建            |
 | Core        | tempfile             | 事务临时目录            |
-| Core        | junction             | 目录连接（symlink 回退）|
+| Core        | junction             | 目录连接（current + persist 目录）|
 | Core        | sysinfo              | 进程检测                |
 | Core        | winreg               | 注册表操作              |
 | Core        | windows              | Windows API（UAC 等）   |
@@ -429,7 +429,7 @@ crates/
 - [ ] Persist 配置文件正确持久化
 - [ ] 安装失败时正确回滚
 - [ ] 自动检测并请求提权
-- [ ] junction fallback 在无开发者模式时正常创建目录连接
+- [ ] `current` 目录通过 junction 正确创建，persist 文件通过 hard_link 正确创建（无需管理员/开发者模式）
 
 ### Phase 2 完成标准
 - [ ] 成功切换软件版本
@@ -484,12 +484,12 @@ crates/
 - `Session::new()` 自动搜索配置文件路径，加载失败则使用默认配置
 - 参考：`ref/Hok/crates/libscoop/src/session.rs`
 
-### 7. Junction 回退策略（采纳 ref/Hok 设计）
-- `symlink_dir` 先尝试 Windows 原生符号链接，失败后自动回退到 `junction::create`
-- Junction 不需要管理员权限或开发者模式，适用于所有 Windows 版本
-- `symlink_file` 失败后回退到 `std::fs::hard_link`
-- 配置项 `no_junction: bool` 可禁用 junction 创建（兼容 Scoop 同名配置）
-- 参考：`ref/Hok/crates/libscoop/src/internal/fs.rs:133-159`
+### 7. 链接策略：Junction + HardLink（与 Scoop 原版一致）
+- 目录链接（如 `apps/<app>/current`、`persist/` 下目录）使用 `junction::create`，无需管理员权限或开发者模式
+- 文件链接（如 `persist/` 下文件）使用 `std::fs::hard_link`
+- 不引入符号链接（symlink）：Scoop 全代码库零 symlink 使用，且 symlink 需管理员或开发者模式，普通用户体验差
+- 配置项 `no_junction: bool` 可禁用 `current` 目录链接创建（兼容 Scoop 同名配置，此时 shim 直接指向版本路径）
+- 不提供"符号链接/自动回退/目录交接点"多模式可选配置，避免复杂度与兼容性风险
 
 ### 8. EventBus 事件总线（采纳 ref/Hok 设计）
 - 使用 `flume` crate 的 bounded channel（容量 20）实现双向事件传输

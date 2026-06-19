@@ -31,7 +31,12 @@ flume = "0.11"
 once_cell = "1"
 
 # hit-core
-git2 = "0.19"
+gix = { version = "0.84", default-features = false, features = [
+    "blocking-network-client",
+    "blocking-http-transport-reqwest",
+    "worktree-mutation",
+    "sha1",
+] }
 reqwest = { version = "0.12", features = ["blocking"] }
 sha2 = "0.10"
 blake3 = "1"

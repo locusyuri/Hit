@@ -12,3 +12,4 @@
 //! - `win/`：Windows 平台集成（`#[cfg(windows)]`）
 
 pub mod manifest;
+pub mod bucket;

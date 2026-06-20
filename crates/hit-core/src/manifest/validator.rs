@@ -307,7 +307,7 @@ fn hash_regex() -> &'static Regex {
     static RE: OnceLock<Regex> = OnceLock::new();
     RE.get_or_init(|| {
         Regex::new(
-            r"^(?:[a-fA-F0-9]{40}|[a-fA-F0-9]{64}|[a-fA-F0-9]{128}|md5:[a-fA-F0-9]{32}|sha1:[a-fA-F0-9]{40}|sha256:[a-fA-F0-9]{64}|sha512:[a-fA-F0-9]{128})$",
+            r"^(?:[a-fA-F0-9]{40}|[a-fA-F0-9]{64}|[a-fA-F0-9]{128}|md5:[a-fA-F0-9]{32}|sha1:[a-fA-F0-9]{40}|sha256:[a-fA-F0-9]{64}|sha512:[a-fA-F0-9]{128}|blake3:[a-fA-F0-9]{64})$",
         )
         .expect("hash regex 应能编译")
     })

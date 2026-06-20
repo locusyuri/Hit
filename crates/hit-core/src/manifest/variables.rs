@@ -243,7 +243,7 @@ pub fn autoupdate_version_vars(av: &AutoupdateVars) -> VarMap {
     m
 }
 
-/// 展开 hash 正则模板：`$md5` / `$sha1` / `$sha256` / `$sha512` / `$checksum` / `$base64`。
+/// 展开 hash 正则模板：`$md5` / `$sha1` / `$sha256` / `$sha512` / `$blake3` / `$checksum` / `$base64`。
 ///
 /// 用于 `find_hash_in_textfile` 等场景，将占位符展开为正则捕获组。
 pub fn hash_regex_templates(pattern: &str) -> String {
@@ -252,6 +252,7 @@ pub fn hash_regex_templates(pattern: &str) -> String {
         .replace("$sha1", "([a-fA-F0-9]{40})")
         .replace("$sha256", "([a-fA-F0-9]{64})")
         .replace("$sha512", "([a-fA-F0-9]{128})")
+        .replace("$blake3", "([a-fA-F0-9]{64})")
         .replace("$checksum", "([a-fA-F0-9]{32,128})")
         .replace("$base64", "([a-zA-Z0-9+/=]{24,88})")
 }

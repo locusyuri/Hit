@@ -130,8 +130,8 @@ crates/
 | 序号  | 任务                                                                                   | 状态 | 依赖  |
 | :--- | --- | :--: | --- |
 | 1.3.1 | 实现 Git 仓库克隆（hit-core/src/bucket/git_client.rs，gix crate）：clone with progress；支持 proxy 配置（从 Session config 读取）；进度通过 EventBus 发送 `BucketUpdateProgress` 事件；**默认浅克隆（depth=1）**，支持 `--full-clone` 切换 | ✅ | 1.1.7, 1.1.8 |
-| 1.3.2 | 实现 Bucket 更新（git pull）                                                           | 📋 | 1.3.1 |
-| 1.3.3 | 实现 Bucket 列表管理                                                                   | 📋 | 1.3.1 |
+| 1.3.2 | 实现 Bucket 更新（git pull）                                                           | ✅ | 1.3.1 |
+| 1.3.3 | 实现 Bucket 列表管理                                                                   | ✅ | 1.3.1 |
 | 1.3.4 | 解析 bucket.json 元数据                                                                | 📋 | 1.2.2 |
 | 1.3.5 | 默认添加 Scoop 官方 bucket（main, extras）                                             | 📋 | 1.3.1 |
 | 1.3.6 | 构建软件索引（hit-core/src/bucket/index.rs）：遍历 bucket 目录下所有 .json 文件（rayon par_bridge 并行），解析为 Manifest 摘要（name + version + description），存入内存 `HashMap<String, Vec<PackageSummary>>` | 📋 | 1.2.2 |

@@ -151,3 +151,26 @@ if !opts.full_clone {
 **Phase 1.3（hit-core/bucket：Scoop Bucket 仓库支持）通过审查，可以关闭。**
 
 gix 的集成质量高，`ProxyGuard` RAII 模式是亮点。`pull_bucket` 的删除重克隆策略是 MVP 阶段的务实选择。索引构建使用 rayon 并行解析保证了搜索性能。36 个测试覆盖充分，4 个网络测试正确标注 `#[ignore]`。
+
+---
+
+# 报告回执
+
+**审查时间**：2026-06-20  
+**回执人**：QoderCN（代码作者）
+
+## 逐项核实
+
+| # | 问题 | 核实结论 | 处理 |
+|---|------|----------|------|
+| 1 | `pull_bucket()` 使用删除重克隆 | 🟡 **已知设计取舍** — 删除重克隆在 MVP 阶段简单可靠，避免 gix fetch+checkout API 的 merge/refspec 复杂性；Phase 2 可优化为增量 `gix::remote::fetch` + `force fetch` | 不改（Phase 2） |
+| 2 | `pull_bucket()` 丢失本地未推送修改 | 🟢 **已确认无风险** — bucket 目录由 Hit 管理，用户不会在其中编辑文件；Scoop 同理 | 不改 |
+| 3 | KNOWN_BUCKETS 缺少 `versions` | ❌ **审查有误** — `versions` 已包含在 `KNOWN_BUCKETS` 中（`types.rs:224`），三个 bucket（main/extras/versions）均已配置 | 不改 |
+| 4 | `build_index` 无进度事件上报 | 🟢 **已知局限** — 当前为内存全量扫描，大 bucket 下可能有感知延迟；Phase 2 可通过 EventBus 上报 `BucketUpdateProgress` 事件 | 不改（Phase 2） |
+
+## 验证
+
+修复后全量验证通过：
+
+- `cargo test --workspace` — 179/179 ✅（4 network ignored）
+- `cargo clippy -p hit-core --all-targets` — 0 warnings ✅

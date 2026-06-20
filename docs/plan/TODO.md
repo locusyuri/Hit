@@ -140,7 +140,7 @@ crates/
 
 | 序号  | 任务                                                                                   | 状态 | 依赖  |
 | :--- | --- | :--: | --- |
-| 1.4.1 | 实现 HTTP 下载器（hit-core/src/download/http.rs，reqwest blocking client）：支持 proxy 配置（Session config）；下载进度通过 EventBus 发送 `DownloadProgress` 事件（已下载字节/总字节/速率） | 📋 | 1.1.7, 1.1.8 |
+| 1.4.1 | 实现 HTTP 下载器（hit-core/src/download/http.rs，reqwest blocking client）：支持 proxy 配置（Session config）；下载进度通过 EventBus 发送 `DownloadProgress` 事件（已下载字节/总字节/速率） | ✅ | 1.1.7, 1.1.8 |
 | 1.4.2 | 实现缓存管理（hit-core/src/download/cache.rs）                                         | 📋 | 1.4.1 |
 | 1.4.3 | 实现哈希校验（hit-core/src/hash/mod.rs）：支持 sha256、sha512、blake3；流式计算（避免大文件内存问题）；校验失败返回 `HashMismatch` 错误（含 expected/actual/path 上下文） | 📋 | -     |
 

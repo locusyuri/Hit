@@ -15,6 +15,7 @@ regex = { workspace = true }
 url = { workspace = true }
 gix = { workspace = true }
 rayon = { workspace = true }
+reqwest = { workspace = true }
 
 [dev-dependencies]
 tempfile = { workspace = true }

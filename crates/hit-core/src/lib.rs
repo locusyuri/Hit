@@ -13,3 +13,4 @@
 
 pub mod manifest;
 pub mod bucket;
+pub mod download;

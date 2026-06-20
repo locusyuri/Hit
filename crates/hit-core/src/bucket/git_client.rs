@@ -141,6 +141,69 @@ pub fn clone_bucket(
     Ok(target)
 }
 
+/// 更新已有 Bucket 仓库
+///
+/// 读取远程 URL 后重新浅克隆（覆盖目录）。Bucket 仓库无本地修改需求，
+/// 此策略简单可靠，浅克隆带宽开销可控。
+///
+/// # 参数
+/// - `session`：会话上下文
+/// - `name`：bucket 名称
+/// - `should_interrupt`：中断信号
+///
+/// # 返回
+/// 本地仓库路径
+pub fn pull_bucket(
+    session: &Session,
+    name: &str,
+    should_interrupt: &AtomicBool,
+) -> Result<PathBuf> {
+    let target = session.buckets_path().join(name);
+
+    // 前置检查：目标目录必须存在
+    if !target.exists() {
+        return Err(HitError::Bucket {
+            bucket: name.into(),
+            message: "bucket 目录不存在".into(),
+        });
+    }
+
+    // 读取 remote URL（必须是 git 仓库）
+    let remote_url = {
+        let repo = gix::open(&target).map_err(|e| HitError::Bucket {
+            bucket: name.into(),
+            message: format!("无法打开 git 仓库：{e}"),
+        })?;
+        let remote = repo.find_remote("origin").map_err(|e| HitError::Bucket {
+            bucket: name.into(),
+            message: format!("无法读取 origin：{e}"),
+        })?;
+        remote
+            .url(gix::remote::Direction::Fetch)
+            .map(|url| url.to_bstring().to_string())
+            .ok_or_else(|| HitError::Bucket {
+                bucket: name.into(),
+                message: "origin 无 fetch URL".into(),
+            })?
+    };
+
+    session.emit(Event::LogInfo {
+        message: format!("正在更新 bucket '{name}'..."),
+    });
+
+    // 删除现有目录后重新浅克隆
+    std::fs::remove_dir_all(&target)
+        .map_err(|e| HitError::io("删除旧 bucket 目录", e))?;
+
+    clone_bucket(
+        session,
+        name,
+        &remote_url,
+        &CloneOptions::default(),
+        should_interrupt,
+    )
+}
+
 /// 将 gix 克隆错误转换为 `HitError::Bucket`
 fn gix_clone_err(name: &str, e: impl std::fmt::Display) -> HitError {
     HitError::Bucket {
@@ -268,5 +331,69 @@ mod tests {
         let path = result.expect("完整克隆应成功");
         assert!(path.join(".git").exists(), "应包含 .git 目录");
         assert!(!path.join(".git/shallow").exists(), "完整克隆不应有 .git/shallow 文件");
+    }
+
+    #[test]
+    fn pull_nonexistent_bucket_errors() {
+        let dir = tempfile::tempdir().unwrap();
+        let config = hit_common::config::HitConfig {
+            root_path: Some(dir.path().to_string_lossy().into()),
+            ..Default::default()
+        };
+        let session = Session::with_config(config);
+        let interrupt = AtomicBool::new(false);
+
+        let result = pull_bucket(&session, "nonexistent", &interrupt);
+        assert!(result.is_err());
+        let msg = result.unwrap_err().to_string();
+        assert!(msg.contains("不存在"), "错误应提及目录不存在：{msg}");
+    }
+
+    #[test]
+    fn pull_non_git_dir_errors() {
+        let dir = tempfile::tempdir().unwrap();
+        let bucket_dir = dir.path().join("buckets").join("not-git");
+        std::fs::create_dir_all(&bucket_dir).unwrap();
+        std::fs::write(bucket_dir.join("file.txt"), "content").unwrap();
+
+        let config = hit_common::config::HitConfig {
+            root_path: Some(dir.path().to_string_lossy().into()),
+            ..Default::default()
+        };
+        let session = Session::with_config(config);
+        let interrupt = AtomicBool::new(false);
+
+        let result = pull_bucket(&session, "not-git", &interrupt);
+        assert!(result.is_err());
+        let msg = result.unwrap_err().to_string();
+        assert!(
+            msg.contains("git 仓库") || msg.contains("git"),
+            "错误应提及 git 仓库：{msg}"
+        );
+    }
+
+    #[test]
+    #[ignore = "需要网络访问"]
+    fn pull_updates_shallow_repo() {
+        let dir = tempfile::tempdir().unwrap();
+        let config = hit_common::config::HitConfig {
+            root_path: Some(dir.path().to_string_lossy().into()),
+            ..Default::default()
+        };
+        let session = Session::with_config(config);
+        let interrupt = AtomicBool::new(false);
+
+        clone_bucket(
+            &session,
+            "main",
+            "https://github.com/ScoopInstaller/Main.git",
+            &CloneOptions::default(),
+            &interrupt,
+        )
+        .expect("克隆应成功");
+
+        let path = pull_bucket(&session, "main", &interrupt).expect("pull 应成功");
+        assert!(path.join(".git").exists());
+        assert!(path.join(".git/shallow").exists(), "pull 后仍应为浅克隆");
     }
 }

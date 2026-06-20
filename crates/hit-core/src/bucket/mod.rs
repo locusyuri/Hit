@@ -4,4 +4,7 @@ pub mod git_client;
 mod types;
 
 pub use git_client::{clone_bucket, pull_bucket, CloneOptions};
-pub use types::{list_buckets, update_all_buckets, Bucket, UpdateOutcome, UpdateResult};
+pub use types::{
+    add_default_buckets, known_buckets, list_buckets, resolve_known_bucket, update_all_buckets,
+    AddOutcome, AddResult, Bucket, BucketMetadata, UpdateOutcome, UpdateResult,
+};

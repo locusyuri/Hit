@@ -4,8 +4,10 @@
 //! manifest 计数等查询方法。`list_buckets` 枚举本地 bucket，
 //! `update_all_buckets` 编排批量更新。
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::atomic::AtomicBool;
+
+use serde::{Deserialize, Serialize};
 
 use hit_common::error::{HitError, Result};
 use hit_common::event::Event;
@@ -20,6 +22,25 @@ pub struct Bucket {
     pub name: String,
     /// 本地路径 `<buckets_path>/<name>/`
     pub path: PathBuf,
+    /// bucket.json 元数据（文件不存在或解析失败时为 None）
+    pub metadata: Option<BucketMetadata>,
+}
+
+/// Bucket 元数据（对应 bucket.json）
+///
+/// Hit 扩展概念：bucket 仓库根目录下的 `bucket.json` 文件，
+/// 描述 bucket 自身信息。Scoop 无此标准，不影响兼容性。
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(default)]
+pub struct BucketMetadata {
+    /// Bucket 显示名称
+    pub name: String,
+    /// Bucket 描述
+    pub description: String,
+    /// Bucket 维护者
+    pub maintainer: Option<String>,
+    /// Bucket 主页 URL
+    pub homepage: Option<String>,
 }
 
 /// 单个 bucket 更新结果
@@ -43,12 +64,21 @@ pub enum UpdateOutcome {
 }
 
 impl Bucket {
-    /// 从目录名和路径构造
+    /// 从目录名和路径构造（自动尝试加载 `bucket.json` 元数据）
     pub fn new(name: impl Into<String>, path: PathBuf) -> Self {
+        let metadata = Self::load_metadata(&path);
         Self {
             name: name.into(),
             path,
+            metadata,
         }
+    }
+
+    /// 尝试从 `<path>/bucket.json` 加载元数据
+    fn load_metadata(path: &Path) -> Option<BucketMetadata> {
+        let file = path.join("bucket.json");
+        let content = std::fs::read_to_string(&file).ok()?;
+        sonic_rs::from_str(&content).ok()
     }
 
     /// 读取 origin remote URL（通过 gix）
@@ -74,7 +104,10 @@ impl Bucket {
         for entry in entries {
             let entry = entry.map_err(|e| HitError::io("读取目录项", e))?;
             let path = entry.path();
-            if path.is_file() && path.extension().is_some_and(|ext| ext == "json") {
+            if path.is_file()
+                && path.extension().is_some_and(|ext| ext == "json")
+                && path.file_name().is_some_and(|f| f != "bucket.json")
+            {
                 count += 1;
             }
         }
@@ -176,6 +209,107 @@ pub fn update_all_buckets(
             name: bucket.name.clone(),
             outcome,
         });
+    }
+
+    Ok(results)
+}
+
+/// 已知 Scoop 官方 Bucket（名称 → Git URL）
+///
+/// 参考 Scoop `buckets.json`（10 个）和 Hok `BUILTIN_BUCKET_LIST`（7 个），
+/// Hit 选取最常用的 3 个作为默认推荐。
+pub static KNOWN_BUCKETS: &[(&str, &str)] = &[
+    ("main", "https://github.com/ScoopInstaller/Main"),
+    ("extras", "https://github.com/ScoopInstaller/Extras"),
+    ("versions", "https://github.com/ScoopInstaller/Versions"),
+];
+
+/// 查询已知 bucket URL（按名称）
+pub fn resolve_known_bucket(name: &str) -> Option<&'static str> {
+    KNOWN_BUCKETS
+        .iter()
+        .find(|(n, _)| *n == name)
+        .map(|(_, url)| *url)
+}
+
+/// 返回所有已知 bucket 列表
+pub fn known_buckets() -> &'static [(&'static str, &'static str)] {
+    KNOWN_BUCKETS
+}
+
+/// 单个 bucket 添加结果
+#[derive(Debug)]
+pub struct AddResult {
+    /// bucket 名称
+    pub name: String,
+    /// 添加结果
+    pub outcome: AddOutcome,
+}
+
+/// Bucket 添加结果枚举
+#[derive(Debug)]
+pub enum AddOutcome {
+    /// 添加成功
+    Added,
+    /// 已存在（跳过）
+    Skipped,
+    /// 添加失败（携带错误描述）
+    Failed(String),
+}
+
+/// 添加所有默认官方 Bucket（跳过已存在的）
+pub fn add_default_buckets(
+    session: &Session,
+    should_interrupt: &AtomicBool,
+) -> Result<Vec<AddResult>> {
+    let buckets_dir = session.buckets_path();
+    let mut results = Vec::with_capacity(KNOWN_BUCKETS.len());
+
+    for (name, url) in KNOWN_BUCKETS {
+        if should_interrupt.load(std::sync::atomic::Ordering::Relaxed) {
+            break;
+        }
+
+        let target = buckets_dir.join(name);
+        if target.exists() {
+            session.emit(Event::LogInfo {
+                message: format!("跳过 '{name}'（已存在）"),
+            });
+            results.push(AddResult {
+                name: name.to_string(),
+                outcome: AddOutcome::Skipped,
+            });
+            continue;
+        }
+
+        session.emit(Event::LogInfo {
+            message: format!("正在添加 bucket '{name}'..."),
+        });
+
+        match git_client::clone_bucket(
+            session,
+            name,
+            url,
+            &git_client::CloneOptions::default(),
+            should_interrupt,
+        ) {
+            Ok(_) => {
+                results.push(AddResult {
+                    name: name.to_string(),
+                    outcome: AddOutcome::Added,
+                });
+            }
+            Err(e) => {
+                let msg = e.to_string();
+                session.emit(Event::LogWarn {
+                    message: format!("添加 '{name}' 失败：{msg}"),
+                });
+                results.push(AddResult {
+                    name: name.to_string(),
+                    outcome: AddOutcome::Failed(msg),
+                });
+            }
+        }
     }
 
     Ok(results)
@@ -310,5 +444,126 @@ mod tests {
             remote.unwrap().contains("ScoopInstaller/Main"),
             "remote URL 应包含仓库名"
         );
+    }
+
+    // ── BucketMetadata 测试 ──
+
+    #[test]
+    fn bucket_metadata_parse_valid() {
+        let dir = tempfile::tempdir().unwrap();
+        let bucket_dir = dir.path().join("test-bucket");
+        std::fs::create_dir_all(&bucket_dir).unwrap();
+        std::fs::write(
+            bucket_dir.join("bucket.json"),
+            r#"{"name":"Test","description":"A test bucket","maintainer":"alice","homepage":"https://example.com"}"#,
+        )
+        .unwrap();
+
+        let bucket = Bucket::new("test-bucket", bucket_dir);
+        let meta = bucket.metadata.expect("应成功解析 metadata");
+        assert_eq!(meta.name, "Test");
+        assert_eq!(meta.description, "A test bucket");
+        assert_eq!(meta.maintainer.as_deref(), Some("alice"));
+        assert_eq!(meta.homepage.as_deref(), Some("https://example.com"));
+    }
+
+    #[test]
+    fn bucket_metadata_missing_returns_none() {
+        let dir = tempfile::tempdir().unwrap();
+        let bucket_dir = dir.path().join("no-meta");
+        std::fs::create_dir_all(&bucket_dir).unwrap();
+
+        let bucket = Bucket::new("no-meta", bucket_dir);
+        assert!(bucket.metadata.is_none());
+    }
+
+    #[test]
+    fn bucket_metadata_malformed_returns_none() {
+        let dir = tempfile::tempdir().unwrap();
+        let bucket_dir = dir.path().join("bad-meta");
+        std::fs::create_dir_all(&bucket_dir).unwrap();
+        std::fs::write(bucket_dir.join("bucket.json"), "not json at all").unwrap();
+
+        let bucket = Bucket::new("bad-meta", bucket_dir);
+        assert!(bucket.metadata.is_none());
+    }
+
+    #[test]
+    fn bucket_metadata_partial_fields() {
+        let dir = tempfile::tempdir().unwrap();
+        let bucket_dir = dir.path().join("partial");
+        std::fs::create_dir_all(&bucket_dir).unwrap();
+        // 只有必填字段（name/description 有默认空字符串），无可选字段
+        std::fs::write(bucket_dir.join("bucket.json"), r#"{"name":"P"}"#).unwrap();
+
+        let bucket = Bucket::new("partial", bucket_dir);
+        let meta = bucket.metadata.expect("应成功解析");
+        assert_eq!(meta.name, "P");
+        assert_eq!(meta.description, "");
+        assert!(meta.maintainer.is_none());
+    }
+
+    #[test]
+    fn manifest_count_excludes_bucket_json() {
+        let dir = tempfile::tempdir().unwrap();
+        let bucket_dir = dir.path().join("my-bucket");
+        std::fs::create_dir_all(&bucket_dir).unwrap();
+        std::fs::write(bucket_dir.join("bucket.json"), r#"{"name":"x"}"#).unwrap();
+        std::fs::write(bucket_dir.join("git.json"), "{}").unwrap();
+        std::fs::write(bucket_dir.join("python.json"), "{}").unwrap();
+
+        let bucket = Bucket::new("my-bucket", bucket_dir);
+        assert_eq!(bucket.manifest_count().unwrap(), 2);
+    }
+
+    // ── KNOWN_BUCKETS 测试 ──
+
+    #[test]
+    fn resolve_known_bucket_main() {
+        let url = resolve_known_bucket("main");
+        assert_eq!(url, Some("https://github.com/ScoopInstaller/Main"));
+    }
+
+    #[test]
+    fn resolve_known_bucket_extras() {
+        let url = resolve_known_bucket("extras");
+        assert_eq!(url, Some("https://github.com/ScoopInstaller/Extras"));
+    }
+
+    #[test]
+    fn resolve_known_bucket_unknown() {
+        assert_eq!(resolve_known_bucket("nonexistent"), None);
+    }
+
+    #[test]
+    fn known_buckets_returns_three() {
+        let list = known_buckets();
+        assert_eq!(list.len(), 3);
+        assert!(list.iter().any(|(n, _)| *n == "main"));
+        assert!(list.iter().any(|(n, _)| *n == "extras"));
+        assert!(list.iter().any(|(n, _)| *n == "versions"));
+    }
+
+    #[test]
+    fn add_default_buckets_skips_existing() {
+        let dir = tempfile::tempdir().unwrap();
+        let buckets_dir = dir.path().join("buckets");
+        // 预先创建所有已知 bucket 目录（全部跳过，无需网络）
+        for (name, _) in KNOWN_BUCKETS {
+            std::fs::create_dir_all(buckets_dir.join(name)).unwrap();
+        }
+
+        let session = test_session(dir.path());
+        let interrupt = AtomicBool::new(false);
+
+        let results = add_default_buckets(&session, &interrupt).unwrap();
+        assert_eq!(results.len(), KNOWN_BUCKETS.len());
+        for result in &results {
+            assert!(
+                matches!(result.outcome, AddOutcome::Skipped),
+                "'{}' 应被跳过",
+                result.name
+            );
+        }
     }
 }

@@ -134,7 +134,7 @@ crates/
 | 1.3.3 | 实现 Bucket 列表管理                                                                   | ✅ | 1.3.1 |
 | 1.3.4 | 解析 bucket.json 元数据                                                                | ✅ | 1.2.2 |
 | 1.3.5 | 默认添加 Scoop 官方 bucket（main, extras）                                             | ✅ | 1.3.1 |
-| 1.3.6 | 构建软件索引（hit-core/src/bucket/index.rs）：遍历 bucket 目录下所有 .json 文件（rayon par_bridge 并行），解析为 Manifest 摘要（name + version + description），存入内存 `HashMap<String, Vec<PackageSummary>>` | 📋 | 1.2.2 |
+| 1.3.6 | 构建软件索引（hit-core/src/bucket/index.rs）：遍历 bucket 目录下所有 .json 文件（rayon par_bridge 并行），解析为 Manifest 摘要（name + version + description），存入内存 `HashMap<String, Vec<PackageSummary>>` | ✅ | 1.2.2 |
 
 ### 1.4 hit-core/download：下载与哈希校验
 

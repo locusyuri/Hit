@@ -150,10 +150,10 @@ crates/
 
 | 序号  | 任务                                                                                   | 状态 | 依赖 |
 | :--- | --- | :--: | --- |
-| 1.5.1 | 实现 ZIP 解压（hit-core/src/compress/zip.rs，zip crate）                               | 📋 | -    |
-| 1.5.2 | 实现 7z 解压（hit-core/src/compress/sevenz.rs，sevenz-rust2）                           | 📋 | -    |
-| 1.5.3 | 实现 TAR 解压（hit-core/src/compress/tar.rs，tar + flate2）                            | 📋 | -    |
-| 1.5.4 | 支持安装程序处理（hit-core/src/compress/installer.rs）：NSIS 静默安装（/S flag）、Inno Setup 静默安装（/VERYSILENT）、MSI 安装（msiexec /qn）；通过 Session config 控制是否使用 lessmsi 提取 MSI | 📋 | -    |
+| 1.5.1 | 实现 ZIP 解压（hit-core/src/compress/zip.rs，zip crate）                               | ✅ | -    |
+| 1.5.2 | 实现 7z 解压（hit-core/src/compress/sevenz.rs，sevenz-rust2）                           | ✅ | -    |
+| 1.5.3 | 实现 TAR 解压（hit-core/src/compress/tar.rs，tar + flate2）                            | ✅ | -    |
+| 1.5.4 | 支持安装程序处理（hit-core/src/compress/installer.rs）：NSIS 静默安装（/S flag）、Inno Setup 静默安装（/VERYSILENT）、MSI 安装（msiexec /qn）；通过 Session config 控制是否使用 lessmsi 提取 MSI | ✅ | -    |
 
 ### 1.6 hit-core/win：Windows 平台集成
 

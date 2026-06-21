@@ -15,3 +15,4 @@ pub mod manifest;
 pub mod bucket;
 pub mod download;
 pub mod hash;
+pub mod compress;

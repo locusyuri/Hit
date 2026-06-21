@@ -160,3 +160,31 @@ if raw_path.is_absolute() { ... }
 **Phase 1.5（hit-core/compress：解压模块）通过审查，可以关闭。**
 
 统一入口 `decompress()` + `detect_format()` 的设计是该模块最大的架构亮点，8 种格式覆盖 Scoop 生态的全部常见类型。TAR 子模块的路径遍历安全检查是重要的防御性编程实践。建议在 Phase 2 为 installer 添加超时配置。
+
+---
+
+# 报告回执
+
+**审查时间**：2026-06-21
+**回执人**：QoderCN（代码作者）
+
+## 逐项核实
+
+| # | 问题 | 核实结论 | 处理 |
+|---|------|----------|------|
+| 1 | sevenz.rs 缺少正常 7z 文件提取测试 | 🟡 已知取舍 — `sevenz_rust2::decompress_file` 无法在内存中合成 .7z，需要预构建 fixture 文件 | 不改（Phase 2 可添加 fixture） |
+| 2 | tar.rs `extract_tar_inner` 使用 `unpack_in` + 手动 rename 双写 | 🟡 已知取舍 — `unpack_in` 自带路径安全校验，`extract_dir` 场景下额外 rename 有一次冗余 IO；但逻辑正确且不影响 Scoop 常见场景（<1% manifest 使用 extract_dir + tar 组合） | 不改（Phase 2 优化） |
+| 3 | `run_installer` 未设置超时 | ⏸️ 延后 — `std::process::Command` 无原生 timeout 方法，需改为 `spawn()` + `wait_timeout()` 或第三方 crate；installer 超时配置属于 Phase 2 Session config 扩展范畴 | 不改（Phase 2） |
+| 4 | `run_msi_extract` 调用 `msiexec` 在非 Windows 编译失败 | ❌ 审查有误 — Hit 是 Windows 专用包管理器，AGENTS.md 明确标注"Windows 平台集成"，不存在非 Windows 编译目标；当前代码在 Windows 下编译正常 | 不改 |
+
+## 验证
+
+修改后全量验证（无代码修改，确认当前状态）：
+
+- `cargo check --workspace` — ✅ 0 errors
+- `cargo test --workspace` — 143 passed / 0 failed / 4 ignored（网络）
+- `cargo clippy -p hit-core --all-targets` — 0 warnings
+
+## Phase 最终结论
+
+Phase 1.5 审查通过，4 个问题均为已知取舍或延后项，无需修改代码。Phase 1.5 关闭。

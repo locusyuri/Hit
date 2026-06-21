@@ -16,3 +16,6 @@ pub mod bucket;
 pub mod download;
 pub mod hash;
 pub mod compress;
+
+#[cfg(windows)]
+pub mod win;

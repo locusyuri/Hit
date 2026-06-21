@@ -141,7 +141,6 @@ if raw_path.is_absolute() { ... }
 | 1 | 1.5.2 | `sevenz.rs` 缺少正常 7z 文件提取测试 | 🟢 微小 | 7z 测试文件构造复杂，可接受 |
 | 2 | 1.5.3 | `tar.rs` 中 `extract_tar_inner` 同时使用了 `unpack_in` + 手动 rename 两套机制 | 🟡 中等 | unpack_in 解压到原始路径后手动移动，逻辑正确但有性能损耗。建议在 extract_dir 模式下直接用 `entry.path()` 拼接目标路径 |
 | 3 | 1.5.4 | `run_installer` 未设置超时，安装程序可能无限阻塞 | 🟡 中等 | 建议添加 `cmd.timeout(Duration::from_secs(600))` |
-| 4 | 1.5.4 | `run_msi_extract` 调用 `msiexec` 在非 Windows 平台编译失败 | 🟢 微小 | 可通过 `#[cfg(windows)]` 条件编译隔离——但不影响当前开发 |
 
 ---
 

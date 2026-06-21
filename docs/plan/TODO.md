@@ -159,12 +159,12 @@ crates/
 
 | 序号  | 任务                                                                                   | 状态 | 依赖  |
 | :--- | --- | :--: | --- |
-| 1.6.1 | 实现进程管理（hit-core/src/win/process.rs，sysinfo crate）：检测运行中的进程；安装前检查目标进程是否在运行；支持优雅终止和强制终止 | 📋 | -     |
-| 1.6.2 | 实现注册表操作（hit-core/src/win/registry.rs，winreg crate）：读写 `HKCU\Environment`（PATH 管理）；读写 `HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall`（已安装软件检测） | 📋 | -     |
-| 1.6.3 | 实现文件系统操作（hit-core/src/win/fs.rs）：**Junction + HardLink 单一策略**（与 Scoop 原版一致）—— 创建 `current` 目录链接时使用 `junction::create`（无需管理员或开发者模式）；`persist/` 下文件链接使用 `std::fs::hard_link`；当 `no_junction=true` 时跳过 `current` 链接创建，shim 直接指向具体版本路径；实现 remove_junction / remove_hardlink 函数（按链接类型清理） | 📋 | -     |
-| 1.6.4 | 实现 UAC 提权（hit-core/src/win/uac.rs）：`is_admin()` 检测当前是否管理员；`elevate_self()` 使用 ShellExecuteW + RunAs verb 重新以管理员启动自身；仅在写系统级路径（如 `Program Files`）或注册表 `HKLM` 时触发，链接创建本身不触发提权 | 📋 | -     |
-| 1.6.5 | 实现环境变量管理（hit-core/src/win/env.rs）：修改用户级 PATH（添加/移除 shims 目录）；广播 `WM_SETTINGCHANGE` 消息通知其他进程刷新环境变量（使用 SendMessageTimeoutW） | 📋 | -     |
-| 1.6.6 | 实现 `no_junction` 配置支持：Config 中添加 `no_junction: Option<bool>` 字段；当 `no_junction=true` 时，跳过 `current` 目录 junction 链接创建，shim 直接指向具体版本路径（兼容 Scoop 同名配置项） | 📋 | 1.1.5, 1.6.3 |
+| 1.6.1 | 实现进程管理（hit-core/src/win/process.rs，sysinfo crate）：检测运行中的进程；安装前检查目标进程是否在运行；支持优雅终止和强制终止 | ✅ | -     |
+| 1.6.2 | 实现注册表操作（hit-core/src/win/registry.rs，winreg crate）：读写 `HKCU\Environment`（PATH 管理）；读写 `HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall`（已安装软件检测） | ✅ | -     |
+| 1.6.3 | 实现文件系统操作（hit-core/src/win/fs.rs）：**Junction + HardLink 单一策略**（与 Scoop 原版一致）—— 创建 `current` 目录链接时使用 `junction::create`（无需管理员或开发者模式）；`persist/` 下文件链接使用 `std::fs::hard_link`；当 `no_junction=true` 时跳过 `current` 链接创建，shim 直接指向具体版本路径；实现 remove_junction / remove_hardlink 函数（按链接类型清理） | ✅ | -     |
+| 1.6.4 | 实现 UAC 提权（hit-core/src/win/uac.rs）：`is_admin()` 检测当前是否管理员；`elevate_self()` 使用 ShellExecuteW + RunAs verb 重新以管理员启动自身；仅在写系统级路径（如 `Program Files`）或注册表 `HKLM` 时触发，链接创建本身不触发提权 | ✅ | -     |
+| 1.6.5 | 实现环境变量管理（hit-core/src/win/env.rs）：修改用户级 PATH（添加/移除 shims 目录）；广播 `WM_SETTINGCHANGE` 消息通知其他进程刷新环境变量（使用 SendMessageTimeoutW） | ✅ | -     |
+| 1.6.6 | 实现 `no_junction` 配置支持：Config 中添加 `no_junction: Option<bool>` 字段；当 `no_junction=true` 时，跳过 `current` 目录 junction 链接创建，shim 直接指向具体版本路径（兼容 Scoop 同名配置项） | ✅ | 1.1.5, 1.6.3 |
 
 ### 1.7 hit-shim：Shim 代理机制（独立 bin）
 

@@ -19,3 +19,6 @@ pub mod compress;
 
 #[cfg(windows)]
 pub mod win;
+
+#[cfg(windows)]
+pub mod install;

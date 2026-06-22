@@ -180,14 +180,14 @@ crates/
 
 | 序号  | 任务                                                                                   | 状态 | 依赖                |
 | :--- | --- | :--: | --- |
-| 1.8.0 | 集成 Session 与 install 流程：所有安装/卸载函数签名以 `session: &Session` 为首参数；通过 `session.event_bus()` 发送安装步骤进度事件（PackageResolveStart, PackageDownloadStart, PackageExtractStart, PackageCommitStart, PackageSyncDone 等） | 📋 | 1.1.7, 1.1.8        |
-| 1.8.1 | 实现事务管理器（hit-core/src/install/transaction.rs）：RAII 模式管理事务状态            | 📋 | -                   |
-| 1.8.2 | 创建临时事务目录（tempfile crate）                                                     | 📋 | 1.6.3               |
-| 1.8.3 | 实现原子移动（rename，使用 Windows `MoveFileEx` API）                                  | 📋 | 1.6.3               |
-| 1.8.4 | 实现失败回滚机制：删除临时目录，保留已安装状态不变                                     | 📋 | 1.8.1               |
-| 1.8.5 | 实现安装流程控制器（hit-core/src/install/controller.rs）：编排完整安装流水线：解析 manifest → 解析依赖 → 下载 → 校验哈希 → 解压 → 创建 shim → 设置 persist → 更新 db.json → 执行 post_install 脚本；每步通过 EventBus 发送进度事件 | 📋 | 所有上游模块        |
-| 1.8.6 | 实现 Persist 持久化机制（hit-core/src/install/persist.rs）：使用 junction（目录）+ hard_link（文件）将 app 目录中的配置文件/目录链接到 `~/.hit/persist/<app>/`（依赖 1.6.3，与 Scoop 原版一致）；卸载时保留 persist 目录；版本切换时更新链接指向 | 📋 | 1.6.3               |
-| 1.8.7 | 实现依赖解析器（hit-core/src/install/dependency.rs）：解析 Manifest 的 depends 字段    | 📋 | 1.2.2               |
+| 1.8.0 | 集成 Session 与 install 流程：所有安装/卸载函数签名以 `session: &Session` 为首参数；通过 `session.event_bus()` 发送安装步骤进度事件（PackageResolveStart, PackageDownloadStart, PackageExtractStart, PackageCommitStart, PackageSyncDone 等） | ✅ | 1.1.7, 1.1.8        |
+| 1.8.1 | 实现事务管理器（hit-core/src/install/transaction.rs）：RAII 模式管理事务状态            | ✅ | -                   |
+| 1.8.2 | 创建临时事务目录（tempfile crate）                                                     | ✅ | 1.6.3               |
+| 1.8.3 | 实现原子移动（rename，使用 Windows `MoveFileEx` API）                                  | ✅ | 1.6.3               |
+| 1.8.4 | 实现失败回滚机制：删除临时目录，保留已安装状态不变                                     | ✅ | 1.8.1               |
+| 1.8.5 | 实现安装流程控制器（hit-core/src/install/controller.rs）：编排完整安装流水线：解析 manifest → 解析依赖 → 下载 → 校验哈希 → 解压 → 创建 shim → 设置 persist → 更新 db.json → 执行 post_install 脚本；每步通过 EventBus 发送进度事件 | ✅ | 所有上游模块        |
+| 1.8.6 | 实现 Persist 持久化机制（hit-core/src/install/persist.rs）：使用 junction（目录）+ hard_link（文件）将 app 目录中的配置文件/目录链接到 `~/.hit/persist/<app>/`（依赖 1.6.3，与 Scoop 原版一致）；卸载时保留 persist 目录；版本切换时更新链接指向 | ✅ | 1.6.3               |
+| 1.8.7 | 实现依赖解析器（hit-core/src/install/dependency.rs）：解析 Manifest 的 depends 字段    | ✅ | 1.2.2               |
 
 ### 1.9 hit-core/store：数据存储
 

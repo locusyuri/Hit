@@ -170,11 +170,11 @@ crates/
 
 | 序号  | 任务                                                                                   | 状态 | 依赖        |
 | :--- | --- | :--: | --- |
-| 1.7.1 | 创建 hit-shim 独立 binary crate：`crates/hit-shim/Cargo.toml` 仅依赖 hit-common + sonic-rs，不使用 workspace 默认 heavy dependencies；`[profile.release]` 单独优化体积 | 📋 | 1.1.1       |
-| 1.7.2 | 实现命令转发逻辑：根据 shim 文件名查找 `~/.hit/apps/<name>/current/<binary>`；使用 `std::process::Command` 启动真实进程；完整转发 stdin/stdout/stderr 和所有命令行参数 | 📋 | 1.6.3       |
-| 1.7.3 | 读取 db.json 获取当前版本（hit-shim/src/main.rs）：反序列化 hit-common 中定义的 `ShimResolveInfo` 结构体（app name → version → install path 的最小映射）；解析 shim 自身文件名确定目标 app | 📋 | 1.1.5       |
-| 1.7.4 | 启动真实进程并转发 stdin/stdout/stderr：Windows 下使用 `CREATE_NEW_PROCESS_GROUP` 标志；正确处理 Ctrl+C 信号传播；返回子进程 exit code | 📋 | 1.6.1       |
-| 1.7.5 | 最小化 shim 体积（~200KB）                                                             | 📋 | -           |
+| 1.7.1 | 创建 hit-shim 独立 binary crate：`crates/hit-shim/Cargo.toml` 零外部依赖（仅 std）；`[profile.release]` 单独优化体积 | ✅ | 1.1.1       |
+| 1.7.2 | 实现命令转发逻辑：读取同名 `.shim` sidecar 文件获取目标路径（兼容 Scoop 格式）；使用 `std::process::Command` 启动真实进程；完整转发 stdin/stdout/stderr 和所有命令行参数 | ✅ | 1.6.3       |
+| 1.7.3 | 读取 `.shim` 文件解析目标路径（hit-shim/src/parse.rs）：解析 `path = "..."` 和 `args = ...` 格式；根据 shim 自身路径推导 `.shim` 文件位置（`exe.with_extension("shim")`） | ✅ | 1.1.5       |
+| 1.7.4 | 启动真实进程并转发 stdin/stdout/stderr：Windows 下使用 `CREATE_NEW_PROCESS_GROUP` 标志；正确处理 Ctrl+C 信号传播；返回子进程 exit code | ✅ | 1.6.1       |
+| 1.7.5 | 最小化 shim 体积（~209KB release binary，零外部依赖 + LTO + strip + opt-level "s"） | ✅ | -           |
 
 ### 1.8 hit-core/install：核心安装逻辑
 

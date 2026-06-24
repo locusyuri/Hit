@@ -193,10 +193,10 @@ crates/
 
 | 序号  | 任务                                                                                   | 状态 | 依赖     |
 | :--- | --- | :--: | --- |
-| 1.9.1 | 实现 JSON 文件存储（hit-core/src/store/mod.rs）：定义 `Db` 结构体（对应 db.json），使用 sonic-rs 序列化/反序列化；实现 `Db::load()` / `Db::save()` 原子写入（写临时文件后 rename） | 📋 | sonic-rs |
-| 1.9.2 | 定义数据模型（hit-core/src/store/models.rs）：`InstalledPackage`（version, bucket, install_date, shims, persist_files, held）、`BucketInfo`（name, url, last_update）、`HitConfig`（proxy, mirror, aria2_enabled, no_junction, root_path） | 📋 | -        |
-| 1.9.3 | 实现数据库迁移（hit-core/src/store/migration.rs）：db.json 包含 `version` 字段；加载时检查版本号，自动执行迁移逻辑（字段重命名、默认值填充） | 📋 | -        |
-| 1.9.4 | 实现安装记录管理                                                                       | 📋 | 1.9.1    |
+| 1.9.1 | 实现 JSON 文件存储（hit-core/src/store/mod.rs）：定义 `Db` 结构体（对应 db.json），使用 sonic-rs 序列化/反序列化；实现 `Db::load()` / `Db::save()` 原子写入（写临时文件后 rename） | ✅ | sonic-rs |
+| 1.9.2 | 定义数据模型（hit-core/src/store/models.rs）：`InstalledPackage`（version, bucket, install_date, shims, persist_files, held）、`BucketInfo`（name, url, last_update）、`HitConfig`（proxy, mirror, aria2_enabled, no_junction, root_path） | ✅ | -        |
+| 1.9.3 | 实现数据库迁移（hit-core/src/store/migration.rs）：db.json 包含 `version` 字段；加载时检查版本号，自动执行迁移逻辑（字段重命名、默认值填充） | ✅ | -        |
+| 1.9.4 | 实现安装记录管理                                                                       | ✅ | 1.9.1    |
 
 ### 1.10 hit-cli：命令行接口
 

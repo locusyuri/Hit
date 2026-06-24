@@ -23,7 +23,8 @@ use crate::install::transaction::{Transaction, UndoAction};
 use crate::manifest::{BinItem, HookType};
 use crate::manifest::variables::{Arch, InstallVars, IntoVarMap, substitute};
 use crate::manifest::{FlatManifest, Manifest};
-use crate::win::env::{add_to_path, ensure_shims_in_path, set_env_var};
+use crate::store::{Db, InstalledPackage, db_path};
+use crate::win::env::{add_to_path, ensure_shims_in_path, remove_from_path, set_env_var};
 use crate::win::fs::link_current;
 use crate::win::process::find_running_processes;
 
@@ -200,9 +201,66 @@ pub fn install(
     // Step 10: 执行 post_install 脚本
     run_hook_script(session, &flat, HookType::PostInstall, &version_dir, &var_map)?;
 
-    // Step 11: 保存安装信息
-    // TODO(1.9): 写入 db.json
-    let _ = bucket;
+    // Step 11: 保存安装信息到 db.json
+    {
+        let mut db = Db::load(&db_path(session))?;
+
+        let env_add_path: Vec<String> = flat
+            .inner()
+            .env_add_path
+            .as_ref()
+            .map(|paths| {
+                paths
+                    .as_slice()
+                    .iter()
+                    .map(|p| {
+                        let substituted = substitute(p, &var_map);
+                        if Path::new(&substituted).is_absolute() {
+                            substituted
+                        } else {
+                            version_dir.join(&substituted).display().to_string()
+                        }
+                    })
+                    .collect()
+            })
+            .unwrap_or_default();
+
+        let env_set: BTreeMap<String, String> = flat
+            .inner()
+            .env_set
+            .as_ref()
+            .map(|m| {
+                m.iter()
+                    .map(|(k, v)| (k.clone(), substitute(v, &var_map)))
+                    .collect()
+            })
+            .unwrap_or_default();
+
+        let persist_files: Vec<String> = flat
+            .inner()
+            .persist
+            .as_ref()
+            .map(|pl| pl.0.iter().map(|item| item.source_and_target().0.to_string()).collect())
+            .unwrap_or_default();
+
+        let raw_manifest = sonic_rs::to_string(manifest).unwrap_or_default();
+
+        let pkg = InstalledPackage {
+            version: version.clone(),
+            bucket: bucket.to_string(),
+            install_date: crate::store::models::now_iso8601(),
+            architecture: arch.scoop_key().to_string(),
+            shims: shims_created.clone(),
+            persist_files,
+            held: false,
+            env_add_path,
+            env_set,
+            raw_manifest,
+        };
+
+        db.insert_package(app.to_string(), pkg);
+        db.save()?;
+    }
 
     tx.commit()?;
     emit_phase(session, app, InstallPhase::Sync, false);
@@ -238,9 +296,19 @@ pub fn uninstall(session: &Session, app: &str) -> Result<()> {
         });
     }
 
-    // 读取 manifest（从 current 目录下的 install.json 或 bucket 中重新加载）
-    // TODO(1.9): 从 db.json 读取安装信息获取 manifest
-    // 暂时跳过脚本执行和 persist unlink（需要 manifest 信息）
+    // 从 db.json 读取安装信息（manifest、环境变量等）
+    let mut db = Db::load(&db_path(session))?;
+    let install_info = db.get_package(app).cloned();
+
+    // 尝试从存储的 raw_manifest 恢复 Manifest（用于执行卸载脚本）
+    let stored_flat: Option<FlatManifest> = install_info.as_ref().and_then(|info| {
+        if info.raw_manifest.is_empty() {
+            return None;
+        }
+        let m: Manifest = sonic_rs::from_str(&info.raw_manifest).ok()?;
+        let arch = Arch::from_scoop_key(&info.architecture).unwrap_or(Arch::X86_64);
+        Some(FlatManifest::resolve_architecture(m, arch))
+    });
 
     // 移除 current junction
     let version_dir = if current_dir.exists() {
@@ -257,8 +325,38 @@ pub fn uninstall(session: &Session, app: &str) -> Result<()> {
     // 移除 shim
     remove_app_shims(session, app)?;
 
-    // 移除环境变量
-    // TODO(1.9): 从 db.json 读取 env_add_path / env_set 信息
+    // 移除环境变量（非致命：失败仅 warn，不中断卸载）
+    if let Some(ref info) = install_info {
+        if !info.env_add_path.is_empty() {
+            let patterns: Vec<&str> = info.env_add_path.iter().map(String::as_str).collect();
+            if let Err(e) = remove_from_path(&patterns, "PATH") {
+                tracing::warn!(app, error = %e, "移除 PATH 条目失败（继续卸载）");
+            }
+        }
+        for key in info.env_set.keys() {
+            if let Err(e) = set_env_var(key, None) {
+                tracing::warn!(app, key, error = %e, "移除环境变量失败（继续卸载）");
+            }
+        }
+    }
+
+    // 执行 pre_uninstall 脚本
+    if let Some(ref flat) = stored_flat
+        && let Some(ref info) = install_info
+    {
+        let arch = Arch::from_scoop_key(&info.architecture).unwrap_or(Arch::X86_64);
+        let vars = InstallVars {
+            version: info.version.clone(),
+            dir: version_dir.clone(),
+            persist_dir: session.persist_path().join(app),
+            architecture: arch,
+            global: false,
+            app: app.to_string(),
+            original_dir: None,
+        };
+        let var_map = vars.to_var_map();
+        run_hook_script(session, flat, HookType::PreUninstall, &version_dir, &var_map).ok();
+    }
 
     // 移除版本目录
     if version_dir.exists() {
@@ -276,6 +374,10 @@ pub fn uninstall(session: &Session, app: &str) -> Result<()> {
     }
 
     // persist 数据保留不删除
+
+    // 从 db.json 移除安装记录
+    db.remove_package(app);
+    db.save()?;
 
     Ok(())
 }

@@ -204,18 +204,18 @@ crates/
 
 | 序号     | 任务                                                                                   | 状态 | 依赖               |
 | :--- | --- | :--: | --- |
-| 1.10.1.1 | 使用 clap 定义命令结构（hit-cli/src/cli.rs）：`#[derive(Parser)]` 与 `#[derive(Subcommand)]` 定义子命令枚举；**添加命令简写别名**：`install` 加 `#[clap(alias = "i")]`、`search` 加 `alias = "s"`、`update` 加 `alias = "u"`、`uninstall` 加 `alias = "rm"`、`list` 加 `alias = "ls"`、`status` 加 `alias = "st"`、`bucket` 加 `alias = "b"`、`cleanup` 加 `alias = "c"`（参考 `ref/Hok/src/cmd/mod.rs`） | 📋 | -                  |
-| 1.10.1.2 | 实现命令路由分发：各子命令模块接收 `&Session` 参数                                      | 📋 | 1.10.1.1, 1.1.7    |
-| 1.10.1.3 | 添加进度条和彩色输出（indicatif, colored）                                             | 📋 | indicatif, colored |
-| 1.10.1.4 | 集成 EventBus 进度渲染（hit-cli/src/progress.rs）：从 Session event_bus receiver 接收 Event；根据事件类型更新 indicatif ProgressBar（下载进度条、解压状态、安装步骤）；PromptConfirm 事件触发用户确认对话框 | 📋 | 1.1.8, 1.10.1.3    |
+| 1.10.1.1 | 使用 clap 定义命令结构（hit-cli/src/cli.rs）：`#[derive(Parser)]` 与 `#[derive(Subcommand)]` 定义子命令枚举；**添加命令简写别名**：`install` 加 `#[clap(alias = "i")]`、`search` 加 `alias = "s"`、`update` 加 `alias = "u"`、`uninstall` 加 `alias = "rm"`、`list` 加 `alias = "ls"`、`status` 加 `alias = "st"`、`bucket` 加 `alias = "b"`、`cleanup` 加 `alias = "c"`（参考 `ref/Hok/src/cmd/mod.rs`） | ✅ | -                  |
+| 1.10.1.2 | 实现命令路由分发：各子命令模块接收 `&Session` 参数                                      | ✅ | 1.10.1.1, 1.1.7    |
+| 1.10.1.3 | 添加进度条和彩色输出（indicatif, colored）                                             | ✅ | indicatif, colored |
+| 1.10.1.4 | 集成 EventBus 进度渲染（hit-cli/src/progress.rs）：从 Session event_bus receiver 接收 Event；根据事件类型更新 indicatif ProgressBar（下载进度条、解压状态、安装步骤）；PromptConfirm 事件触发用户确认对话框 | ✅ | 1.1.8, 1.10.1.3    |
 
 #### 1.10.2 install 命令
 
 | 序号     | 任务                      | 状态 | 依赖              |
 | :--- | --- | :--: | --- |
-| 1.10.2.1 | 解析软件名和版本约束      | 📋 | hit-core/bucket   |
-| 1.10.2.2 | 搜索 Bucket 获取 Manifest | 📋 | hit-core/bucket   |
-| 1.10.2.3 | 调用 hit-core 执行安装    | 📋 | hit-core/install  |
+| 1.10.2.1 | 解析软件名和版本约束      | ✅ | hit-core/bucket   |
+| 1.10.2.2 | 搜索 Bucket 获取 Manifest | ✅ | hit-core/bucket   |
+| 1.10.2.3 | 调用 hit-core 执行安装    | ✅ | hit-core/install  |
 
 #### 1.10.3 uninstall 命令
 

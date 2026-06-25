@@ -221,47 +221,47 @@ crates/
 
 | 序号     | 任务                   | 状态 | 依赖             |
 | :--- | --- | :--: | --- |
-| 1.10.3.1 | 查找已安装软件         | 📋 | hit-core/store   |
-| 1.10.3.2 | 调用 hit-core 执行卸载 | 📋 | hit-core/install |
+| 1.10.3.1 | 查找已安装软件         | ✅ | hit-core/store   |
+| 1.10.3.2 | 调用 hit-core 执行卸载 | ✅ | hit-core/install |
 
 #### 1.10.4 list 命令
 
 | 序号     | 任务                     | 状态 | 依赖             |
 | :--- | --- | :--: | --- |
-| 1.10.4.1 | 读取数据库中的已安装列表 | 📋 | hit-core/store   |
-| 1.10.4.2 | 格式化输出（表格形式）   | 📋 | -                |
+| 1.10.4.1 | 读取数据库中的已安装列表 | ✅ | hit-core/store   |
+| 1.10.4.2 | 格式化输出（表格形式）   | ✅ | -                |
 
 #### 1.10.5 search 命令
 
 | 序号     | 任务               | 状态 | 依赖            |
 | :--- | --- | :--: | --- |
-| 1.10.5.1 | 遍历 Bucket 索引   | 📋 | hit-core/bucket |
-| 1.10.5.2 | 实现关键词模糊匹配 | 📋 | -               |
-| 1.10.5.3 | 显示匹配结果       | 📋 | -               |
+| 1.10.5.1 | 遍历 Bucket 索引   | ✅ | hit-core/bucket |
+| 1.10.5.2 | 实现关键词模糊匹配 | ✅ | -               |
+| 1.10.5.3 | 显示匹配结果       | ✅ | -               |
 
 #### 1.10.6 info 命令
 
 | 序号     | 任务               | 状态 | 依赖            |
 | :--- | --- | :--: | --- |
-| 1.10.6.1 | 查找软件 Manifest  | 📋 | hit-core/bucket |
-| 1.10.6.2 | 格式化显示软件详情 | 📋 | -               |
+| 1.10.6.1 | 查找软件 Manifest  | ✅ | hit-core/bucket |
+| 1.10.6.2 | 格式化显示软件详情 | ✅ | -               |
 
 #### 1.10.7 update 命令
 
 | 序号     | 任务                 | 状态 | 依赖                            |
 | :--- | --- | :--: | --- |
-| 1.10.7.1 | 更新所有 Bucket      | 📋 | hit-core/bucket                 |
-| 1.10.7.2 | 检查已安装软件新版本 | 📋 | hit-core/store, hit-core/bucket |
-| 1.10.7.3 | 执行软件升级         | 📋 | hit-core/install                |
+| 1.10.7.1 | 更新所有 Bucket      | ✅ | hit-core/bucket                 |
+| 1.10.7.2 | 检查已安装软件新版本 | ✅ | hit-core/store, hit-core/bucket |
+| 1.10.7.3 | 执行软件升级         | ✅ | hit-core/install                |
 
 #### 1.10.8 bucket 命令
 
 | 序号     | 任务                            | 状态 | 依赖            |
 | :--- | --- | :--: | --- |
-| 1.10.8.1 | bucket add - 添加新 Bucket      | 📋 | hit-core/bucket |
-| 1.10.8.2 | bucket remove - 移除 Bucket     | 📋 | hit-core/bucket |
-| 1.10.8.3 | bucket list - 列出所有 Bucket   | 📋 | hit-core/bucket |
-| 1.10.8.4 | bucket update - 更新指定 Bucket | 📋 | hit-core/bucket |
+| 1.10.8.1 | bucket add - 添加新 Bucket      | ✅ | hit-core/bucket |
+| 1.10.8.2 | bucket remove - 移除 Bucket     | ✅ | hit-core/bucket |
+| 1.10.8.3 | bucket list - 列出所有 Bucket   | ✅ | hit-core/bucket |
+| 1.10.8.4 | bucket update - 更新指定 Bucket | ✅ | hit-core/bucket |
 | 1.10.8.5 | bucket create - 交互式创建 Bucket：初始化目录结构、生成 bucket.json、可选配合 `gh` CLI 推送至 GitHub | 📋 | hit-core/bucket |
 
 ### 1.11 首次启动引导

@@ -10,4 +10,10 @@ hit-core = { workspace = true }
 clap = { workspace = true }
 indicatif = { workspace = true }
 colored = { workspace = true }
+tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
+anyhow = { workspace = true }
+flume = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }

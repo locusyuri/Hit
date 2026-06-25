@@ -47,6 +47,7 @@ fn run() -> anyhow::Result<()> {
         Command::List(args) => commands::list::execute(args, &session),
         Command::Status(args) => commands::status::execute(args, &session),
         Command::Bucket(args) => commands::bucket::execute(args, &session),
+        Command::Info(args) => commands::info::execute(args, &session),
         Command::Cleanup(args) => commands::cleanup::execute(args, &session),
     };
 

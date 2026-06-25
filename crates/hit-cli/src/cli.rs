@@ -59,6 +59,9 @@ pub enum Command {
     #[clap(alias = "b")]
     Bucket(commands::bucket::Args),
 
+    /// 查看软件包详情
+    Info(commands::info::Args),
+
     /// 清理旧版本与缓存
     #[clap(alias = "c")]
     Cleanup(commands::cleanup::Args),

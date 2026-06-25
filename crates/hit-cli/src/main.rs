@@ -8,6 +8,7 @@
 mod cli;
 mod commands;
 mod progress;
+mod welcome;
 
 use std::process::ExitCode;
 
@@ -36,6 +37,11 @@ fn run() -> anyhow::Result<()> {
     init_tracing(cli.verbose);
 
     let session = hit_common::Session::new()?;
+
+    // 首次启动引导
+    if welcome::is_first_run() {
+        welcome::run_first_time_setup(&session)?;
+    }
 
     let progress = ProgressRenderer::start(&session);
 

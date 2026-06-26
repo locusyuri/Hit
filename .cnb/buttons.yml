@@ -1,0 +1,10 @@
+# CNB 手动触发按钮配置
+# 文档：https://docs.cnb.cool/zh/build/web-trigger.html
+# 此文件独立于 .cnb.yml，专门配置分支详情页面上显示的按钮
+
+branch:
+  - buttons:
+      - name: 🚀 构建 Hit
+        description: 交叉编译 Windows 二进制并打包为 zip
+        event: web_trigger_build
+        isDefault: true

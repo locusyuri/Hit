@@ -29,6 +29,7 @@ Hit 是一个用 Rust 编写的现代 Windows 包管理器，完全兼容 Scoop 
 - 符号链接创建需要 Windows 开发者模式或管理员权限（版本切换关键依赖）
 - 涉及 UAC 提升、注册表操作、PATH 管理和 `WM_SETTINGCHANGE` 广播
 - 使用 `windows` / `winreg` crate 访问 Windows API
+- **PowerShell 版本**：本项目使用 PowerShell 7（`pwsh`），不要用 `powershell`（5 版本）。执行 PowerShell 命令时一律用 `pwsh`
 
 ## 开发约定
 

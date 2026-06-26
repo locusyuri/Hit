@@ -4,6 +4,10 @@ version.workspace = true
 edition.workspace = true
 description = "Hit 命令行入口：clap 命令树（含 alias）+ EventBus 进度渲染 + ratatui TUI"
 
+[[bin]]
+name = "hit"
+path = "src/main.rs"
+
 [dependencies]
 hit-common = { workspace = true }
 hit-core = { workspace = true }

@@ -276,12 +276,12 @@ crates/
 
 | 序号   | 任务                                                                                   | 状态 | 依赖                 |
 | :--- | --- | :--: | --- |
-| 1.12.1 | 设置单元测试框架                                                                       | 📋 | -                    |
-| 1.12.2 | 编写 Manifest 解析测试                                                                 | 📋 | hit-core/manifest    |
-| 1.12.3 | 编写 Bucket 管理测试                                                                   | 📋 | hit-core/bucket      |
-| 1.12.4 | 编写安装卸载集成测试：使用 hit-test-utils 创建临时 Scoop root；测试完整安装流水线（manifest → download → extract → shim → db.json 更新）；测试卸载清理；测试安装失败回滚（模拟下载中断、哈希不匹配） | 📋 | hit-core/install     |
-| 1.12.5 | 编写 EventBus 事件流测试：验证安装流程中事件按正确顺序发送（ResolveStart → DownloadStart → DownloadProgress... → ExtractStart → CommitStart → SyncDone） | 📋 | 1.1.8                |
-| 1.12.6 | 编写 junction / hard_link 测试：验证 `current` 目录通过 `junction::create` 正确创建；验证 persist 文件通过 `std::fs::hard_link` 正确创建；验证 `no_junction` 配置生效时跳过 `current` 链接创建、shim 直接指向版本路径 | 📋 | 1.6.3, 1.6.6         |
+| 1.12.1 | 设置单元测试框架                                                                       | ✅ | -                    |
+| 1.12.2 | 编写 Manifest 解析测试                                                                 | ✅ | hit-core/manifest    |
+| 1.12.3 | 编写 Bucket 管理测试                                                                   | ✅ | hit-core/bucket      |
+| 1.12.4 | 编写安装卸载集成测试：使用 hit-test-utils 创建临时 Scoop root；测试完整安装流水线（manifest → download → extract → shim → db.json 更新）；测试卸载清理；测试安装失败回滚（模拟下载中断、哈希不匹配） | ✅ | hit-core/install     |
+| 1.12.5 | 编写 EventBus 事件流测试：验证安装流程中事件按正确顺序发送（ResolveStart → DownloadStart → DownloadProgress... → ExtractStart → CommitStart → SyncDone） | ✅ | 1.1.8                |
+| 1.12.6 | 编写 junction / hard_link 测试：验证 `current` 目录通过 `junction::create` 正确创建；验证 persist 文件通过 `std::fs::hard_link` 正确创建；验证 `no_junction` 配置生效时跳过 `current` 链接创建、shim 直接指向版本路径 | ✅ | 1.6.3, 1.6.6         |
 
 ---
 

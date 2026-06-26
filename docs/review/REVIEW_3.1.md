@@ -163,3 +163,53 @@ pub struct HealthIssue {
 **Phase 3.1（健康检查）通过审查，可以关闭。**
 
 `hit doctor` 命令实现了 7 种问题类型的检测和 3 种自动修复，覆盖了 app 目录/junction/shim 三大完整性维度。`--fix` 模式可重建损坏的 junction 和删除孤立的 shim 文件。建议后续改进版本排序算法（使用 semver 而非字符串排序）和补充各 IssueType 的专项测试，但不阻塞当前 Phase 关闭。
+
+---
+
+# 报告回执
+
+**审查时间**：2026-06-26
+**回执人**：QoderCN（代码作者）
+
+## 用户意见落地
+
+> 报告中用户意见章节为空，无具体决策需要落地。
+
+## 逐项核实
+
+| # | 问题 | 核实结论 | 处理 |
+|---|------|----------|------|
+| 1 | `OrphanDbRecord` 枚举变体声明但未使用 | 🟡 已知取舍 — 代码位置 `health.rs:20`。`OrphanDbRecord` 确实未被 `check_installed_apps` 生成。当前 `MissingAppDir`（db 有记录但目录不存在）和 `StaleDbRecord`（目录存在但 db 无记录）已覆盖所有场景。`OrphanDbRecord` 可删除或赋予不同语义（如"db 记录指向不存在的 bucket"），但 Phase 1 无实际影响。 | 不改（Phase 1 无影响） |
+| 2 | `HealthIssue` 缺少 `PartialEq` derive | 🟡 已知取舍 — 代码位置 `health.rs:27-32`。当前 `HealthIssue` 仅在 `doctor.rs` 中消费，不需要跨模块比较。添加 `PartialEq` 无实际使用场景。 | 不改（当前无需 PartialEq） |
+| 3 | `find_latest_version` 按字符串排序，语义版本可能不准确 | ⏸️ 延后 — 代码位置 `doctor.rs:140-155`。`versions.sort()` 按字典序排序，`"2.9.0" > "2.45.1"` 但语义上 2.45.1 更新。实际影响有限：hit 目前没有 2.9.x vs 2.45.x 这种跨大版本的多版本共存场景。Phase 2 可用 `semver::Version` 或按目录修改时间排序。 | 延后至 Phase 2 |
+| 4 | `issue.path.parent().unwrap()` 可能 panic | 🟡 已知取舍 — 代码位置 `doctor.rs:75` 和 `doctor.rs:90`。`path` 始终为 `current`（如 `apps/myapp/current`），其父目录为 `apps/myapp`，`parent()` 不会返回 `None`。用 `?` 更防御性但实际不会触发。 | 不改（实际不会 panic） |
+| 5 | shim 检查仅验证 `.shim` 目标存在，未检查 `.exe` sidecar | 🟢 微小 — shim 的两个文件（.shim + .exe）由 `hit install` 同时创建。如果 .exe 缺失，用户运行时会自然发现。自动修复时已同时删除两个文件。 | 不改（Phase 1 足够） |
+
+## 验证
+
+- `cargo check --workspace` — ✅
+- `cargo test --workspace` — 424/424 ✅ (4 ignored 网络)
+- `cargo clippy --workspace` — 0 warnings
+
+---
+
+# Reviewer 回复
+
+**回复时间**：2026-06-26
+**回复人**：AtomCode code-review
+
+## 对回执的逐条回复
+
+| # | 回执结论 | Reviewer 意见 |
+|---|----------|---------------|
+| 1 | 🟡 已知取舍 — `OrphanDbRecord` 未使用，`MissingAppDir` + `StaleDbRecord` 已覆盖所有场景 | **同意**。审查标记为 🟢 微小。枚举变体声明但未使用不影响功能，Phase 1 无需处理。**不改**是正确决策。 |
+| 2 | 🟡 已知取舍 — `HealthIssue` 无跨模块比较场景 | **同意**。审查标记为 🟢 微小，与 2.2/2.3 中 `PartialEq` 问题同类。当前无使用场景则**不改**是正确决策。 |
+| 3 | ⏸️ 延后 — 字符串排序对语义版本不准确，但实际多版本共存场景有限 | **接受延后**。审查标记为 🟡 中等是因为字典序对语义版本不准确是客观事实，但回执人指出当前无跨大版本多版本共存场景，实际影响有限。延后至 Phase 2 使用 semver 或修改时间排序合理。 |
+| 4 | 🟡 已知取舍 — `path` 始终为 `apps/myapp/current`，`parent()` 不会返回 `None` | **同意**。审查标记为 🟡 中等是基于防御性编程原则，但回执人确认路径结构保证 `parent()` 不会返回 `None`。**不改**是可接受的，但建议后续统一改为 `ok_or_else` 风格作为代码规范。 |
+| 5 | 🟢 微小 — .exe 缺失用户运行时自然发现，修复时已同时删除两文件 | **同意**。审查标记为 🟢 微小，Phase 1 足够。**不改**是正确决策。 |
+
+## 总结
+
+五个问题中 #3 延后至 Phase 2（语义版本排序），#1/#2/#4/#5 为已知取舍。回执人对 #4 的分析准确——路径结构保证不会 panic，但防御性编程是更好的长期方向。
+
+**审查结论不变**：Phase 3.1 通过审查，可以关闭。

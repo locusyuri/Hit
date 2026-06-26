@@ -58,7 +58,20 @@ impl Default for HitConfig {
 
 impl HitConfig {
     /// 配置文件的默认路径：`~/.hit/config.json`
+    ///
+    /// 查找顺序：
+    /// 1. 当前 exe 同目录下的 `config.json`（支持自定义安装路径，无需 HIT_ROOT 环境变量）
+    /// 2. `paths::root_path()` 下的 `config.json`（基于 HIT_ROOT / SCOOP / USERPROFILE 回退链）
     pub fn default_path() -> PathBuf {
+        // 优先检查 exe 同目录：安装脚本将 hit.exe 和 config.json 放在同一目录
+        if let Ok(exe) = std::env::current_exe() {
+            if let Some(dir) = exe.parent() {
+                let candidate = dir.join("config.json");
+                if candidate.exists() {
+                    return candidate;
+                }
+            }
+        }
         paths::root_path().join("config.json")
     }
 

@@ -33,16 +33,16 @@ fn main() -> ExitCode {
 }
 
 fn run() -> anyhow::Result<()> {
-    let cli = Cli::parse();
-
-    init_tracing(cli.verbose);
-
     let session = hit_common::Session::new()?;
 
-    // 首次启动引导
+    // 首次启动引导（在 parse 之前，否则 --help 时 clap 直接退出，欢迎页无法显示）
     if welcome::is_first_run() {
         welcome::run_first_time_setup(&session)?;
     }
+
+    let cli = Cli::parse();
+
+    init_tracing(cli.verbose);
 
     let progress = ProgressRenderer::start(&session);
 

@@ -308,10 +308,10 @@ crates/
 
 | 序号  | 任务                          | 状态 | 依赖              |
 | :--- | --- | :--: | --- |
-| 2.2.1 | 解析 Manifest 的 depends 字段 | 📋 | hit-core/manifest |
-| 2.2.2 | 构建依赖图                    | 📋 | petgraph          |
-| 2.2.3 | 检测循环依赖                  | 📋 | 2.2.2             |
-| 2.2.4 | 实现依赖安装顺序              | 📋 | hit-core/install  |
+| 2.2.1 | 解析 Manifest 的 depends 字段 | ✅ | hit-core/manifest |
+| 2.2.2 | 构建依赖图                    | ✅ | petgraph          |
+| 2.2.3 | 检测循环依赖                  | ✅ | 2.2.2             |
+| 2.2.4 | 实现依赖安装顺序              | ✅ | hit-core/install  |
 
 ### 2.3 Bucket 全局索引
 

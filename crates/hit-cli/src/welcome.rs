@@ -166,7 +166,6 @@ fn interactive_add_buckets(session: &Session, interrupt: &AtomicBool) -> anyhow:
 #[cfg(test)]
 mod tests {
     use super::*;
-    use hit_common::config::HitConfig;
 
     #[test]
     fn is_first_run_true_when_no_config() {

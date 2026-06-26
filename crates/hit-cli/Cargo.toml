@@ -16,6 +16,8 @@ tracing-subscriber = { workspace = true }
 anyhow = { workspace = true }
 flume = { workspace = true }
 junction = { workspace = true }
+ratatui = { workspace = true }
+crossterm = "0.28"
 
 [dev-dependencies]
 tempfile = { workspace = true }

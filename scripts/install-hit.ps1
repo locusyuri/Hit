@@ -14,7 +14,7 @@
         # 静默安装：直接指定参数
         irm https://get.hit.sh | iex
         .\install-hit.ps1 -Path C:\Users\me\.hit
-        .\install-hit.ps1 -Mirror tuna -Version 1.0.0
+        .\install-hit.ps1 -Mirror cnb -Version 1.0.0
         .\install-hit.ps1 -FromLocal .\target\release\hit.exe
         .\install-hit.ps1 -Force
 
@@ -22,7 +22,7 @@
     安装目录。优先级：-Path > $env:HIT_ROOT > $env:SCOOP > $HOME\.hit
 
 .PARAMETER Mirror
-    下载镜像：github（默认）/ tuna / aliyun
+    下载镜像：github（默认）/ cnb
 
 .PARAMETER Version
     指定版本号（如 1.0.0）；默认 latest
@@ -42,7 +42,7 @@
 
 param(
     [string]$Path,
-    [ValidateSet('github', 'tuna', 'aliyun')]
+    [ValidateSet('github', 'cnb')]
     [string]$Mirror = 'github',
     [string]$Version = 'latest',
     [switch]$Force,
@@ -112,12 +112,10 @@ if (-not $NonInteractive -and -not $FromLocal) {
         Write-Host ""
         Write-Host "  下载镜像：" -ForegroundColor Yellow
         Write-Host "    1) GitHub（默认）"
-        Write-Host "    2) 清华大学 TUNA 镜像"
-        Write-Host "    3) 阿里云镜像"
-        $mirrorInput = Read-Host "请选择 [1/2/3]（默认: 1）"
+        Write-Host "    2) CNB 云原生"
+        $mirrorInput = Read-Host "请选择 [1/2]（默认: 1）"
         $Mirror = switch ($mirrorInput) {
-            '2' { 'tuna' }
-            '3' { 'aliyun' }
+            '2' { 'cnb' }
             default { 'github' }
         }
 
@@ -212,8 +210,7 @@ else {
 
     $baseUrl = switch ($Mirror) {
         'github' { 'https://github.com/hit-buckets/hit/releases' }
-        'tuna'   { 'https://mirrors.tuna.tsinghua.edu.cn/github-release/hit-buckets/hit' }
-        'aliyun' { 'https://mirrors.aliyun.com/github-release/hit-buckets/hit' }
+        'cnb'    { 'https://cnb.cool/catmono/Hit/-/releases' }
     }
 
     if ($Version -eq 'latest') {
@@ -229,7 +226,7 @@ else {
         Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing
     }
     catch {
-        Write-Fail "下载失败：$($_.Exception.Message)`n    请检查网络或切换镜像 (-Mirror tuna)"
+        Write-Fail "下载失败：$($_.Exception.Message)`n    请检查网络或切换镜像 (-Mirror cnb)"
     }
 
     $extractDir = Join-Path $env:TEMP "hit-extract-$(Get-Random)"

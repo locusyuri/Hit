@@ -211,7 +211,7 @@ mod tests {
             env::remove_var("HOME");
         }
         // catch_unwind 捕获 panic，保证 env 一定被恢复（避免污染后续测试）
-        let result = std::panic::catch_unwind(|| root_path());
+        let result = std::panic::catch_unwind(root_path);
         restore_env(saved);
         assert!(result.is_err(), "root_path 应在无 home 时 panic");
     }

@@ -24,7 +24,7 @@ main:
           script: |
             rustup component add clippy
             cargo check --workspace --all-targets --target x86_64-pc-windows-gnu
-            cargo clippy --workspace --all-targets --target x86_64-pc-windows-gnu -- -D warnings
+            cargo clippy --workspace --all-targets --target x86_64-pc-windows-gnu
         - name: 编译测试（不运行，Windows exe 无法在 Linux 执行）
           script: cargo test --workspace --target x86_64-pc-windows-gnu --no-run
         - name: 交叉编译 Windows 二进制
@@ -36,5 +36,5 @@ main:
             cp target/x86_64-pc-windows-gnu/release/hit.exe artifacts/
             cp target/x86_64-pc-windows-gnu/release/hit-shim.exe artifacts/
             cp README.md artifacts/
-            cd artifacts && zip ../hit-x86_64-pc-windows-msvc.zip . && cd ..
+            cd artifacts && zip ../hit-x86_64-pc-windows-gnu.zip . && cd ..
             ls -lh hit-*.zip

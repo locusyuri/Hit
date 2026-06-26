@@ -171,7 +171,7 @@ mod tests {
     fn is_first_run_true_when_no_config() {
         // 验证 is_first_run 返回 bool（纯函数逻辑验证）
         let result = is_first_run();
-        assert!(result == true || result == false);
+        let _ = result;
     }
 
     #[test]
@@ -179,6 +179,6 @@ mod tests {
         // 验证 show_welcome 和 read_choice 存在且可调用（不实际执行交互）
         // is_first_run 是纯函数，直接测试
         let result = is_first_run();
-        assert!(result == true || result == false); // 验证返回 bool
+        let _ = result;
     }
 }

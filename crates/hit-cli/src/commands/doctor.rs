@@ -72,6 +72,7 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
             match &issue.issue {
                 hit_core::health::IssueType::MissingCurrent => {
                     // 尝试找到最新版本目录并重建 junction
+                    #[cfg(windows)]
                     if let Some(version_dir) = find_latest_version(issue.path.parent().unwrap()) {
                         match junction::create(&version_dir, &issue.path) {
                             Ok(()) => {
@@ -83,21 +84,28 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
                             }
                         }
                     }
+                    #[cfg(not(windows))]
+                    { let _ = issue; }
                 }
                 hit_core::health::IssueType::BrokenJunction => {
                     // 删除旧 junction 并重建
-                    let _ = junction::delete(&issue.path);
-                    if let Some(version_dir) = find_latest_version(issue.path.parent().unwrap()) {
-                        match junction::create(&version_dir, &issue.path) {
-                            Ok(()) => {
-                                fixed += 1;
-                                println!("  {} {} → {}", "✔".green(), issue.app, version_dir.display());
-                            }
-                            Err(e) => {
-                                println!("  {} {} 修复失败: {e}", "✗".red(), issue.app);
+                    #[cfg(windows)]
+                    {
+                        let _ = junction::delete(&issue.path);
+                        if let Some(version_dir) = find_latest_version(issue.path.parent().unwrap()) {
+                            match junction::create(&version_dir, &issue.path) {
+                                Ok(()) => {
+                                    fixed += 1;
+                                    println!("  {} {} → {}", "✔".green(), issue.app, version_dir.display());
+                                }
+                                Err(e) => {
+                                    println!("  {} {} 修复失败: {e}", "✗".red(), issue.app);
+                                }
                             }
                         }
                     }
+                    #[cfg(not(windows))]
+                    { let _ = issue; }
                 }
                 hit_core::health::IssueType::BrokenShim => {
                     // 删除损坏的 shim 文件

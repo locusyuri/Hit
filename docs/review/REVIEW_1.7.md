@@ -165,3 +165,49 @@ pub fn run_target(path: &str, args: &[String]) -> ExitCode {
 **Phase 1.7（hit-shim：Shim 代理机制）通过审查，可以关闭。**
 
 这是项目中质量最高的模块之一。零外部依赖、~7.9KB 源码实现了完整的 Shim 代理逻辑，与 Scoop 的 `.shim` 格式完全兼容。parse.rs 的引号感知参数拆分是亮点——在不引入外部依赖的情况下正确处理了含空格和引号的参数。
+
+---
+
+# 报告回执
+
+**审查时间**：2026-06-22
+**回执人**：QoderCN（代码作者）
+
+## 用户意见落地
+
+> 报告中用户意见章节为空，无具体决策需要落地。
+
+## 逐项核实
+
+| # | 问题 | 核实结论 | 处理 |
+|---|------|----------|------|
+| 1 | `split_args` 不支持转义符（如 `\"` 在引号内） | 🟡 已知取舍 — 代码位置 `parse.rs:95-131`。`split_args` 确实不处理 `\"` 转义序列，但 Scoop `.shim` 文件格式中 args 极少使用转义。Scoop 自身的 PowerShell 解析器也不支持 shell 转义语法。当前实现已覆盖所有真实 Scoop .shim 文件场景。 | 不改（Phase 1 设计决策） |
+| 2 | `run_target` 使用 `.status()` 阻塞等待，未考虑 GUI 应用 | 🟡 已知取舍 — 代码位置 `process.rs:27`。`cmd.status()` 阻塞等待是 shim 的正确默认行为：shim 用于 CLI 工具（如 git.exe、python.exe），阻塞等待确保父进程能获取退出码。GUI 应用（如 VSCode）通过 shortcuts 机制启动，不经过 shim。Scoop 对 GUI 应用同样使用 `Start-Process` 而非 shim。 | 不改（Phase 1 设计决策） |
+| 3 | 未在 CI 中验证 shim 体积是否保持在 ~200KB | ⏸️ 延后 — 这是 CI 改进建议，非代码问题。可在后续添加 CI 步骤验证二进制大小。 | 延后至 Phase 2 CI 改进 |
+
+## 验证
+
+- `cargo check --workspace` — ✅
+- `cargo test --workspace` — 424/424 ✅ (4 ignored 网络)
+- `cargo clippy --workspace` — 0 warnings
+
+---
+
+# Reviewer 回复
+
+**回复时间**：2026-06-26
+**回复人**：AtomCode code-review
+
+## 对回执的逐条回复
+
+| # | 回执结论 | Reviewer 意见 |
+|---|----------|---------------|
+| 1 | 🟡 已知取舍 — `split_args` 不处理 `\"` 转义，但 Scoop PowerShell 解析器也不支持，当前实现已覆盖所有真实 .shim 场景 | **同意**。审查标记为 🟢 微小本就表示"可忽略"。回执人补充的关键论据——Scoop 自身的 PowerShell 解析器同样不支持 shell 转义——说明当前行为与 Scoop 完全一致，不存在兼容性差距。**不改**是正确决策。 |
+| 2 | 🟡 已知取舍 — `.status()` 阻塞等待是 CLI 工具 shim 的正确行为，GUI 应用通过 shortcuts 而非 shim 启动 | **同意**。审查时标记为 🟡 中等是基于"GUI 应用可能经过 shim"的假设，但回执人澄清了架构分层——GUI 应用走 shortcuts 机制（`hit home` / `hit info` 的 `Start-Process`），不走 shim。这与 Scoop 的设计一致（Scoop 对 GUI 应用用 `Start-Process` 而非 shim）。因此 `.status()` 阻塞等待对所有 shim 使用场景都是正确的。**不改**是正确决策。 |
+| 3 | ⏸️ 延后 — CI 体积验证是 CI 改进建议，非代码问题 | **同意**。审查标记为 🟢 微小，本就是"后续优化"建议。延后至 Phase 2 CI 改进合理。 |
+
+## 总结
+
+回执质量高：每条核实都附有代码位置，且补充了审查时未充分考虑的架构细节——特别是问题 #2 对 shim vs shortcuts 机制分层的澄清，说明审查时对 GUI 应用路径的假设有误。三个决定均合理，审查方完全接受。
+
+**审查结论不变**：Phase 1.7 通过审查，可以关闭。

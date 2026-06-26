@@ -1,53 +1,44 @@
 # CNB 云原生构建配置
 # 文档：https://docs.cnb.cool/zh/build/intro.html
-# 按钮/手动触发：https://docs.cnb.cool/zh/build/web-trigger.html
+# 手动触发：https://docs.cnb.cool/zh/build/web-trigger.html
 #
-# 在仓库页面点击"构建 Hit"按钮手动触发构建。
+# 在仓库分支详情页面点击"🚀 构建 Hit"按钮手动触发构建。
 # 使用 Linux Docker 容器，MinGW 交叉编译 Windows 二进制。
-# 产物从 CNB Releases 下载：https://cnb.cool/catmono/Hit/-/releases
 
-# ── 流水线配置 ──────────────────────────────────────────────────────────
+# ── main 分支 - web_trigger_build 事件 ────────────────────────────────
 
-# 流水线复用锚点
-.build: &build
-  - name: Hit 交叉编译
-    docker:
-      image: rust:latest
-      volumes:
-        - /usr/local/cargo/registry:copy-on-write
-        - /usr/local/cargo/git:copy-on-write
-    stages:
-      - name: 安装 MinGW 工具链
-        script: |
-          rustup target add x86_64-pc-windows-gnu
-          apt-get update && apt-get install -y -qq gcc-mingw-w64-x86-64-posix zip
-      - name: 编译检查与静态分析
-        script: |
-          cargo check --workspace --all-targets
-          cargo clippy --workspace --all-targets -- -D warnings
-      - name: 运行测试
-        script: cargo test --workspace
-      - name: 交叉编译 Windows 二进制
-        script: |
-          cargo build --release -p hit-cli -p hit-shim --target x86_64-pc-windows-gnu
-      - name: 打包
-        script: |
-          mkdir -p artifacts
-          cp target/x86_64-pc-windows-gnu/release/hit.exe artifacts/
-          cp target/x86_64-pc-windows-gnu/release/hit-shim.exe artifacts/
-          cp README.md artifacts/
-          cd artifacts && zip ../hit-x86_64-pc-windows-msvc.zip . && cd ..
-          ls -lh hit-*.zip
-
-# main 分支
 main:
-  web_trigger_build: *build
+  web_trigger_build:
+    - name: Hit 交叉编译
+      docker:
+        image: rust:latest
+        volumes:
+          - /usr/local/cargo/registry:copy-on-write
+          - /usr/local/cargo/git:copy-on-write
+      stages:
+        - name: 安装 MinGW 工具链
+          script: |
+            rustup target add x86_64-pc-windows-gnu
+            apt-get update && apt-get install -y -qq gcc-mingw-w64-x86-64-posix zip
+        - name: 编译检查与静态分析
+          script: |
+            cargo check --workspace --all-targets
+            cargo clippy --workspace --all-targets -- -D warnings
+        - name: 运行测试
+          script: cargo test --workspace
+        - name: 交叉编译 Windows 二进制
+          script: |
+            cargo build --release -p hit-cli -p hit-shim --target x86_64-pc-windows-gnu
+        - name: 打包
+          script: |
+            mkdir -p artifacts
+            cp target/x86_64-pc-windows-gnu/release/hit.exe artifacts/
+            cp target/x86_64-pc-windows-gnu/release/hit-shim.exe artifacts/
+            cp README.md artifacts/
+            cd artifacts && zip ../hit-x86_64-pc-windows-msvc.zip . && cd ..
+            ls -lh hit-*.zip
 
-# 其他分支
-"**":
-  web_trigger_build: *build
-
-# ── 按钮配置 ─────────────────────────────────────────────────────────────
+# ── 手动触发按钮（出现在分支详情页面） ────────────────────────────────
 
 branch:
   - buttons:

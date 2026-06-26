@@ -1,38 +1,37 @@
 # CNB 云原生构建配置
-# 参考文档：https://docs.cnb.cool/zh/build/intro.html
+# 文档：https://docs.cnb.cool/zh/build/intro.html
+# 迁移：https://docs.cnb.build/zh/build/migrate-to-cnb/migrate-from-github-actions.html
 #
-# CNB 使用 Linux 容器，通过 MinGW 交叉编译 Windows 二进制。
-# volumes 使用 copy-on-write 模式（CNB 原生缓存机制）。
+# CNB 使用 Linux Docker 容器，通过 MinGW 交叉编译 Windows 二进制。
+# 产物可从 CNB Releases 下载：https://cnb.cool/catmono/Hit/-/releases
 
 main:
   push:
-    - docker:
+    - name: Hit 交叉编译
+      docker:
         image: rust:1.85
         volumes:
           - /usr/local/cargo/registry:copy-on-write
           - /usr/local/cargo/git:copy-on-write
-        stages:
-          # ── 1. 安装 MinGW 交叉编译工具链 ─────────────
-          - rustup target add x86_64-pc-windows-gnu
-          - apt-get update && apt-get install -y -qq gcc-mingw-w64-x86-64-posix zip
-
-          # ── 2. 编译检查 + 静态分析 ────────────────────
-          - cargo check --workspace --all-targets
-          - cargo clippy --workspace --all-targets -- -D warnings
-
-          # ── 3. 运行测试（Linux 原生）──────────────────
-          - cargo test --workspace
-
-          # ── 4. 交叉编译 Windows 二进制 ────────────────
-          - cargo build --release -p hit-cli -p hit-shim --target x86_64-pc-windows-gnu
-
-          # ── 5. 打包 ────────────────────────────────────
-          - mkdir -p artifacts
-          - cp target/x86_64-pc-windows-gnu/release/hit.exe artifacts/
-          - cp target/x86_64-pc-windows-gnu/release/hit-shim.exe artifacts/
-          - cp README.md artifacts/
-          - cd artifacts && zip ../hit-x86_64-pc-windows-msvc.zip . && cd ..
-
-          # ── 6. 输出 ────────────────────────────────────
-          - ls -lh hit-*.zip
-          - echo "构建完成！"
+      stages:
+        - name: 安装 MinGW 工具链
+          script: |
+            rustup target add x86_64-pc-windows-gnu
+            apt-get update && apt-get install -y -qq gcc-mingw-w64-x86-64-posix zip
+        - name: 编译检查与静态分析
+          script: |
+            cargo check --workspace --all-targets
+            cargo clippy --workspace --all-targets -- -D warnings
+        - name: 运行测试
+          script: cargo test --workspace
+        - name: 交叉编译 Windows 二进制
+          script: |
+            cargo build --release -p hit-cli -p hit-shim --target x86_64-pc-windows-gnu
+        - name: 打包发布
+          script: |
+            mkdir -p artifacts
+            cp target/x86_64-pc-windows-gnu/release/hit.exe artifacts/
+            cp target/x86_64-pc-windows-gnu/release/hit-shim.exe artifacts/
+            cp README.md artifacts/
+            cd artifacts && zip ../hit-x86_64-pc-windows-msvc.zip . && cd ..
+            ls -lh hit-*.zip

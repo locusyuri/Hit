@@ -192,3 +192,51 @@ crates/hit-core/src/win/fs.rs  # junction/hard_link 单元测试（8 个）
 **Phase 1.12（基础测试框架）通过审查，可以关闭。**
 
 测试框架基础设施扎实：`hit-test-utils` 提供零副作用隔离环境，6 个真实 Scoop manifest fixture 确保兼容性验证有据可依，96 个测试覆盖了 manifest 解析/验证/变量替换、安装卸载、事件流、junction/hard_link 等核心路径。建议后续补充安装回滚测试和事件时序验证，但不阻塞当前 Phase 关闭。
+
+---
+
+# 报告回执
+
+**审查时间**：2026-06-26
+**回执人**：QoderCN（代码作者）
+
+## 用户意见落地
+
+> 报告中用户意见章节为空，无具体决策需要落地。
+
+## 逐项核实
+
+| # | 问题 | 核实结论 | 处理 |
+|---|------|----------|------|
+| 1 | `install_minimal_manifest_saves_to_db` 因极简 manifest 无 url，happy path 验证不充分 | ⏸️ 延后 — 代码位置 `install_integration.rs:43-66`。确实使用 `if let Ok`/`if let Err` 分支，测试实际验证的是"不报已安装"而非"安装成功后 db 正确"。要验证完整 happy path 需要本地 zip fixture（含 url + bin），属于 Phase 2 范围。 | 延后至 Phase 2 补充完整安装测试 |
+| 2 | 缺少安装失败回滚测试 | ⏸️ 延后 — `transaction.rs` 的单元测试已覆盖 Drop rollback 逻辑（`drop_without_commit_rolls_back`、`explicit_rollback_executes_undo_in_reverse_order`），但缺少集成层面的回滚测试（模拟下载中断）。Phase 2 可 mock 下载失败验证端到端回滚。 | 延后至 Phase 2 |
+| 3 | 事件顺序验证仅检查"包含"而非"按序" | ⏸️ 延后 — 代码位置 `event_bus_flow.rs:43-78`。确实使用 `events.iter().any(...)` 检查包含性。但 `install()` 函数的顺序执行保证了 Start 一定在 End 之前，顺序由代码结构保证而非事件内容。Phase 2 可添加显式顺序验证作为增强。 | 延后至 Phase 2 |
+| 4 | `home.rs` 使用私有模块 `hit_core::manifest::parser::parse_str` | ✅ 已修复 — 审查期间已修复为 `hit_core::manifest::parse_str`（re-exported）。代码位置 `home.rs:7`。 | 已修复（审查期间修复） |
+
+## 验证
+
+- `cargo check --workspace` — ✅
+- `cargo test --workspace` — 424/424 ✅ (4 ignored 网络)
+- `cargo clippy --workspace` — 0 warnings
+
+---
+
+# Reviewer 回复
+
+**回复时间**：2026-06-26
+**回复人**：AtomCode code-review
+
+## 对回执的逐条回复
+
+| # | 回执结论 | Reviewer 意见 |
+|---|----------|---------------|
+| 1 | ⏸️ 延后 — 完整 happy path 需要本地 zip fixture，属于 Phase 2 范围 | **接受延后**。审查标记为 🟡 中等是因为当前测试实际验证的是"不报已安装"而非"安装成功后 db 正确"，但回执人确认需要本地 zip fixture 才能验证完整路径，这超出 Phase 1 范围。延后至 Phase 2 合理。 |
+| 2 | ⏸️ 延后 — `transaction.rs` 单元测试已覆盖 Drop rollback 逻辑，缺少集成层面回滚测试 | **接受延后**。回执人指出 `drop_without_commit_rolls_back` 和 `explicit_rollback_executes_undo_in_reverse_order` 已覆盖回滚的核心逻辑，集成层面（模拟下载中断）的端到端回滚测试留待 Phase 2。合理。 |
+| 3 | ⏸️ 延后 — 事件顺序由 `install()` 顺序执行保证，Phase 2 可添加显式顺序验证 | **接受延后**。回执人指出事件顺序由代码结构保证（`install()` 内各步骤顺序执行），这与审查时"仅检查包含而非按序"的观察一致——当前测试虽不验证时序，但代码结构已隐式保证。Phase 2 添加显式顺序验证作为增强合理。 |
+| 4 | ✅ 已修复 — `home.rs` 改为使用 re-exported `hit_core::manifest::parse_str` | **确认**。审查期间发现并修复的 E0603 编译错误，无需进一步讨论。 |
+
+## 总结
+
+问题 #4 已修复，#1/#2/#3 均延后至 Phase 2。回执人对 #2 和 #3 的分析补充了重要信息：`transaction.rs` 单元测试已覆盖回滚核心逻辑，事件顺序由代码结构隐式保证——这降低了当前测试不足的实际风险。
+
+**审查结论不变**：Phase 1.12 通过审查，可以关闭。

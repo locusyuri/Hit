@@ -31,13 +31,12 @@ jobs:
       - name: Package artifacts
         shell: pwsh
         run: |
-          $version = "${{ github.ref_name }}".TrimStart('v')
+          $version = "${{ inputs.version }}".TrimStart('v')
           $arch = "x86_64"
           $zipName = "hit-$arch-pc-windows-msvc-$version.zip"
           Compress-Archive -Path @(
             "target/release/hit.exe",
             "target/release/hit-shim.exe",
-            "LICENSE",
             "README.md"
           ) -DestinationPath $zipName
           echo "ARTIFACT=$zipName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
@@ -45,10 +44,11 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ inputs.version }}
           files: ${{ env.ARTIFACT }}
           generate_release_notes: true
           body: |
-            ## Hit ${{ github.ref_name }}
+            ## Hit v${{ inputs.version }}
 
             ### 安装方式
 

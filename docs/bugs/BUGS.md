@@ -61,3 +61,6 @@ wasmedge     0.17.0     A lightweight, high-performance, and extensible WebAssem
 以及搜索结果格式不对，没有对齐，应该使用表格。
 
 !!! 搜索结果似乎并不相关 !!!
+
+## Hit 本身的 Shim 异常 ⭐⭐⭐
+shim 文件夹下的 `hit.exe` 大小 10873 KB，和根目录下的 `hit.exe` 大小相同。事实上这里应该是轻量的代理文件，而不是真正的 hit 程序。

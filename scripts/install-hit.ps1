@@ -212,27 +212,22 @@ else {
     }
 
     if ($Version -eq 'latest') {
-        $downloadUrl = "$baseUrl/latest/download/hit-$arch-pc-windows-msvc.zip"
+        $downloadUrl = "$baseUrl/latest/download/hit.exe"
     }
     else {
-        $downloadUrl = "$baseUrl/download/v$Version/hit-$arch-pc-windows-msvc.zip"
+        $downloadUrl = "$baseUrl/download/v$Version/hit.exe"
     }
 
-    $zipPath = Join-Path $env:TEMP "hit-$Version-$arch.zip"
+    $exePath = Join-Path $env:TEMP "hit-$Version-$arch.exe"
     Write-Step "下载 $downloadUrl"
     try {
-        Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath -UseBasicParsing
+        Invoke-WebRequest -Uri $downloadUrl -OutFile $exePath -UseBasicParsing
     }
     catch {
         Write-Fail "下载失败：$($_.Exception.Message)`n    请检查网络或切换镜像 (-Mirror cnb)"
     }
 
-    $extractDir = Join-Path $env:TEMP "hit-extract-$(Get-Random)"
-    Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
-    $exeSource = Get-ChildItem $extractDir -Filter hit.exe -Recurse | Select-Object -First 1
-    if (-not $exeSource) {
-        Write-Fail "zip 中找不到 hit.exe：$zipPath"
-    }
+    $exeSource = Resolve-Path $exePath
 }
 
 # ── 3. 初始化目录布局 ──────────────────────────────────────────────────
@@ -268,10 +263,9 @@ if (-not (Test-Path $configPath)) {
     Write-Ok "默认配置已写入 $configPath"
 }
 
-# 清理临时下载
-if (-not $FromLocal -and (Test-Path $zipPath)) {
-    Remove-Item $zipPath -Force -ErrorAction SilentlyContinue
-    Remove-Item $extractDir -Recurse -Force -ErrorAction SilentlyContinue
+# 清理临时文件
+if (-not $FromLocal -and (Test-Path $exePath)) {
+    Remove-Item $exePath -Force -ErrorAction SilentlyContinue
 }
 
 # ── 4. 注册 PATH（仅 CurrentUser，无需管理员） ──────────────────────

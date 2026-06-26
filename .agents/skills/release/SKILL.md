@@ -66,20 +66,16 @@ Write-Host "当前 workspace 版本：$ver"
 
 ### Step 2：构建 Release 资产
 
+直接上传 `hit.exe`（不再打 zip）。
+
 ```powershell
 cargo build --release -p hit-cli -p hit-shim
 if ($LASTEXITCODE -ne 0) { Write-Fail "cargo build 失败" }
 
-# 打包 zip
-$artifacts = "artifacts"
-New-Item -ItemType Directory -Path $artifacts -Force | Out-Null
-Copy-Item "target\release\hit.exe" $artifacts\ -Force
-Copy-Item "target\release\hit-shim.exe" $artifacts\ -Force
-Copy-Item "README.md" $artifacts\ -Force
-
-$zipName = "hit-x86_64-pc-windows-msvc-$Version.zip"
-Compress-Archive -Path "$artifacts\*" -DestinationPath $zipName -Force
-Write-Host "产物：$zipName"
+$exePath = "target\release\hit.exe"
+$exeName = "hit-x86_64-pc-windows-msvc.exe"
+Copy-Item $exePath $exeName -Force
+Write-Host "产物：$exeName"
 ```
 
 ### Step 3：生成草稿
@@ -100,9 +96,7 @@ Hit v${Version}
 $(git log $(git describe --tags --abbrev=0 2>/dev/null || echo "HEAD~10")..HEAD --oneline --no-merges | ForEach-Object { "- $_" })
 
 ## 包含的资产
-- hit.exe（x86_64-pc-windows-msvc）
-- hit-shim.exe（x86_64-pc-windows-msvc）
-- README.md
+- hit-x86_64-pc-windows-msvc.exe（x86_64-pc-windows-msvc）
 
 ## 发布操作
 将执行以下命令：
@@ -119,11 +113,11 @@ git tag ${Tag}
 git push origin main ${Tag}
 
 # 4. 创建 GitHub Release
-gh release create ${Tag} ${zipName} --title "Hit v${Tag}" --generate-notes
+gh release create ${Tag} ${exeName} --title "Hit v${Tag}" --generate-notes
 
 # 5. 创建 CNB Release
 git cnb release create ${Tag}
-git cnb release upload ${Tag} ${zipName}
+git cnb release upload ${Tag} ${exeName}
 ```
 
 文件写入 `draft_release.md` 后，展示给用户审核。告知用户：
@@ -149,18 +143,18 @@ git tag ${Tag}
 git push origin main ${Tag}
 
 # 3. GitHub Release
-gh release create ${Tag} ${zipName} --title "Hit v${Tag}" --generate-notes
+gh release create ${Tag} ${exeName} --title "Hit v${Tag}" --generate-notes
 
 # 4. CNB Release
 git cnb release create ${Tag}
-git cnb release upload ${Tag} ${zipName}
+git cnb release upload ${Tag} ${exeName}
 ```
 
 ### Step 5：清理
 
 ```powershell
-# 删除本地 zip（artifacts 目录保留，便于调试）
-Remove-Item $zipName -Force
+# 删除本地 exe
+Remove-Item $exeName -Force
 Write-Host "发布完成！GitHub: https://github.com/locusyuri/Hit/releases/tag/${Tag}"
 Write-Host "CNB: https://cnb.cool/catmono/Hit/-/releases"
 ```

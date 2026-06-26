@@ -23,6 +23,8 @@ Test-Path .\target\release\hit-shim.exe   # True
 
 ### 0.2 安装到本地（使用安装脚本）
 
+#### 0.2.1 交互式安装（首次体验流程）
+
 ```powershell
 # 交互式安装，选择"使用本地编译的 exe"
 .\scripts\install-hit.ps1
@@ -35,6 +37,33 @@ Test-Path .\target\release\hit-shim.exe   # True
 - hit.exe 路径：`C:\Repos\Hit\target\release\hit.exe`
 
 安装完成后**重新打开终端**让 PATH 生效。
+
+#### 0.2.2 一行命令快速安装（反复测试用）
+
+跳过所有交互提示，直接用参数指定，适合在修复 Bug 后快速回归测试：
+
+```powershell
+.\scripts\install-hit.ps1 -Path C:\Users\<你>\Downloads\test\hit -FromLocal C:\Repos\Hit\target\release\hit.exe -NonInteractive -Force
+```
+
+参数说明：
+
+| 参数 | 含义 |
+|------|------|
+| `-Path` | 安装目录（覆盖默认 `~/.hit`） |
+| `-FromLocal` | 使用本地预编译 exe，跳过网络下载 |
+| `-NonInteractive` | 跳过所有交互提示 |
+| `-Force` | 覆盖已有安装 |
+
+#### 0.2.3 清理环境变量（卸载辅助）
+
+测试结束后清理 Hit 注册的 `HIT_ROOT` 和 PATH 中的 shims 条目（需两次确认）：
+
+```powershell
+.\scripts\uninstall-env.ps1
+```
+
+自动化场景可加 `-Force` 跳过确认。
 
 ### 0.3 确认安装成功
 

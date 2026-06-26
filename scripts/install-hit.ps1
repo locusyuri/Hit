@@ -255,7 +255,7 @@ if (-not (Test-Path $configPath)) {
         mirror                         = $mirrorValue
         aria2_enabled                  = $false
         no_junction                    = $false
-        root_path                      = $null
+        root_path                      = $Path
         auto_cleanup_days              = 30
         health_check_interval_days     = 7
     }
@@ -268,7 +268,23 @@ if (-not $FromLocal -and (Test-Path $exePath)) {
     Remove-Item $exePath -Force -ErrorAction SilentlyContinue
 }
 
-# ── 4. 注册 PATH（仅 CurrentUser，无需管理员） ──────────────────────
+# ── 4. 注册环境变量（HIT_ROOT + PATH，仅 CurrentUser，无需管理员） ─────
+
+# 注册 HIT_ROOT 环境变量（与 SCOOP 等价，供 hit 自身定位根目录）
+try {
+    $regKey = 'HKCU:\Environment'
+    $currentHitRoot = (Get-ItemProperty -Path $regKey -Name HIT_ROOT -ErrorAction SilentlyContinue).HIT_ROOT
+    if (-not $currentHitRoot -or $currentHitRoot -ne $Path) {
+        Set-ItemProperty -Path $regKey -Name HIT_ROOT -Value $Path -Type ExpandString
+        Write-Ok "已设置 HIT_ROOT = $Path"
+    }
+    else {
+        Write-Ok "HIT_ROOT 已是 $Path（无需修改）"
+    }
+}
+catch {
+    Write-Warn "HIT_ROOT 注册失败：$($_.Exception.Message)`n    请手动将 HIT_ROOT 设为 $Path"
+}
 
 Write-Step "注册 shims 目录到用户 PATH..."
 try {
@@ -281,9 +297,10 @@ try {
         $newPath = if ($currentPath) { "$currentPath;$shimsDir" } else { $shimsDir }
         Set-ItemProperty -Path $regKey -Name Path -Value $newPath -Type ExpandString
         Write-Ok "已追加 $shimsDir 到 HKCU\Environment\Path"
+    }
 
-        # 广播 WM_SETTINGCHANGE 通知其它进程刷新环境变量
-        Add-Type -TypeDefinition @"
+    # 广播 WM_SETTINGCHANGE 通知其它进程刷新环境变量（HIT_ROOT 与 PATH 同属 Environment）
+    Add-Type -TypeDefinition @"
 using System;
 using System.Runtime.InteropServices;
 public class HitBroadcast {
@@ -298,8 +315,7 @@ public class HitBroadcast {
     }
 }
 "@
-        [HitBroadcast]::SettingChange()
-    }
+    [HitBroadcast]::SettingChange()
 }
 catch {
     Write-Warn "PATH 注册失败：$($_.Exception.Message)`n    请手动将 $shimsDir 加入系统 PATH"

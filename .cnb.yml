@@ -22,6 +22,7 @@ main:
             apt-get update && apt-get install -y -qq gcc-mingw-w64-x86-64-posix zip
         - name: 交叉编译检查与静态分析
           script: |
+            rustup component add clippy
             cargo check --workspace --all-targets --target x86_64-pc-windows-gnu
             cargo clippy --workspace --all-targets --target x86_64-pc-windows-gnu -- -D warnings
         - name: 编译测试（不运行，Windows exe 无法在 Linux 执行）

@@ -19,6 +19,7 @@
 - ~~**高频旧版本专用仓库** — 对 maven、gradle、nodejs、python 等频繁下载旧版本的环境类软件可自建 GitHub 仓库托管历史版本清单，或复用 Scoop 的 `versions` bucket。~~ ❌ **不建议实施**（Scoop 已有 `versions` bucket）
 - ~~**首次启动快速导入** — 初次运行 `hit` 时提供交互式引导，一键导入 `main`、`extras`、`versions` 等常用 bucket。~~ ✅ **已列入 [PROJECT.md](./PROJECT.md)**
 - ~~**快速创建 bucket 命令** — 新增 `hit bucket create` 命令，交互式引导用户创建自己的 bucket 仓库（初始化目录结构、生成 bucket.json、提示推送到 GitHub 等）。~~ ✅ **已列入 [PROJECT.md](./PROJECT.md)**
+- **卸载 Hit 自身** — 新增 `hit uninstall hit` 命令，支持两种模式：模式1（`--self`）只卸载 hit 本身，保留已安装软件和 shim，仅删除 shim 中指向 hit 自身的条目；模式2（`--purge-self`）完全卸载，删除 `~/.hit/` 全部内容（apps/shims/persist/cache/buckets）并从 PATH 移除 shims 目录。注意：运行中的 hit 进程无法删除自身二进制，需先提示用户关闭终端或重启后自删除。
 
 ---
 
@@ -44,3 +45,32 @@
 | 7 | **TOML 配置** | 当前 config 已是 JSON + `sonic-rs`，切换到 TOML 涉及到迁移。`toml_edit` 保留注释的优势仅在用户手动编辑时体现——如果主要修改途径是 TUI/CLI，普通 toml crate 就够了。**建议**：Phase 1 先用 JSON，等配置结构稳定后再迁移。 |
 | 8 | **持久化搜索索引** | 思路正确，Scoop 慢的根因就是每次遍历所有 JSON。但需明确：索引格式用 `redb`（KV）做 `name → [bucket, version, desc]` 映射足够，不需要倒排索引，关键词搜索走 `LIKE` 扫描 KV。**建议**：默认启用而非可选，`hit bucket update` 后自动增量更新。备选方案可用 SQLite（已有 rusqlite 经验）。适合 Phase 2-3。 |
 | 9 | **高频旧版本专用仓库** | Scoop 已有 `versions` bucket，**不建议自建**。在首次启动导入时默认添加 `versions` bucket 即可，维护成本远低于自建。 |
+
+---
+
+## 新增灵感评审
+
+### 🟡 **卸载 Hit 自身**（2026-06-26 新增）
+
+**灵感来源**：用户卸载软件时，可能也需要卸载包管理器本身。当前 `hit uninstall` 只支持卸载已安装软件，无法卸载 Hit 自身。
+
+**建议方案**：
+
+| 参数 | 行为 |
+|------|------|
+| `hit uninstall hit`（无额外参数） | 模式1：只卸载 Hit 自身。保留 `~/.hit/apps/`、`~/.hit/shims/`、db.json 等，仅删除 shim 目录中指向 hit 的条目（`hit.exe` / `hit-shim.exe`）。 |
+| `hit uninstall hit --purge` | 模式2：完全卸载。删除 `~/.hit/` 整个目录，并从用户 PATH 中移除 shims 目录。 |
+
+**技术风险与对策**：
+
+1. **运行中的进程无法删除自身二进制** — Windows 不允许删除正在运行的 exe。对策：检测当前进程路径是否在 `~/.hit/` 下，若是则提示用户"请先关闭所有 hit 进程，或重启后运行此命令"；或使用 Windows 延迟删除 API（`MoveFileEx` 带 `MOVEFILE_DELAY_UNTIL_REBOOT` 标志，需要管理员权限，不推荐）。
+2. **PATH 清理** — 需区分模式1（保留 shims 目录，只移除 hit 相关条目）和模式2（从 PATH 中移除整个 shims 目录）。当前已有 `remove_from_path` 实现可复用。
+3. **shim 中 hit 的识别** — shim 的 `.shim` 文件中 `path` 字段指向真实 exe。删除前需确认该路径在 `~/.hit/` 下，避免误删其他软件的 shim。
+4. **正在运行的 hit 子进程** — 卸载前应检查是否有 `hit-shim.exe` 进程正在运行（通过 `find_running_processes`），若有则提示用户关闭。
+
+**优先级建议**：低。属于"有更好没有也不影响核心功能"的增强，建议 Phase 4+ 实现。当前用户可手动删除 `~/.hit/` 目录完成卸载。
+
+**与现有功能的关系**：
+- 复用 `hit-core::install::uninstall()` 的 PATH 操作（`remove_from_path`）
+- 复用 `hit-core::win::process::find_running_processes()` 检测运行进程
+- 不依赖 `hit-core::store`（因为不涉及已安装软件的 db.json 操作）

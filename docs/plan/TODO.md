@@ -301,8 +301,8 @@ crates/
 | 2.1.8 | `hit prefix` - 显示安装路径                                                            | ✅ | hit-core/store                  |
 | 2.1.9 | `hit hold <pkg>` - 版本锁定：在 db.json 的 InstalledPackage 中设置 `held: true` 字段；被 hold 的包在 `hit update` 时跳过升级；参考 Hok 的 `operation::package_hold` 实现 | ✅ | hit-core/store                  |
 | 2.1.10| `hit unhold <pkg>` - 解除版本锁定：将 `held` 字段设回 `false`                          | ✅ | 2.1.9                           |
-| 2.1.11| `hit list` 增加 held 标记：已 hold 的包在 list 输出中显示 `[held]` 标记                | 📋 | 2.1.9                           |
-| 2.1.12| `hit config` 子命令：`hit config list` 显示当前配置；`hit config set <key> <value>` 修改配置（proxy, no_junction, mirror 等）；参考 Hok 的 config.rs `set()` 方法 | 📋 | hit-common/config               |
+| 2.1.11| `hit list` 增加 held 标记：已 hold 的包在 list 输出中显示 `[held]` 标记                | ✅ | 2.1.9                           |
+| 2.1.12| `hit config` 子命令：`hit config list` 显示当前配置；`hit config set <key> <value>` 修改配置（proxy, no_junction, mirror 等）；参考 Hok 的 config.rs `set()` 方法 | ✅ | hit-common/config               |
 
 ### 2.2 依赖解析增强
 

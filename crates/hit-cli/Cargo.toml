@@ -7,6 +7,7 @@ description = "Hit 命令行入口：clap 命令树（含 alias）+ EventBus 进
 [dependencies]
 hit-common = { workspace = true }
 hit-core = { workspace = true }
+hit-shim = { workspace = true }
 clap = { workspace = true }
 indicatif = { workspace = true }
 colored = { workspace = true }

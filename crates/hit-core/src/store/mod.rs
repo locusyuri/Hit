@@ -126,6 +126,10 @@ impl Db {
         self.packages.get(app)
     }
 
+    pub fn get_package_mut(&mut self, app: &str) -> Option<&mut InstalledPackage> {
+        self.packages.get_mut(app)
+    }
+
     pub fn insert_package(&mut self, app: String, pkg: InstalledPackage) {
         self.packages.insert(app, pkg);
         self.dirty = true;

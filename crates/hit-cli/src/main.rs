@@ -54,7 +54,14 @@ fn run() -> anyhow::Result<()> {
         Command::Status(args) => commands::status::execute(args, &session),
         Command::Bucket(args) => commands::bucket::execute(args, &session),
         Command::Info(args) => commands::info::execute(args, &session),
+        Command::Reset(args) => commands::reset::execute(args, &session),
+        Command::Cache(args) => commands::cache::execute(args, &session),
+        Command::Home(args) => commands::home::execute(args, &session),
         Command::Cleanup(args) => commands::cleanup::execute(args, &session),
+        Command::Which(args) => commands::which::execute(args, &session),
+        Command::Prefix(args) => commands::prefix::execute(args, &session),
+        Command::Hold(args) => commands::hold::execute(args, &session),
+        Command::Unhold(args) => commands::unhold::execute(args, &session),
     };
 
     progress.stop();

@@ -62,9 +62,31 @@ pub enum Command {
     /// 查看软件包详情
     Info(commands::info::Args),
 
+    /// 切换软件版本
+    #[clap(alias = "r")]
+    Reset(commands::reset::Args),
+
+    /// 管理下载缓存
+    Cache(commands::cache::Args),
+
+    /// 打开软件主页
+    Home(commands::home::Args),
+
     /// 清理旧版本与缓存
     #[clap(alias = "c")]
     Cleanup(commands::cleanup::Args),
+
+    /// 查找命令对应的 shim 路径
+    Which(commands::which::Args),
+
+    /// 显示安装路径
+    Prefix(commands::prefix::Args),
+
+    /// 锁定软件版本（update 时跳过）
+    Hold(commands::hold::Args),
+
+    /// 解除版本锁定
+    Unhold(commands::unhold::Args),
 }
 
 #[cfg(test)]

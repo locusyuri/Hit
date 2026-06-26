@@ -7,13 +7,10 @@
 //! 4. 启动目标进程，继承 stdin/stdout/stderr
 //! 5. 返回子进程退出码
 
-mod parse;
-mod process;
-
 use std::process::ExitCode;
 
-use parse::{read_shim_file, shim_file_path};
-use process::run_target;
+use hit_shim::parse::{read_shim_file, shim_file_path};
+use hit_shim::process::run_target;
 
 fn main() -> ExitCode {
     let exe = match std::env::current_exe() {

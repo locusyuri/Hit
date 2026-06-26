@@ -329,9 +329,9 @@ crates/
 
 | 序号  | 任务                   | 状态 | 依赖              |
 | :--- | --- | :--: | --- |
-| 3.1.1 | 实现文件完整性检查     | 📋 | hit-core/download |
-| 3.1.2 | 检查 Shim 指向是否正确 | 📋 | hit-shim          |
-| 3.1.3 | 实现自动修复功能       | 📋 | hit-core/install  |
+| 3.1.1 | 实现文件完整性检查     | ✅ | hit-core/download |
+| 3.1.2 | 检查 Shim 指向是否正确 | ✅ | hit-shim          |
+| 3.1.3 | 实现自动修复功能       | ✅ | hit-core/install  |
 
 ### 3.2 镜像源管理
 

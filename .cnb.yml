@@ -1,36 +1,41 @@
 # CNB 云原生构建配置
 # 参考文档：https://docs.cnb.cool/zh/build/intro.html
+#
+# CNB 使用 Linux 容器，通过 MinGW 交叉编译 Windows 二进制。
+# 产物可在 README.md 中通过 CNB 下载链接获取。
 
 main:
   push:
     - docker:
-        image: rust:1.85-windowsservercore-ltsc2022
+        image: rust:1.85
         volumes:
-          - C:\Users\containeruser\.cargo\registry:cache
-          - C:\Users\containeruser\.cargo\git:cache
+          - /usr/local/cargo/registry:cache
+          - /usr/local/cargo/git:cache
           - target:cache
         stages:
-          # ── 1. 编译检查 ─────────────────────────────────
+          # ── 1. 安装 MinGW 交叉编译工具链 ─────────────
+          - rustup target add x86_64-pc-windows-gnu
+          - apt-get update && apt-get install -y -qq gcc-mingw-w64-x86-64-posix zip
+
+          # ── 2. 编译检查 ─────────────────────────────────
           - cargo check --workspace --all-targets
 
-          # ── 2. 静态分析 ─────────────────────────────────
+          # ── 3. 静态分析 ─────────────────────────────────
           - cargo clippy --workspace --all-targets -- -D warnings
 
-          # ── 3. 运行测试 ─────────────────────────────────
+          # ── 4. 运行测试（Linux 原生）──────────────────
           - cargo test --workspace
 
-          # ── 4. 构建 release ────────────────────────────
-          - cargo build --release -p hit-cli
-          - cargo build --release -p hit-shim
+          # ── 5. 交叉编译 Windows 二进制 ────────────────
+          - cargo build --release -p hit-cli -p hit-shim --target x86_64-pc-windows-gnu
 
-          # ── 5. 打包 ────────────────────────────────────
+          # ── 6. 打包 ────────────────────────────────────
           - mkdir -p artifacts
-          - cp target/release/hit.exe artifacts/
-          - cp target/release/hit-shim.exe artifacts/
+          - cp target/x86_64-pc-windows-gnu/release/hit.exe artifacts/
+          - cp target/x86_64-pc-windows-gnu/release/hit-shim.exe artifacts/
           - cp README.md artifacts/
-          - cp LICENSE artifacts/ 2>/dev/null || true
-          - cd artifacts && 7z a -tzip ../hit-x86_64-pc-windows-msvc.zip . && cd ..
+          - cd artifacts && zip ../hit-x86_64-pc-windows-msvc.zip . && cd ..
 
-          # ── 6. 输出 ────────────────────────────────────
-          - echo "构建完成！"
+          # ── 7. 输出 ────────────────────────────────────
           - ls -lh hit-*.zip
+          - echo "构建完成！产物在 hit-x86_64-pc-windows-msvc.zip"

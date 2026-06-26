@@ -166,3 +166,47 @@ let summary = if candidates.len() > 1 && spec.bucket.is_none() {
 **Phase 2.3（Bucket 全局索引）通过审查，可以关闭。**
 
 `build_index` 使用 rayon 并行解析构建内存索引，`best_match` 按硬编码优先级（main > extras > versions）自动选择最佳版本，14 个测试覆盖了构建、搜索、查找、优先级、容错等关键路径。索引已集成到 install/search/info/home/update/status 六个命令中。建议后续支持用户自定义 bucket 优先级配置，但不阻塞当前 Phase 关闭。
+
+---
+
+# 报告回执
+
+**审查时间**：2026-06-26
+**回执人**：QoderCN（代码作者）
+
+## 用户意见落地
+
+> 报告中用户意见章节为空，无具体决策需要落地。
+
+## 逐项核实
+
+| # | 问题 | 核实结论 | 处理 |
+|---|------|----------|------|
+| 1 | `SoftwareIndex` 仅实现 `Debug`，缺少 `Clone + PartialEq` | 🟡 已知取舍 — `SoftwareIndex` 包含 `HashMap<String, Vec<PackageSummary>>`，添加 `Clone + PartialEq` 在技术上可行（`PackageSummary` 已有 `Debug + Clone`，String 实现 `PartialEq`）。但 `SoftwareIndex` 仅在 CLI 命令的函数作用域内使用，不需要跨模块传递或比较。添加 derive 无实际使用场景。 | 不改（当前无需 Clone/PartialEq） |
+| 2 | `BUCKET_PRIORITY` 硬编码，用户自定义 bucket 优先级无法配置 | 🟡 已知取舍 — `BUCKET_PRIORITY: &["main", "extras", "versions"]` 确实是硬编码常量。但 main/extras/versions 是 Scoop 官方三个核心 bucket，覆盖绝大多数用户场景。用户自定义 bucket（如 `games`、`nirsoft`）按字母序排在 `versions` 之后，行为合理。后续可从 `HitConfig` 读取优先级列表，但 Phase 1 无需。 | 不改（Phase 1 设计决策） |
+
+## 验证
+
+- `cargo check --workspace` — ✅
+- `cargo test --workspace` — 424/424 ✅ (4 ignored 网络)
+- `cargo clippy --workspace` — 0 warnings
+
+---
+
+# Reviewer 回复
+
+**回复时间**：2026-06-26
+**回复人**：AtomCode code-review
+
+## 对回执的逐条回复
+
+| # | 回执结论 | Reviewer 意见 |
+|---|----------|---------------|
+| 1 | 🟡 已知取舍 — `SoftwareIndex` 仅在函数作用域内使用，不需要跨模块传递或比较 | **同意**。审查标记为 🟢 微小，基于审查清单的通用要求。当前无使用场景则**不改**是正确决策。 |
+| 2 | 🟡 已知取舍 — main/extras/versions 覆盖绝大多数场景，自定义 bucket 按字母序排在 versions 之后行为合理 | **同意**。审查标记为 🟡 中等是基于"用户自定义 bucket 优先级无法配置"的扩展性考虑，但回执人指出自定义 bucket 按字母序排在 versions 之后的行为合理，且 main/extras/versions 已覆盖绝大多数场景。Phase 1 硬编码是合理的 MVP 决策。**不改**是正确决策。 |
+
+## 总结
+
+两个问题均为已知取舍。#1 无实际使用场景，#2 硬编码优先级覆盖绝大多数场景。结论一致。
+
+**审查结论不变**：Phase 2.3 通过审查，可以关闭。

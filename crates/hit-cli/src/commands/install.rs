@@ -80,17 +80,13 @@ fn find_manifest(
         ));
     }
 
-    // 如果有多个 bucket 但未指定，提示用户选择
-    if candidates.len() > 1 && spec.bucket.is_none() {
-        let buckets: Vec<&str> = candidates.iter().map(|p| p.bucket.as_str()).collect();
-        return Err(anyhow::anyhow!(
-            "在多个 bucket 中找到 '{}': {}，请使用 bucket/name 指定",
-            spec.name,
-            buckets.join(", ")
-        ));
-    }
-
-    let summary = candidates[0];
+    // 选择最佳匹配
+    let summary = if candidates.len() > 1 && spec.bucket.is_none() {
+        // 多个 bucket 有同名软件，按优先级自动选择
+        index.best_match(&spec.name).unwrap()
+    } else {
+        candidates[0]
+    };
     let bucket = summary.bucket.clone();
     let app = summary.name.clone();
 
@@ -276,17 +272,17 @@ mod tests {
     }
 
     #[test]
-    fn find_manifest_ambiguous_bucket_error() {
+    fn find_manifest_ambiguous_selects_best() {
         let dir = tempfile::tempdir().unwrap();
         let buckets_dir = dir.path().join("buckets");
 
-        // 在两个 bucket 中创建同名 manifest
-        for bucket_name in &["main", "extras"] {
+        // 在两个 bucket 中创建同名 manifest（不同版本）
+        for (bucket_name, version) in [("main", "2.45.1"), ("extras", "2.44.0")] {
             let bucket_dir = buckets_dir.join(bucket_name);
             std::fs::create_dir_all(&bucket_dir).unwrap();
             std::fs::write(
                 bucket_dir.join("git.json"),
-                minimal_manifest_json("2.45.1"),
+                minimal_manifest_json(version),
             )
             .unwrap();
         }
@@ -299,9 +295,11 @@ mod tests {
         };
 
         let result = find_manifest(&session, &spec);
-        assert!(result.is_err());
-        let err_msg = result.unwrap_err().to_string();
-        assert!(err_msg.contains("多个 bucket"), "错误信息应提示多个 bucket: {err_msg}");
+        assert!(result.is_ok());
+        let (bucket, _app, manifest) = result.unwrap();
+        // 应自动选择 main bucket
+        assert_eq!(bucket, "main");
+        assert_eq!(manifest.version, "2.45.1");
     }
 
     #[test]

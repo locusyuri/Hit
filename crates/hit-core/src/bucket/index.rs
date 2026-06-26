@@ -14,6 +14,11 @@ use hit_common::Session;
 use crate::bucket::types::list_buckets;
 use crate::manifest::parse_str;
 
+/// Bucket 优先级（数值越小优先级越高）
+///
+/// 当多个 bucket 包含同名软件时，按此顺序选择最佳匹配。
+const BUCKET_PRIORITY: &[&str] = &["main", "extras", "versions"];
+
 /// 软件包摘要（从 manifest 文件提取的最小信息集）
 #[derive(Debug, Clone)]
 pub struct PackageSummary {
@@ -159,6 +164,19 @@ impl SoftwareIndex {
     /// 索引中软件包总数
     pub fn total_packages(&self) -> usize {
         self.packages.values().map(Vec::len).sum()
+    }
+
+    /// 从多个候选中选择最佳匹配（按 bucket 优先级排序）
+    ///
+    /// 优先级顺序：main > extras > versions > 其他（按字母序）
+    pub fn best_match(&self, name: &str) -> Option<&PackageSummary> {
+        let candidates = self.find(name);
+        candidates.into_iter().min_by_key(|p| {
+            BUCKET_PRIORITY
+                .iter()
+                .position(|&b| b == p.bucket.as_str())
+                .unwrap_or(BUCKET_PRIORITY.len())
+        })
     }
 }
 
@@ -376,5 +394,47 @@ mod tests {
         let index = build_index(&session).unwrap();
 
         assert_eq!(index.total_packages(), 3);
+    }
+
+    #[test]
+    fn best_match_prefers_main() {
+        let dir = tempfile::tempdir().unwrap();
+        let main_dir = dir.path().join("buckets").join("main");
+        let extras_dir = dir.path().join("buckets").join("extras");
+        std::fs::create_dir_all(&main_dir).unwrap();
+        std::fs::create_dir_all(&extras_dir).unwrap();
+        write_manifest(&main_dir.join("git.json"), "2.45.1", "Git main");
+        write_manifest(&extras_dir.join("git.json"), "2.44.0", "Git extras");
+
+        let session = test_session(dir.path());
+        let index = build_index(&session).unwrap();
+
+        let best = index.best_match("git").unwrap();
+        assert_eq!(best.bucket, "main");
+        assert_eq!(best.version, "2.45.1");
+    }
+
+    #[test]
+    fn best_match_fallback_to_extras() {
+        let dir = tempfile::tempdir().unwrap();
+        let extras_dir = dir.path().join("buckets").join("extras");
+        std::fs::create_dir_all(&extras_dir).unwrap();
+        write_manifest(&extras_dir.join("git.json"), "2.44.0", "Git extras");
+
+        let session = test_session(dir.path());
+        let index = build_index(&session).unwrap();
+
+        let best = index.best_match("git").unwrap();
+        assert_eq!(best.bucket, "extras");
+    }
+
+    #[test]
+    fn best_match_returns_none_for_unknown() {
+        let dir = tempfile::tempdir().unwrap();
+        std::fs::create_dir_all(dir.path().join("buckets").join("main")).unwrap();
+        let session = test_session(dir.path());
+        let index = build_index(&session).unwrap();
+
+        assert!(index.best_match("nonexistent").is_none());
     }
 }

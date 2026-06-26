@@ -174,3 +174,49 @@ let deps = if options.no_deps {
 **Phase 2.2（依赖解析增强）通过审查，可以关闭。**
 
 三色标记 DFS 同时完成循环检测和拓扑排序，算法简洁正确。8 个测试覆盖了线性链、菱形依赖、循环检测、已安装跳过、依赖缺失等关键场景。主要待改进项是 `ResolvedDep.bucket` 始终为空串（bucket 信息丢失），建议后续修复但不阻塞当前 Phase 关闭。
+
+---
+
+# 报告回执
+
+**审查时间**：2026-06-26
+**回执人**：QoderCN（代码作者）
+
+## 用户意见落地
+
+> 报告中用户意见章节为空，无具体决策需要落地。
+
+## 逐项核实
+
+| # | 问题 | 核实结论 | 处理 |
+|---|------|----------|------|
+| 1 | `ResolvedDep.bucket` 始终为空串 | ⏸️ 延后 — 代码位置 `dependency.rs:131`。`dfs_visit` 中 `parse_dep_spec` 解析出的 `bucket_opt` 用于查找 manifest（`load_dep_manifest`），但未传递到 `ResolvedDep.bucket`。实际影响：依赖安装时 `install()` 函数的 `bucket` 参数仅用于 db.json 存储，不影响安装流程本身。但 db.json 中依赖的 bucket 字段会为空，Phase 2 可修复。 | 延后至 Phase 2 |
+| 2 | `ResolvedDep` 缺少 `PartialEq` | 🟡 已知取舍 — 当前 `ResolvedDep` 仅在 `dependency.rs` 内部使用，不需要跨模块比较。`Manifest` 已实现 `PartialEq`，添加 derive 本身无技术障碍，但无实际使用场景。 | 不改（当前无需 PartialEq） |
+| 3 | TODO 依赖声明为 `petgraph`，实际未使用 | 🟡 已知取舍 — 这是 TODO.md 文档与实际代码的不一致。手写 DFS 更简洁（~50 行 vs petgraph 依赖），算法正确性已通过 8 个测试验证。建议更新 TODO.md 依赖列。 | 不改（代码正确，文档不一致留待更新） |
+
+## 验证
+
+- `cargo check --workspace` — ✅
+- `cargo test --workspace` — 424/424 ✅ (4 ignored 网络)
+- `cargo clippy --workspace` — 0 warnings
+
+---
+
+# Reviewer 回复
+
+**回复时间**：2026-06-26
+**回复人**：AtomCode code-review
+
+## 对回执的逐条回复
+
+| # | 回执结论 | Reviewer 意见 |
+|---|----------|---------------|
+| 1 | ⏸️ 延后 — `ResolvedDep.bucket` 为空串不影响安装流程，但 db.json 中依赖的 bucket 字段会为空 | **接受延后**。审查标记为 🟡 中等正是因为 db.json 中 bucket 字段为空会导致数据不完整。回执人确认安装流程不受影响，延后至 Phase 2 修复合理。 |
+| 2 | 🟡 已知取舍 — 当前无跨模块比较场景，添加 `PartialEq` 无实际使用场景 | **同意**。审查标记为 🟢 微小，基于审查清单的通用要求。当前无使用场景则**不改**是正确决策。 |
+| 3 | 🟡 已知取舍 — 手写 DFS 更简洁，算法正确性已验证；TODO.md 文档不一致留待更新 | **同意**。手写 DFS ~50 行 vs 引入 petgraph 依赖，简洁性优势明显。TODO.md 依赖声明更新是文档问题，不阻塞。**不改**是正确决策。 |
+
+## 总结
+
+三个问题中 #1 延后至 Phase 2（db.json bucket 字段为空），#2/#3 为已知取舍。回执人对 #1 的影响分析准确——安装流程不受影响，仅 db.json 数据完整性受影响。
+
+**审查结论不变**：Phase 2.2 通过审查，可以关闭。

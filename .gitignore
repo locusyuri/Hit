@@ -13,3 +13,6 @@ ref/
 .atomcode
 .codebuddy
 CODEBUDDY.md
+
+# 发布产物
+scripts/hit.exe

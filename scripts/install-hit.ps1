@@ -151,10 +151,8 @@ if ($PSVersionTable.PSVersion.Major -lt 5) {
 }
 
 # 执行策略（CurrentUser 级别，无需管理员）
-$policy = Get-ExecutionPolicy -Scope CurrentUser -List |
-    Where-Object { $_ -notin @('Undefined', 'Restricted') } |
-    Select-Object -First 1
-if (-not $policy) {
+$policy = Get-ExecutionPolicy -Scope CurrentUser
+if ($policy -in @('Undefined', 'Restricted')) {
     Write-Step "设置执行策略 RemoteSigned (CurrentUser)..."
     Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 }

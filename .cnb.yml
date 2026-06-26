@@ -36,5 +36,5 @@ main:
             cp target/x86_64-pc-windows-gnu/release/hit.exe artifacts/
             cp target/x86_64-pc-windows-gnu/release/hit-shim.exe artifacts/
             cp README.md artifacts/
-            cd artifacts && zip ../hit-x86_64-pc-windows-gnu.zip . && cd ..
+            cd artifacts && zip -r ../hit-x86_64-pc-windows-gnu.zip . && cd ..
             ls -lh hit-*.zip

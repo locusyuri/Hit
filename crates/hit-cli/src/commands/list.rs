@@ -45,8 +45,13 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     );
 
     for (name, pkg) in &filtered {
+        let held_mark = if pkg.held {
+            " [held]".yellow().to_string()
+        } else {
+            String::new()
+        };
         println!(
-            "{:<12} {:<10} {:<8} {:<10} {}",
+            "{:<12} {:<10} {:<8} {:<10} {}{held_mark}",
             name,
             pkg.version,
             pkg.architecture,
@@ -107,6 +112,36 @@ mod tests {
                     bucket: "main".into(),
                     architecture: "64bit".into(),
                     install_date: "2024-06-10".into(),
+                    ..Default::default()
+                },
+            );
+            db.save().unwrap();
+        }
+
+        let args = Args { filter: None };
+        let result = execute(&args, &session);
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn list_shows_held_mark() {
+        let dir = tempfile::tempdir().unwrap();
+        let session = test_session(dir.path());
+
+        {
+            let mut db = hit_core::store::Db::load(&hit_core::store::db_path(&session)).unwrap();
+            let mut pkg = hit_core::store::InstalledPackage {
+                version: "1.0".into(),
+                bucket: "main".into(),
+                ..Default::default()
+            };
+            pkg.held = true;
+            db.insert_package("held_app".into(), pkg);
+            db.insert_package(
+                "normal_app".into(),
+                hit_core::store::InstalledPackage {
+                    version: "2.0".into(),
+                    bucket: "main".into(),
                     ..Default::default()
                 },
             );

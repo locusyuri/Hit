@@ -62,6 +62,7 @@ fn run() -> anyhow::Result<()> {
         Command::Prefix(args) => commands::prefix::execute(args, &session),
         Command::Hold(args) => commands::hold::execute(args, &session),
         Command::Unhold(args) => commands::unhold::execute(args, &session),
+        Command::Config(args) => commands::config::execute(args, &session),
     };
 
     progress.stop();

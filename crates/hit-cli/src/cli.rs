@@ -87,6 +87,9 @@ pub enum Command {
 
     /// 解除版本锁定
     Unhold(commands::unhold::Args),
+
+    /// 管理配置
+    Config(commands::config::Args),
 }
 
 #[cfg(test)]

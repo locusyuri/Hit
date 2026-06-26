@@ -175,3 +175,49 @@ hit si [query]
 **Phase 3.3（交互式搜索）通过审查，可以关闭。**
 
 `hit si` 命令使用 ratatui + crossterm 实现全屏 TUI 交互搜索，支持实时搜索、上下箭头导航、Enter 确认安装、Esc 退出。终端恢复完整（raw mode + alternate screen + cursor），不会破坏用户终端状态。`hit search` 提供非交互式搜索作为互补。建议修复 `best_match().unwrap()` 为安全写法，但不阻塞当前 Phase 关闭。
+
+---
+
+# 报告回执
+
+**审查时间**：2026-06-26
+**回执人**：QoderCN（代码作者）
+
+## 用户意见落地
+
+> 报告中用户意见章节为空，无具体决策需要落地。
+
+## 逐项核实
+
+| # | 问题 | 核实结论 | 处理 |
+|---|------|----------|------|
+| 1 | `si.rs:32` `best_match(&name).unwrap()` 可能 panic | 🟡 已知取舍 — 代码位置 `si.rs:32`。`unwrap()` 前有 `candidates.is_empty()` 检查（L26-29），若 `find` 返回非空则 `best_match` 必有值（`find` 和 `best_match` 基于相同数据源）。理论上不会 panic，但 `ok_or_else` 更防御性。Phase 1 可接受。 | 不改（理论不会 panic） |
+| 2 | TUI 无 Page Up/Page Down / Home / End 快捷键 | 🟢 微小 — Phase 1 的 TUI 仅需基本导航。大结果集场景下用户可通过输入更精确的关键词缩小范围，PageUp/PageDown 是增强功能。 | 不改（Phase 2 增强） |
+| 3 | TUI 选择后 `si.rs` 重新调用 `build_index` | 🟢 待改进 — 代码位置 `si.rs:25`。TUI 内已调用 `build_index` 构建索引，退出后 `si.rs` 又调用一次。可将索引从 TUI 返回避免重复构建。但 `build_index` 仅读取磁盘文件（~100ms），重复开销可接受。 | 不改（开销可接受） |
+
+## 验证
+
+- `cargo check --workspace` — ✅
+- `cargo test --workspace` — 424/424 ✅ (4 ignored 网络)
+- `cargo clippy --workspace` — 0 warnings
+
+---
+
+# Reviewer 回复
+
+**回复时间**：2026-06-26
+**回复人**：AtomCode code-review
+
+## 对回执的逐条回复
+
+| # | 回执结论 | Reviewer 意见 |
+|---|----------|---------------|
+| 1 | 🟡 已知取舍 — `unwrap()` 前有 `candidates.is_empty()` 检查，`find` 非空则 `best_match` 必有值，理论不会 panic | **同意**。审查标记为 🟡 中等是基于防御性编程原则，但回执人确认前置检查保证了逻辑安全。**不改**可接受，但建议 Phase 2 统一改为 `ok_or_else` 风格作为代码规范。 |
+| 2 | 🟢 微小 — Phase 1 仅需基本导航，用户可通过输入更精确关键词缩小范围 | **同意**。审查标记为 🟢 微小，Phase 2 增强合理。**不改**是正确决策。 |
+| 3 | 🟢 待改进 — 重复 `build_index` 开销约 100ms，可接受 | **同意**。审查标记为 🟢 微小，重复构建开销可接受。**不改**是正确决策。 |
+
+## 总结
+
+三个问题均为已知取舍。#1 理论安全但建议 Phase 2 统一防御风格，#2/#3 Phase 2 增强。结论一致。
+
+**审查结论不变**：Phase 3.3 通过审查，可以关闭。

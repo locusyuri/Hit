@@ -291,16 +291,16 @@ crates/
 
 | 序号  | 任务                                                                                   | 状态 | 依赖                            |
 | :--- | --- | :--: | --- |
-| 2.1.1 | `hit reset` - 版本切换                                                                 | 📋 | hit-core/install                |
-| 2.1.2 | `hit cleanup` - 清理旧版本                                                             | 📋 | hit-core/store                  |
-| 2.1.3 | `hit cache` - 缓存管理                                                                 | 📋 | hit-core/download               |
-| 2.1.4 | `hit status` - 状态检查                                                                | 📋 | hit-core/store, hit-core/bucket |
-| 2.1.5 | `hit home` - 打开主页                                                                  | 📋 | hit-core/manifest               |
-| 2.1.6 | `hit uninstall --purge` - 彻底卸载                                                     | 📋 | hit-core/install                |
-| 2.1.7 | `hit which` - 查找命令对应的 shim 路径和真实 exe 路径                                  | 📋 | hit-shim                        |
-| 2.1.8 | `hit prefix` - 显示安装路径                                                            | 📋 | hit-core/store                  |
-| 2.1.9 | `hit hold <pkg>` - 版本锁定：在 db.json 的 InstalledPackage 中设置 `held: true` 字段；被 hold 的包在 `hit update` 时跳过升级；参考 Hok 的 `operation::package_hold` 实现 | 📋 | hit-core/store                  |
-| 2.1.10| `hit unhold <pkg>` - 解除版本锁定：将 `held` 字段设回 `false`                          | 📋 | 2.1.9                           |
+| 2.1.1 | `hit reset` - 版本切换                                                                 | ✅ | hit-core/install                |
+| 2.1.2 | `hit cleanup` - 清理旧版本                                                             | ✅ | hit-core/store                  |
+| 2.1.3 | `hit cache` - 缓存管理                                                                 | ✅ | hit-core/download               |
+| 2.1.4 | `hit status` - 状态检查                                                                | ✅ | hit-core/store, hit-core/bucket |
+| 2.1.5 | `hit home` - 打开主页                                                                  | ✅ | hit-core/manifest               |
+| 2.1.6 | `hit uninstall --purge` - 彻底卸载                                                     | ✅ | hit-core/install                |
+| 2.1.7 | `hit which` - 查找命令对应的 shim 路径和真实 exe 路径                                  | ✅ | hit-shim                        |
+| 2.1.8 | `hit prefix` - 显示安装路径                                                            | ✅ | hit-core/store                  |
+| 2.1.9 | `hit hold <pkg>` - 版本锁定：在 db.json 的 InstalledPackage 中设置 `held: true` 字段；被 hold 的包在 `hit update` 时跳过升级；参考 Hok 的 `operation::package_hold` 实现 | ✅ | hit-core/store                  |
+| 2.1.10| `hit unhold <pkg>` - 解除版本锁定：将 `held` 字段设回 `false`                          | ✅ | 2.1.9                           |
 | 2.1.11| `hit list` 增加 held 标记：已 hold 的包在 list 输出中显示 `[held]` 标记                | 📋 | 2.1.9                           |
 | 2.1.12| `hit config` 子命令：`hit config list` 显示当前配置；`hit config set <key> <value>` 修改配置（proxy, no_junction, mirror 等）；参考 Hok 的 config.rs `set()` 方法 | 📋 | hit-common/config               |
 

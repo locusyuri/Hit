@@ -1,0 +1,36 @@
+# CNB 云原生构建配置
+# 参考文档：https://docs.cnb.cool/zh/build/intro.html
+
+main:
+  push:
+    - docker:
+        image: rust:1.85-windowsservercore-ltsc2022
+        volumes:
+          - C:\Users\containeruser\.cargo\registry:cache
+          - C:\Users\containeruser\.cargo\git:cache
+          - target:cache
+        stages:
+          # ── 1. 编译检查 ─────────────────────────────────
+          - cargo check --workspace --all-targets
+
+          # ── 2. 静态分析 ─────────────────────────────────
+          - cargo clippy --workspace --all-targets -- -D warnings
+
+          # ── 3. 运行测试 ─────────────────────────────────
+          - cargo test --workspace
+
+          # ── 4. 构建 release ────────────────────────────
+          - cargo build --release -p hit-cli
+          - cargo build --release -p hit-shim
+
+          # ── 5. 打包 ────────────────────────────────────
+          - mkdir -p artifacts
+          - cp target/release/hit.exe artifacts/
+          - cp target/release/hit-shim.exe artifacts/
+          - cp README.md artifacts/
+          - cp LICENSE artifacts/ 2>/dev/null || true
+          - cd artifacts && 7z a -tzip ../hit-x86_64-pc-windows-msvc.zip . && cd ..
+
+          # ── 6. 输出 ────────────────────────────────────
+          - echo "构建完成！"
+          - ls -lh hit-*.zip

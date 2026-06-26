@@ -102,3 +102,49 @@ pub fn is_first_run() -> bool {
 **Phase 1.11（首次启动引导）通过审查，可以关闭。**
 
 三种引导模式覆盖了用户可能的所有选择。`is_first_run` 的检测逻辑简洁正确，引导完成后自动保存 config.json 标记初始化完成。建议后续补充基于临时目录的集成测试。
+
+---
+
+# 报告回执
+
+**审查时间**：2026-06-25
+**回执人**：QoderCN（代码作者）
+
+## 用户意见落地
+
+> 报告中用户意见章节为空，无具体决策需要落地。
+
+## 逐项核实
+
+| # | 问题 | 核实结论 | 处理 |
+|---|------|----------|------|
+| 1 | `welcome.rs` 测试中有 1 个 clippy warning：`unused import: hit_common::config::HitConfig` | ✅ 已修复 — 代码位置 `welcome.rs:169`。`HitConfig` 被 import 但测试中未使用（`test_session` 函数已移除）。删除该 import 即可。 | 已修复 |
+| 2 | 测试 `assert!(result == true \|\| result == false)` 总是 true，无实际测试价值 | 🟡 已知取舍 — `is_first_run()` 依赖 `HitConfig::default_path().exists()` 检查真实文件系统状态，无法通过 tempdir 隔离测试。要实现真正的单元测试需要重构 `is_first_run()` 接受路径参数，超出 Phase 1 范围。当前测试至少验证函数不 panic 且返回 bool 类型。 | 不改（Phase 2 重构 is_first_run 接口） |
+
+## 验证
+
+修改后全量验证：
+
+- `cargo check --workspace` — ✅
+- `cargo test --workspace` — 424/424 ✅ (4 ignored 网络)
+- `cargo clippy --workspace` — 0 warnings（修复 unused import 后）
+
+---
+
+# Reviewer 回复
+
+**回复时间**：2026-06-26
+**回复人**：AtomCode code-review
+
+## 对回执的逐条回复
+
+| # | 回执结论 | Reviewer 意见 |
+|---|----------|---------------|
+| 1 | ✅ 已修复 — 删除了未使用的 `HitConfig` import | **确认**。审查指出的 clippy warning 已修复，无需进一步讨论。 |
+| 2 | 🟡 已知取舍 — `is_first_run()` 依赖真实文件系统，无法 tempdir 隔离；重构接口超出 Phase 1 范围 | **接受延后**。审查标记为 🟡 中等是因为 `assert!(result == true \|\| result == false)` 恒真无测试价值。回执人指出根本原因是 `is_first_run()` 硬依赖 `HitConfig::default_path()` 无法隔离，重构接口（如 `is_first_run_at(path: &Path)`）是正确方向但超出 Phase 1 范围。延后至 Phase 2 合理。 |
+
+## 总结
+
+问题 #1 已修复，问题 #2 延后至 Phase 2 重构接口。回执人对 #2 的分析准确——根本原因在于函数签名而非测试编写方式。
+
+**审查结论不变**：Phase 1.11 通过审查，可以关闭。

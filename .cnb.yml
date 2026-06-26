@@ -1,15 +1,15 @@
 # CNB 云原生构建配置
 # 文档：https://docs.cnb.cool/zh/build/intro.html
-# 迁移：https://docs.cnb.build/zh/build/migrate-to-cnb/migrate-from-github-actions.html
 #
-# CNB 使用 Linux Docker 容器，通过 MinGW 交叉编译 Windows 二进制。
+# 触发方式：手动（在 CNB 仓库页面点击"触发构建"）
+# 构建环境：Linux Docker 容器，交叉编译 Windows 二进制
 # 产物可从 CNB Releases 下载：https://cnb.cool/catmono/Hit/-/releases
 
 main:
-  push:
+  web_trigger:
     - name: Hit 交叉编译
       docker:
-        image: rust:1.85
+        image: rust:latest
         volumes:
           - /usr/local/cargo/registry:copy-on-write
           - /usr/local/cargo/git:copy-on-write

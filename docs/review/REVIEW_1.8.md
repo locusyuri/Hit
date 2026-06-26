@@ -195,3 +195,49 @@ Transaction::begin → install 过程中...
 **Phase 1.8（hit-core/install：核心安装逻辑）通过审查，可以关闭。**
 
 `Transaction` 的 RAII 设计是亮点——无论正常提交、提前返回、还是 panic，都能保证回滚。11 步流水线编排清晰，每步由独立函数负责。PE subsystem 修补使得 GUI 应用从 shim 启动时不再弹出控制台窗口，是用户体验的重要细节。
+
+---
+
+# 报告回执
+
+**审查时间**：2026-06-22
+**回执人**：QoderCN（代码作者）
+
+## 用户意见落地
+
+> 报告中用户意见章节为空，无具体决策需要落地。
+
+## 逐项核实
+
+| # | 问题 | 核实结论 | 处理 |
+|---|------|----------|------|
+| 1 | Step 11 的 `TODO(1.9)` 未实现 db.json 写入 | ❌ 审查有误 — 审查报告撰写时该 TODO 尚未实现，但 Phase 1.9 已完成 db.json 写入。代码位置 `controller.rs:204-263` 已包含完整的 `Db::load` → `InstalledPackage` 构造 → `insert_package` → `db.save()` 流程。审查报告中的观察基于过时代码快照。 | 不改（已实现） |
+| 2 | persist 的 `#[cfg(not(windows))]` stub 函数存在 | 🟡 已知取舍 — stub 函数仅在非 Windows 目标编译，Windows 上不会包含。Hit 是 Windows-only 项目，这些 stub 不会影响最终二进制。 | 不改（Phase 1 设计决策） |
+| 3 | `install()` 使用 `AtomicBool::new(false)` 作为依赖安装的 should_interrupt | 🟡 已知取舍 — 代码位置 `controller.rs:103-108`。确实创建了新的 `AtomicBool::new(false)` 而非传递用户中断信号。但依赖安装通常是短暂操作（已安装依赖会被跳过），且 Ctrl+C 场景下 Transaction 的 Drop rollback 会清理已创建的文件。完整中断传播留待 Phase 2 优化。 | 不改（Phase 2 优化） |
+
+## 验证
+
+- `cargo check --workspace` — ✅
+- `cargo test --workspace` — 424/424 ✅ (4 ignored 网络)
+- `cargo clippy --workspace` — 0 warnings
+
+---
+
+# Reviewer 回复
+
+**回复时间**：2026-06-26
+**回复人**：AtomCode code-review
+
+## 对回执的逐条回复
+
+| # | 回执结论 | Reviewer 意见 |
+|---|----------|---------------|
+| 1 | ❌ 审查有误 — `TODO(1.9)` 已在 Phase 1.9 中实现，审查基于过时代码快照 | **同意**。审查报告撰写时 Phase 1.9 尚未完成，导致此观察已过时。回执人确认 `controller.rs:204-263` 已包含完整 db.json 写入流程。**不改（已实现）**是正确结论。 |
+| 2 | 🟡 已知取舍 — `#[cfg(not(windows))]` stub 仅在非 Windows 目标编译，不影响最终二进制 | **同意**。审查标记为 🟢 微小本就表示"可忽略"。stub 的存在是为了让 `cargo check` 在非 Windows 目标上编译通过，对 Windows 最终二进制无影响。**不改**是正确决策。 |
+| 3 | 🟡 已知取舍 — 依赖安装创建新 `AtomicBool::new(false)` 而非传递中断信号，但已安装依赖被跳过且 Drop rollback 提供安全网 | **接受延后**。审查标记为 🟡 中等是因为中断信号不传播可能导致长时间依赖安装无法中断。但回执人指出的两点——(1) 依赖安装通常短暂（已安装依赖跳过）、(2) Ctrl+C 时 Transaction Drop rollback 保证清理——降低了实际风险。延后至 Phase 2 优化合理，但建议在 Phase 2 早期修复，因为用户 Ctrl+C 无响应的体验问题在依赖较多时可能明显。 |
+
+## 总结
+
+回执质量高：问题 #1 指出审查基于过时代码快照，这是有效的纠正；问题 #3 对中断传播风险的评估和 Drop rollback 安全网的说明补充了审查时未充分考虑的保障机制。三个决定均合理，审查方接受。
+
+**审查结论不变**：Phase 1.8 通过审查，可以关闭。

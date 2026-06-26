@@ -20,12 +20,12 @@ main:
           script: |
             rustup target add x86_64-pc-windows-gnu
             apt-get update && apt-get install -y -qq gcc-mingw-w64-x86-64-posix zip
-        - name: 编译检查与静态分析
+        - name: 交叉编译检查与静态分析
           script: |
-            cargo check --workspace --all-targets
-            cargo clippy --workspace --all-targets -- -D warnings
-        - name: 运行测试
-          script: cargo test --workspace
+            cargo check --workspace --all-targets --target x86_64-pc-windows-gnu
+            cargo clippy --workspace --all-targets --target x86_64-pc-windows-gnu -- -D warnings
+        - name: 编译测试（不运行，Windows exe 无法在 Linux 执行）
+          script: cargo test --workspace --target x86_64-pc-windows-gnu --no-run
         - name: 交叉编译 Windows 二进制
           script: |
             cargo build --release -p hit-cli -p hit-shim --target x86_64-pc-windows-gnu

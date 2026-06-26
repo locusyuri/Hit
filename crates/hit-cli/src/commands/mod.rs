@@ -15,3 +15,4 @@ pub mod prefix;
 pub mod hold;
 pub mod unhold;
 pub mod config;
+pub mod doctor;

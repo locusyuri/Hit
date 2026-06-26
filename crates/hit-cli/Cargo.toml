@@ -15,6 +15,7 @@ tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 anyhow = { workspace = true }
 flume = { workspace = true }
+junction = { workspace = true }
 
 [dev-dependencies]
 tempfile = { workspace = true }

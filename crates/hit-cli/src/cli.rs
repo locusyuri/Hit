@@ -90,6 +90,9 @@ pub enum Command {
 
     /// 管理配置
     Config(commands::config::Args),
+
+    /// 健康检查与修复
+    Doctor(commands::doctor::Args),
 }
 
 #[cfg(test)]

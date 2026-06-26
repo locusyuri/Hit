@@ -17,6 +17,7 @@ pub mod download;
 pub mod hash;
 pub mod compress;
 pub mod store;
+pub mod health;
 
 #[cfg(windows)]
 pub mod win;

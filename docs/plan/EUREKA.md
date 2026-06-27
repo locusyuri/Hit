@@ -20,6 +20,7 @@
 - ~~**首次启动快速导入** — 初次运行 `hit` 时提供交互式引导，一键导入 `main`、`extras`、`versions` 等常用 bucket。~~ ✅ **已列入 [PROJECT.md](./PROJECT.md)**
 - ~~**快速创建 bucket 命令** — 新增 `hit bucket create` 命令，交互式引导用户创建自己的 bucket 仓库（初始化目录结构、生成 bucket.json、提示推送到 GitHub 等）。~~ ✅ **已列入 [PROJECT.md](./PROJECT.md)**
 - **卸载 Hit 自身** — 新增 `hit uninstall hit` 命令，支持两种模式：模式1（`--self`）只卸载 hit 本身，保留已安装软件和 shim，仅删除 shim 中指向 hit 自身的条目；模式2（`--purge-self`）完全卸载，删除 `~/.hit/` 全部内容（apps/shims/persist/cache/buckets）并从 PATH 移除 shims 目录。注意：运行中的 hit 进程无法删除自身二进制，需先提示用户关闭终端或重启后自删除。
+- **tabled 美化 CLI 输出** — 将 `search`、`list`、`cache list`、`bucket list` 等命令的手写文本表格改为 `tabled` crate 自动渲染的表格，列宽自适应、对齐整齐、无需手写格式化逻辑，比 `println!` 拼接更美观且零维护成本。
 
 ---
 
@@ -74,3 +75,37 @@
 - 复用 `hit-core::install::uninstall()` 的 PATH 操作（`remove_from_path`）
 - 复用 `hit-core::win::process::find_running_processes()` 检测运行进程
 - 不依赖 `hit-core::store`（因为不涉及已安装软件的 db.json 操作）
+
+---
+
+### 🟡 **ratatui 美化 CLI 输出**（2026-06-27 新增）
+
+**灵感来源**：当前 `search`、`list`、`info` 等命令的输出是简单的文本表格（`println!`），缺少列宽自适应、高亮、滚动等交互能力，视觉上不够美观。
+
+**建议方案**：
+
+| 考虑方案 | 说明 | 评价 |
+|---------|------|:----:|
+| ratatui 全屏渲染 | 进入 TUI 全屏模式显示表格，用户按 `q` 或 `Esc` 返回 | 与 `hit si` 的 TUI 模式一致，但命令输出从"一行命令一行结果"变成了"进入全屏"的体验，对简单的 list/search 来说太重了 |
+| ratatui 内联输出 | 用 ratatui 仅渲染表格部分（不进入全屏），在终端当前行下方绘制表格 | ratatui 本质是全屏框架，不适合此用途 |
+| `tabled` crate | 保持文本行输出，但用 `tabled` 自动计算列宽、对齐、分区线 | **推荐**。零侵入，不需要 TUI 的 event loop，直接从 `Vec<struct>` 输出格式化的表格，效果比手写 `println!` 好得多 |
+
+**技术分析**：
+
+1. **ratatui 不适合** — ratatui (`crossterm`/`termion` 后端) 本质是**全屏 TUI 框架**，需要获取终端大小、进入原始模式、处理键盘事件。对于 `search` / `list` 这样"输入命令 → 立刻输出 → 退出"的交互模式，全屏模式显得大材小用且体验割裂。
+2. **推荐 `tabled`** — `tabled` crate 专为这种场景设计：接收结构体切片，自动计算列宽、处理换行、支持 Markdown/ANSI/ASCII 格式，且零运行时依赖、无需修改 main loop。
+
+**实施建议**：
+
+| 命令 | 当前输出 | 建议改用 |
+|------|---------|---------|
+| `hit search` | 手写 `println!` 表格 | `tabled::Table::new(results)` + `#[derive(tabled::Tabled)]` |
+| `hit list` | 手写 `println!` 表格 | 同上 |
+| `hit info` | 手写 `println!` 标签 | 少量结构化文本，保持现状即可 |
+| `hit status` | 手写 `println!` 标签 | 同上 |
+| `hit cache list` | 手写 `println!` 表格 | 同上（`tabled`） |
+| `hit bucket list` | 手写 `println!` 表格 | 同上（`tabled`） |
+
+**优先级建议**：低。属于视觉增强，不影响功能正确性。建议在各项功能稳定后、或重构命令输出层时统一改造。预计改动量：为各结构体添加 `#[derive(tabled::Tabled)]` + 替换 `println!` 循环，约 3-5 行/命令。
+
+**现有依赖**：当前依赖列表中已有 `tabled`（在 `hit-cli/Cargo.toml` 中），可直接使用。

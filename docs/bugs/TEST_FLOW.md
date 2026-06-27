@@ -43,7 +43,7 @@ Test-Path .\target\release\hit-shim.exe   # True
 跳过所有交互提示，直接用参数指定，适合在修复 Bug 后快速回归测试：
 
 ```powershell
-.\scripts\install-hit.ps1 -Path C:\Users\<你>\Downloads\test\hit -FromLocal C:\Repos\Hit\target\release\hit.exe -NonInteractive -Force
+.\scripts\install-hit.ps1 -Path C:\Users\Violet\Downloads\test\hit -FromLocal C:\Repos\Hit\target\release\hit.exe -NonInteractive -Force
 ```
 
 参数说明：

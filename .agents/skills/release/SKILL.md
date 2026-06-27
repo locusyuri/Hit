@@ -66,16 +66,18 @@ Write-Host "当前 workspace 版本：$ver"
 
 ### Step 2：构建 Release 资产
 
-直接上传 `hit.exe`（不再打 zip）。
+直接上传 `hit.exe` + `hit-shim.exe`（不再打 zip）。install-hit.ps1 的网络下载模式会同时下载这两个文件（URL 分别为 `$baseUrl/.../hit.exe` 与 `$baseUrl/.../hit-shim.exe`），故两者都必须上传。
 
 ```powershell
 cargo build --release -p hit-cli -p hit-shim
 if ($LASTEXITCODE -ne 0) { Write-Fail "cargo build 失败" }
 
-$exePath = "target\release\hit.exe"
-$exeName = "hit-x86_64-pc-windows-msvc.exe"
-Copy-Item $exePath $exeName -Force
-Write-Host "产物：$exeName"
+$assets = @('hit.exe', 'hit-shim.exe')
+foreach ($a in $assets) {
+    $src = "target\release\$a"
+    if (-not (Test-Path $src)) { Write-Fail "产物不存在：$src" }
+    Write-Host "产物：$src"
+}
 ```
 
 ### Step 3：生成草稿
@@ -96,7 +98,8 @@ Hit v${Version}
 $(git log $(git describe --tags --abbrev=0 2>/dev/null || echo "HEAD~10")..HEAD --oneline --no-merges | ForEach-Object { "- $_" })
 
 ## 包含的资产
-- hit-x86_64-pc-windows-msvc.exe（x86_64-pc-windows-msvc）
+- hit.exe（x86_64-pc-windows-msvc，主程序）
+- hit-shim.exe（x86_64-pc-windows-msvc，轻量 shim 代理，~200KB）
 
 ## 发布操作
 将执行以下命令：
@@ -112,12 +115,13 @@ git tag ${Tag}
 # 3. 推送
 git push origin main ${Tag}
 
-# 4. 创建 GitHub Release
-gh release create ${Tag} ${exeName} --title "Hit v${Tag}" --generate-notes
+# 4. 创建 GitHub Release（上传两个资产）
+gh release create ${Tag} hit.exe hit-shim.exe --title "Hit v${Tag}" --generate-notes
 
-# 5. 创建 CNB Release
+# 5. 创建 CNB Release（分别上传两个资产）
 git cnb release create ${Tag}
-git cnb release upload ${Tag} ${exeName}
+git cnb release upload ${Tag} hit.exe
+git cnb release upload ${Tag} hit-shim.exe
 ```
 
 文件写入 `draft_release.md` 后，展示给用户审核。告知用户：
@@ -142,19 +146,20 @@ git commit -m "release: v${Version}"
 git tag ${Tag}
 git push origin main ${Tag}
 
-# 3. GitHub Release
-gh release create ${Tag} ${exeName} --title "Hit v${Tag}" --generate-notes
+# 3. GitHub Release（上传 hit.exe + hit-shim.exe）
+gh release create ${Tag} hit.exe hit-shim.exe --title "Hit v${Tag}" --generate-notes
 
-# 4. CNB Release
+# 4. CNB Release（分别上传两个资产）
 git cnb release create ${Tag}
-git cnb release upload ${Tag} ${exeName}
+git cnb release upload ${Tag} hit.exe
+git cnb release upload ${Tag} hit-shim.exe
 ```
 
 ### Step 5：清理
 
 ```powershell
-# 删除本地 exe
-Remove-Item $exeName -Force
+# 删除本地 exe（构建产物已在 target/release/，无需保留副本）
+# 注：不再复制到仓库根，故无需清理根目录文件
 Write-Host "发布完成！GitHub: https://github.com/locusyuri/Hit/releases/tag/${Tag}"
 Write-Host "CNB: https://cnb.cool/catmono/Hit/-/releases"
 ```

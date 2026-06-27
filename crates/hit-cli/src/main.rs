@@ -33,16 +33,19 @@ fn main() -> ExitCode {
 }
 
 fn run() -> anyhow::Result<()> {
-    let session = hit_common::Session::new()?;
-
-    // 首次启动引导（在 parse 之前，否则 --help 时 clap 直接退出，欢迎页无法显示）
-    if welcome::is_first_run() {
-        welcome::run_first_time_setup(&session)?;
-    }
-
+    // clap 必须先解析：让 clap 处理 --help / 无子命令 / 错误命令 / 缺参数，
+    // 直接报错退出，不被 welcome 拦截（修 BUGS.md "clap 错误被 welcome 吞掉"）
     let cli = Cli::parse();
 
     init_tracing(cli.verbose);
+
+    let session = hit_common::Session::new()?;
+
+    // 首次启动引导：仅在 clap 成功解析出子命令后才检查，
+    // 避免污染所有命令的输出（修 BUGS.md "Welcome 引导错误触发"）
+    if welcome::is_first_run() {
+        welcome::run_first_time_setup(&session)?;
+    }
 
     let progress = ProgressRenderer::start(&session);
 

@@ -1,7 +1,7 @@
 //! 首次启动引导
 //!
-//! 检测首次运行（config.json 不存在）时显示欢迎界面，
-//! 引导用户选择添加官方 Bucket。
+//! 检测首次运行（config.json 不存在 **且** buckets 目录为空）时显示欢迎界面，
+//! 引导用户选择添加官方 Bucket。判据见 [`is_first_run`]。
 
 use std::io::{self, BufRead, Write};
 use std::sync::atomic::AtomicBool;
@@ -12,21 +12,32 @@ use hit_common::config::HitConfig;
 
 /// 检测是否首次运行。
 ///
-/// 判定逻辑：**没有任何 bucket 存在**视为首次运行。
-/// 不能仅靠 config.json 是否存在判断，因为安装脚本会预先写好默认 config，
-/// 但此时用户尚未完成首次引导（添加 bucket）。
+/// 判定逻辑（双条件，必须同时满足才算首次运行）：
+/// 1. config.json 不存在（安装脚本会预置 config，存在则说明已初始化）
+/// 2. buckets/ 目录不存在或为空（无任何 bucket）
 ///
-/// 参考 `ref/Scoop/lib/core.ps1` 的 `install_config` / `Get-Config` 逻辑：
-/// Scoop 通过检查 `last_update` 时间戳判断是否首次运行，此处采用更直观的
-/// "bucket 目录为空"作为判据。
+/// 两个条件都满足才视为首次运行。这样：
+/// - 已安装环境（config 在 + bucket 在）绝不触发
+/// - 安装脚本刚装好但用户还没添加 bucket（config 在 + bucket 空）也不触发，
+///   避免污染已有配置环境
+///
+/// 注意：判据必须基于 `paths::root_path()` 解析的真实根目录，
+/// 不能用 `current_exe()` 同目录（通过 shim 调用时 current_exe 是 shim 路径，
+/// 其同目录是 shims/ 而非根目录，会误判）。
 pub fn is_first_run() -> bool {
     use hit_common::paths;
 
+    // 条件 1：config.json 不存在
+    let config_path = paths::root_path().join("config.json");
+    if config_path.exists() {
+        return false;
+    }
+
+    // 条件 2：buckets/ 目录不存在或为空
     let buckets = paths::buckets_path();
     if !buckets.exists() {
         return true;
     }
-    // bucket 目录存在但为空（或只含占位文件）→ 首次运行
     match std::fs::read_dir(&buckets) {
         Ok(mut it) => it.next().is_none(),
         Err(_) => true,

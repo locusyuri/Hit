@@ -176,3 +176,21 @@ Hit 0.1.0
 **修复**：`crates/hit-cli/src/commands/status.rs` 和 `bucket.rs` 引入 `display_width()`/`pad()` 辅助函数，按 Unicode 显示宽度对齐。
 
 **提交**：`e79afb0` — fix(cli): status和bucket输出按Unicode宽度对齐;bucket add未知bucket提示用法示例
+
+---
+
+## Welcome 引导错误触发 + clap 错误被 welcome 吞掉 ⭐⭐⭐⭐⭐（2026-06-27 解决）
+
+两个同根同源的五星 bug：welcome 在已安装环境仍触发污染所有命令输出；`hit`/`hit wrongcmd`/`hit install`（无参数）的 clap 错误被 welcome 菜单吞掉。
+
+**根因（双重）**：
+1. **welcome 时机错误** — `main.rs` 的 `run()` 在 `Cli::parse()` **之前**调用 `welcome::is_first_run()`，导致 clap 还来不及报错就被 welcome 拦截。
+2. **`is_first_run()` 判据错误** — 上一版（`f967a07`）改为仅以 buckets 目录为空判断，但 `paths::buckets_path()` 依赖 `HIT_ROOT` 环境变量解析根目录；通过 shim 调用时若 `current_exe()` 回退到错误路径，buckets 判据会误判为首次运行。
+
+**修复**：
+- `crates/hit-cli/src/main.rs` — welcome 检查移到 `Cli::parse()` **之后**，让 clap 先处理 `--help`/无子命令/错误命令/缺参数，直接报错退出不被 welcome 拦截。
+- `crates/hit-cli/src/welcome.rs` — `is_first_run()` 改为**双条件**（必须同时满足）：config.json 不存在 **且** buckets 目录为空。已安装环境（config 在）绝不触发。判据改用 `paths::root_path()`（基于 HIT_ROOT/SCOOP/USERPROFILE 回退链）而非 `current_exe()` 同目录，避免 shim 调用误判。
+
+**验证**：hit-cli 73 个单元测试全部通过；`cargo check` 通过。
+
+**说明**：此修复同时是五星 bug "hit install 完全不工作" 和 "hit info 完全不工作" 的潜在根因——welcome 在 parse 前执行污染 stdout（横幅+菜单+"无效选择，已跳过"喷到 stdout），把 install/info 的真实业务输出冲掉。修复后这两个 bug 应随之恢复，待 release 构建后跑 REPORT.md 回归验证。

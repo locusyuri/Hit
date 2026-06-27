@@ -27,41 +27,34 @@ pub fn execute(_args: &Args, session: &Session) -> anyhow::Result<()> {
     let cache_count = cache_entries.len();
     let cache_size: u64 = cache_entries.iter().map(|e| e.size).sum();
 
-    // 输出
+    // 输出（使用 Unicode 显示宽度对齐，中文字符占 2 列）
     println!(
         "{} {}",
         "Hit".bold().cyan(),
         env!("CARGO_PKG_VERSION")
     );
     println!();
-    println!(
-        "  {:<16} {}",
-        "已安装软件:".bold(),
-        installed_count
-    );
-    println!(
-        "  {:<16} {}",
-        "Bucket 数量:".bold(),
-        bucket_count
-    );
-    println!(
-        "  {:<16} {}",
-        "可用软件总数:".bold(),
-        total_packages
-    );
-    println!(
-        "  {:<16} {} ({})",
-        "缓存文件:".bold(),
-        cache_count,
-        format_bytes(cache_size)
-    );
-    println!(
-        "  {:<16} {}",
-        "根目录:".bold(),
-        session.root_path().display()
-    );
+    let rows: Vec<(&str, String)> = vec![
+        ("已安装软件:", installed_count.to_string()),
+        ("Bucket 数量:", bucket_count.to_string()),
+        ("可用软件总数:", total_packages.to_string()),
+        ("缓存文件:", format!("{} ({})", cache_count, format_bytes(cache_size))),
+        ("根目录:", session.root_path().display().to_string()),
+    ];
+    // 计算标签列最大显示宽度
+    let max_label_w = rows.iter().map(|(l, _)| display_width(l)).max().unwrap_or(0);
+    for (label, value) in &rows {
+        let pad = max_label_w - display_width(label);
+        println!("  {}{}  {}", label.bold(), " ".repeat(pad), value);
+    }
 
     Ok(())
+}
+
+/// 计算字符串的终端显示宽度（CJK 全角字符占 2，其余占 1）。
+/// 避免引入 unicode-width 依赖的轻量实现。
+fn display_width(s: &str) -> usize {
+    s.chars().map(|c| if (c as u32) > 0x2E80 { 2 } else { 1 }).sum()
 }
 
 /// 字节数格式化

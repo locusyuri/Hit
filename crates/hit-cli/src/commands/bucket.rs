@@ -56,7 +56,9 @@ fn cmd_add(session: &Session, name: &str, url: Option<&str>) -> anyhow::Result<(
     let bucket_url = match url {
         Some(u) => u.to_string(),
         None => hit_core::bucket::resolve_known_bucket(name)
-            .ok_or_else(|| anyhow::anyhow!("未知 bucket '{name}'，请提供 Git 仓库 URL"))?
+            .ok_or_else(|| anyhow::anyhow!(
+                "未知 bucket '{name}'，请提供 Git 仓库 URL\n  示例：hit bucket add {name} https://github.com/<user>/<bucket>.git"
+            ))?
             .to_string(),
     };
 
@@ -68,7 +70,6 @@ fn cmd_add(session: &Session, name: &str, url: Option<&str>) -> anyhow::Result<(
     }
 
     println!("{} 正在添加 bucket '{}'...", "添加".cyan().bold(), name);
-
     hit_core::bucket::clone_bucket(session, name, &bucket_url, &hit_core::bucket::CloneOptions::default(), &should_interrupt)?;
 
     println!("{} bucket '{}' 添加完成", "✔".green().bold(), name);
@@ -108,9 +109,9 @@ fn cmd_list(session: &Session) -> anyhow::Result<()> {
     }
 
     println!(
-        "{:<15} {:<10} {}",
-        "名称".bold(),
-        "Manifest".bold(),
+        "{}  {}  {}",
+        pad("名称", 20).bold(),
+        pad("Manifest", 10).bold(),
         "描述".bold()
     );
 
@@ -121,11 +122,31 @@ fn cmd_list(session: &Session) -> anyhow::Result<()> {
             .as_ref()
             .map(|m| m.description.as_str())
             .unwrap_or("");
-        println!("{:<15} {:<10} {}", bucket.name, count, desc);
+        println!(
+            "{}  {}  {}",
+            pad(&bucket.name, 20),
+            pad(&count.to_string(), 10),
+            desc
+        );
     }
 
     println!("\n共 {} 个 Bucket", buckets.len());
     Ok(())
+}
+
+/// 按显示宽度右补空格对齐（CJK 全角字符占 2 列）
+fn pad(s: &str, width: usize) -> String {
+    let dw = display_width(s);
+    if dw >= width {
+        s.to_string()
+    } else {
+        format!("{s}{}", " ".repeat(width - dw))
+    }
+}
+
+/// 计算字符串的终端显示宽度（CJK 全角字符占 2，其余占 1）
+fn display_width(s: &str) -> usize {
+    s.chars().map(|c| if (c as u32) > 0x2E80 { 2 } else { 1 }).sum()
 }
 
 /// bucket update — 更新 Bucket

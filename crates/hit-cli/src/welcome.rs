@@ -10,9 +10,27 @@ use colored::Colorize;
 use hit_common::Session;
 use hit_common::config::HitConfig;
 
-/// 检测是否首次运行（config.json 不存在）
+/// 检测是否首次运行。
+///
+/// 判定逻辑：**没有任何 bucket 存在**视为首次运行。
+/// 不能仅靠 config.json 是否存在判断，因为安装脚本会预先写好默认 config，
+/// 但此时用户尚未完成首次引导（添加 bucket）。
+///
+/// 参考 `ref/Scoop/lib/core.ps1` 的 `install_config` / `Get-Config` 逻辑：
+/// Scoop 通过检查 `last_update` 时间戳判断是否首次运行，此处采用更直观的
+/// "bucket 目录为空"作为判据。
 pub fn is_first_run() -> bool {
-    !HitConfig::default_path().exists()
+    use hit_common::paths;
+
+    let buckets = paths::buckets_path();
+    if !buckets.exists() {
+        return true;
+    }
+    // bucket 目录存在但为空（或只含占位文件）→ 首次运行
+    match std::fs::read_dir(&buckets) {
+        Ok(mut it) => it.next().is_none(),
+        Err(_) => true,
+    }
 }
 
 /// 显示欢迎界面并执行引导流程

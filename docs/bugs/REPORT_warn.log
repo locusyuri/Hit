@@ -1,0 +1,440 @@
+
+
+────────────────────────────────────────────────
+[§0.3] hit --version
+
+────────────────────────────────────────────────
+[§0.3] hit --help
+
+────────────────────────────────────────────────
+[§0.4] hit prefix
+
+────────────────────────────────────────────────
+[§0.4] hit config list
+
+────────────────────────────────────────────────
+[§2.1.1] hit bucket add main
+错误: Bucket 'main' 已存在
+
+
+────────────────────────────────────────────────
+[§2.1.4] hit bucket add main
+错误: Bucket 'main' 已存在
+
+
+────────────────────────────────────────────────
+[§2.1.5] hit bucket add myrepo https://github.com/user/repo.git
+错误: Bucket 'myrepo' 错误：克隆失败：An IO error occurred when talking to the server
+
+
+────────────────────────────────────────────────
+[§2.1.6] hit bucket add unknownbucket
+错误: 未知 bucket 'unknownbucket'，请提供 Git 仓库 URL
+  示例：hit bucket add unknownbucket https://github.com/<user>/<bucket>.git
+
+
+────────────────────────────────────────────────
+[§2.2.1] hit bucket list
+
+────────────────────────────────────────────────
+[§2.2.2] hit b ls
+
+────────────────────────────────────────────────
+[§2.3.1] hit bucket update
+
+────────────────────────────────────────────────
+[§2.3.2] hit bucket update main
+
+────────────────────────────────────────────────
+[§2.3.3] hit bucket update nonexistent
+
+────────────────────────────────────────────────
+[§2.4.1] hit bucket remove myrepo
+错误: Bucket 'myrepo' 不存在
+
+
+────────────────────────────────────────────────
+[§2.4.2] hit bucket rm main
+错误: Bucket 'main' 不存在
+
+
+────────────────────────────────────────────────
+[§2.4.3] hit bucket remove nonexistent
+错误: Bucket 'nonexistent' 不存在
+
+
+────────────────────────────────────────────────
+[§2.4-restore] hit bucket add main
+
+────────────────────────────────────────────────
+[§3.1] hit search git
+
+────────────────────────────────────────────────
+[§3.2] hit s python
+
+────────────────────────────────────────────────
+[§3.3] hit search GIT
+
+────────────────────────────────────────────────
+[§3.4] hit search git --bucket main
+
+────────────────────────────────────────────────
+[§3.5] hit search nonexistent_xyz
+
+────────────────────────────────────────────────
+[§4.1] hit info git
+错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\git.json): The system cannot find the file specified. (os error 2)
+
+
+────────────────────────────────────────────────
+[§4.2] hit info git --bucket main
+错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\git.json): The system cannot find the file specified. (os error 2)
+
+
+────────────────────────────────────────────────
+[§4.3] hit info nonexistent
+错误: 未找到软件 'nonexistent'
+
+
+────────────────────────────────────────────────
+[§4.4] hit info curl
+错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\curl.json): The system cannot find the file specified. (os error 2)
+
+
+────────────────────────────────────────────────
+[§5.1] hit install curl
+错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\curl.json): The system cannot find the file specified. (os error 2)
+
+
+────────────────────────────────────────────────
+[§5.2] hit i jq
+错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\jq.json): The system cannot find the file specified. (os error 2)
+
+
+────────────────────────────────────────────────
+[§5.3] hit install curl
+错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\curl.json): The system cannot find the file specified. (os error 2)
+
+
+────────────────────────────────────────────────
+[§5.4] hit install curl --force
+错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\curl.json): The system cannot find the file specified. (os error 2)
+
+
+────────────────────────────────────────────────
+[§5.5] hit install main/git
+错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\git.json): The system cannot find the file specified. (os error 2)
+
+
+────────────────────────────────────────────────
+[§5.6] hit install nonexistent_pkg
+错误: 未找到软件 'nonexistent_pkg'
+
+
+────────────────────────────────────────────────
+[§5.7] hit install jq --arch 64bit
+错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\jq.json): The system cannot find the file specified. (os error 2)
+
+
+────────────────────────────────────────────────
+[§6.1] hit list
+
+────────────────────────────────────────────────
+[§6.2] hit ls
+
+────────────────────────────────────────────────
+[§6.3] hit list curl
+
+────────────────────────────────────────────────
+[§6.4] hit list nonexistent
+
+────────────────────────────────────────────────
+[§7.1.1] hit install python@3.11.0
+错误: 版本约束暂不支持（'python@3.11.0' 中的 '@3.11.0' 部分）
+
+
+────────────────────────────────────────────────
+[§7.1.2] hit install python@3.12.0
+错误: 版本约束暂不支持（'python@3.12.0' 中的 '@3.12.0' 部分）
+
+
+────────────────────────────────────────────────
+[§7.1.3] hit reset python 3.11.0
+错误: 版本 '3.11.0' 不存在（python）
+
+
+────────────────────────────────────────────────
+[§7.1.4] hit reset python 9.9.9
+错误: 版本 '9.9.9' 不存在（python）
+
+
+────────────────────────────────────────────────
+[§7.2.1] hit hold curl
+错误: 'curl' 未安装
+
+
+────────────────────────────────────────────────
+[§7.2.2] hit hold curl
+错误: 'curl' 未安装
+
+
+────────────────────────────────────────────────
+[§7.2.3] hit update --all
+
+────────────────────────────────────────────────
+[§7.2.4] hit unhold curl
+错误: 'curl' 未安装
+
+
+────────────────────────────────────────────────
+[§7.2.5] hit unhold curl
+错误: 'curl' 未安装
+
+
+────────────────────────────────────────────────
+[§7.2.6] hit hold nonexistent
+错误: 'nonexistent' 未安装
+
+
+────────────────────────────────────────────────
+[§8.1] hit update
+
+────────────────────────────────────────────────
+[§8.2] hit update --all
+
+────────────────────────────────────────────────
+[§8.3] hit update curl
+
+────────────────────────────────────────────────
+[§8.4] hit update nonexistent
+
+────────────────────────────────────────────────
+[§8.5] hit update --force
+
+────────────────────────────────────────────────
+[§9.1] hit uninstall jq
+错误: 'jq' 未安装
+
+
+────────────────────────────────────────────────
+[§9.2] hit rm curl --purge
+错误: 'curl' 未安装
+
+
+────────────────────────────────────────────────
+[§9.3] hit uninstall nonexistent
+错误: 'nonexistent' 未安装
+
+
+────────────────────────────────────────────────
+[§9.4] hit uninstall
+错误: 至少指定一个要卸载的软件名
+
+
+────────────────────────────────────────────────
+[§9.5] hit uninstall jq curl
+错误: 'jq' 未安装
+
+
+────────────────────────────────────────────────
+[§10-pre] hit install curl
+错误: 未找到软件 'curl'
+
+
+────────────────────────────────────────────────
+[§10.1] hit cache list
+
+────────────────────────────────────────────────
+[§10.2] hit cache dir
+
+────────────────────────────────────────────────
+[§10.3] hit cache clean
+
+────────────────────────────────────────────────
+[§10.4] hit cache clean curl
+
+────────────────────────────────────────────────
+[§10.5] hit cache list
+
+────────────────────────────────────────────────
+[§11.1] hit cleanup python
+
+────────────────────────────────────────────────
+[§11.2] hit cleanup --all
+
+────────────────────────────────────────────────
+[§11.3] hit cleanup --cache
+
+────────────────────────────────────────────────
+[§11.4] hit cleanup
+
+────────────────────────────────────────────────
+[§12.1.1] hit which curl
+错误: 未找到 'curl' 的 shim 文件
+
+
+────────────────────────────────────────────────
+[§12.1.2] hit which nonexistent
+错误: 未找到 'nonexistent' 的 shim 文件
+
+
+────────────────────────────────────────────────
+[§12.2.1] hit prefix
+
+────────────────────────────────────────────────
+[§12.2.2] hit prefix curl
+错误: 'curl' 未安装
+
+
+────────────────────────────────────────────────
+[§12.2.3] hit prefix nonexistent
+错误: 'nonexistent' 未安装
+
+
+────────────────────────────────────────────────
+[§12.3.2] hit home nonexistent
+错误: 未找到软件 'nonexistent'
+
+
+────────────────────────────────────────────────
+[§13.1] hit config list
+
+────────────────────────────────────────────────
+[§13.2] hit config set proxy http://127.0.0.1:7890
+
+────────────────────────────────────────────────
+[§13.3] hit config set aria2_enabled true
+
+────────────────────────────────────────────────
+[§13.4] hit config set aria2_enabled yes
+
+────────────────────────────────────────────────
+[§13.5] hit config set aria2_enabled maybe
+错误: 'maybe' 不是有效的布尔值（应为 true/false/1/0/yes/no）
+
+
+────────────────────────────────────────────────
+[§13.6] hit config set auto_cleanup_days 60
+
+────────────────────────────────────────────────
+[§13.7] hit config set auto_cleanup_days abc
+错误: 'abc' 不是有效的数字
+
+
+────────────────────────────────────────────────
+[§13.8] hit config set unknown_key value
+错误: 未知配置项 'unknown_key'。支持的配置项：proxy, mirror, aria2_enabled, no_junction, root_path, auto_cleanup_days, health_check_interval_days
+
+
+────────────────────────────────────────────────
+[§13.9] hit config set proxy ""
+
+────────────────────────────────────────────────
+[§13.10] hit config list
+
+────────────────────────────────────────────────
+[§14.1] hit doctor
+
+────────────────────────────────────────────────
+[§14.3] hit doctor --fix
+
+────────────────────────────────────────────────
+[§16.1] hit status
+
+────────────────────────────────────────────────
+[§16.2] hit st
+
+────────────────────────────────────────────────
+[§17-i] hit i nonexistent_alias_test
+错误: 未找到软件 'nonexistent_alias_test'
+
+
+────────────────────────────────────────────────
+[§17-s] hit s nonexistent_alias_test
+
+────────────────────────────────────────────────
+[§17-u] hit u nonexistent
+
+────────────────────────────────────────────────
+[§17-rm] hit rm nonexistent
+错误: 'nonexistent' 未安装
+
+
+────────────────────────────────────────────────
+[§17-ls] hit ls
+
+────────────────────────────────────────────────
+[§17-st] hit st
+
+────────────────────────────────────────────────
+[§17-b] hit b ls
+
+────────────────────────────────────────────────
+[§17-c] hit c
+
+────────────────────────────────────────────────
+[§17-r] hit r nonexistent 1.0.0
+错误: 版本 '1.0.0' 不存在（nonexistent）
+
+
+────────────────────────────────────────────────
+[§18.1] hit -v list
+
+────────────────────────────────────────────────
+[§18.2] hit -vv list
+
+────────────────────────────────────────────────
+[§18.3] hit -vvv list
+
+────────────────────────────────────────────────
+[§19.1] hit
+Hit — Scoop 兼容的 Windows 包管理器
+
+Usage: hit.exe [OPTIONS] <COMMAND>
+
+Commands:
+  install    安装软件包
+  search     搜索软件包
+  update     更新已安装软件
+  uninstall  卸载软件
+  list       列出已安装软件
+  status     查看系统状态
+  bucket     管理 Bucket 仓库
+  info       查看软件包详情
+  reset      切换软件版本
+  cache      管理下载缓存
+  home       打开软件主页
+  cleanup    清理旧版本与缓存
+  which      查找命令对应的 shim 路径
+  prefix     显示安装路径
+  hold       锁定软件版本（update 时跳过）
+  unhold     解除版本锁定
+  config     管理配置
+  doctor     健康检查与修复
+  si         交互式搜索并安装
+  help       Print this message or the help of the given subcommand(s)
+
+Options:
+  -v, --verbose...  日志级别（-v / -vv / -vvv）
+  -h, --help        Print help
+  -V, --version     Print version
+
+
+────────────────────────────────────────────────
+[§19.2] hit wrongcmd
+error: unrecognized subcommand 'wrongcmd'
+
+  tip: a similar subcommand exists: 'r'
+
+Usage: hit.exe [OPTIONS] <COMMAND>
+
+For more information, try '--help'.
+
+
+────────────────────────────────────────────────
+[§19.3] hit install
+错误: 至少指定一个要安装的软件名
+
+
+────────────────────────────────────────────────
+[§19.5] hit list

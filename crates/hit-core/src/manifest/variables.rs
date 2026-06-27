@@ -367,8 +367,14 @@ fn sub_checkver(cv: &mut Checkver, vars: &VarMap) {
         *r = substitute(r, vars);
     }
     if let Some(s) = &mut cv.script {
-        for line in s.iter_mut() {
-            *line = substitute(line, vars);
+        // ScriptField 现在用于 checkver.script,支持单字符串或数组
+        match s {
+            ScriptField::Single(line) => *line = substitute(line, vars),
+            ScriptField::Lines(lines) => {
+                for line in lines.iter_mut() {
+                    *line = substitute(line, vars);
+                }
+            }
         }
     }
 }
@@ -402,6 +408,13 @@ fn sub_hash(h: &mut HashField, vars: &VarMap) {
             for s in v.iter_mut() {
                 *s = substitute(s, vars);
             }
+        }
+        // Fetch 变体的 url/regex/jsonpath 也需变量替换
+        HashField::Fetch { url, regex, jsonpath, xpath } => {
+            *url = substitute(url, vars);
+            if let Some(r) = regex { *r = substitute(r, vars); }
+            if let Some(j) = jsonpath { *j = substitute(j, vars); }
+            if let Some(x) = xpath { *x = substitute(x, vars); }
         }
     }
 }

@@ -241,11 +241,14 @@ fn check_checkver(m: &Manifest, d: &mut Diagnostics) {
 fn check_suggest_depends(m: &Manifest, d: &mut Diagnostics) {
     if let Some(sug) = &m.suggest {
         for (display, value) in sug {
-            if !looks_like_bucket_ref(value) {
-                d.push_warning(
-                    format!("suggest.{display}"),
-                    format!("suggest 值 '{value}' 非 bucket/name 格式（Scoop 约定）"),
-                );
+            // suggest 值现在是 OneOrMany<String>,逐项校验
+            for v in value.as_slice() {
+                if !looks_like_bucket_ref(v) {
+                    d.push_warning(
+                        format!("suggest.{display}"),
+                        format!("suggest 值 '{v}' 非 bucket/name 格式（Scoop 约定）"),
+                    );
+                }
             }
         }
     }

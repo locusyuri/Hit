@@ -61,7 +61,9 @@ pub struct Manifest {
 
     // -------- 依赖 --------
     pub depends: Option<OneOrMany<String>>,
-    pub suggest: Option<BTreeMap<String, String>>,
+    /// `suggest` 字段:键为建议安装的软件类别名,值为该类别下的软件列表
+    /// (支持单字符串或字符串数组,参考 digital.json)
+    pub suggest: Option<BTreeMap<String, OneOrMany<String>>>,
 
     // -------- 元信息 --------
     pub notes: Option<ScriptField>,
@@ -213,19 +215,35 @@ impl License {
 
 /// 哈希字段（顶层 `hash` 或 `architecture.<arch>.hash`）。
 ///
-/// 数组形式与 `url` 数组逐位对应。算法由字符串长度识别：
-/// 40 → sha1，64 → sha256，128 → sha512；也可能带 `algo:` 前缀。
+/// 支持三种形式：
+/// - `Single(String)`：单个 hash 字符串
+/// - `Multiple(Vec<String>)`：hash 字符串数组（与 url 数组逐位对应）
+/// - `Fetch`：从远程 URL 抓取 hash 的对象 `{url, regex?, jsonpath?, xpath?}`
+///
+/// 算法由字符串长度识别：40 → sha1，64 → sha256，128 → sha512；也可能带 `algo:` 前缀。
+/// `Fetch` 变体参考 `AutoupdateHash::Fetch`，用于 autoupdate 中从 release notes 等远程源取哈希。
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum HashField {
+    /// 抓取对象必须在 Plain 之前以优先匹配 object。
+    /// 支持 `{url, regex?}`、`{url, jsonpath?}`、`{url, xpath?}`、`{jp, url}` 等所有 Scoop 取哈希形式。
+    Fetch {
+        url: String,
+        regex: Option<String>,
+        jsonpath: Option<String>,
+        xpath: Option<String>,
+    },
     Single(String),
     Multiple(Vec<String>),
 }
 
 impl HashField {
     /// 统一返回所有 hash 字符串。
+    ///
+    /// `Fetch` 变体无法静态给出 hash 值（需运行时抓取），返回空 Vec。
     pub fn values(&self) -> Vec<&str> {
         match self {
+            HashField::Fetch { .. } => Vec::new(),
             HashField::Single(s) => vec![s.as_str()],
             HashField::Multiple(v) => v.iter().map(String::as_str).collect(),
         }
@@ -718,7 +736,8 @@ pub struct Checkver {
     pub jsonpath: Option<String>,
     pub xpath: Option<String>,
     pub replace: Option<String>,
-    pub script: Option<Vec<String>>,
+    /// `script` 可以是单字符串或字符串数组（参考 feem.json）
+    pub script: Option<ScriptField>,
     pub reverse: Option<bool>,
     pub useragent: Option<String>,
     pub sourceforge: Option<String>,

@@ -320,3 +320,134 @@ fn hook_type_all_variants_covered() {
     assert!(flat.resolve_script(HookType::Uninstaller).is_some());
     assert!(flat.resolve_script(HookType::PostUninstall).is_some());
 }
+
+// ============================================================================
+// BUGS.md 回归测试：真实 Scoop manifest 兼容性
+// ============================================================================
+
+/// 验证 perl.json 的 autoupdate.hash 为 {url, jsonpath} 对象形式时能正确解析
+/// （原 bug：HashField 不支持 Fetch 变体，导致整个 manifest 被跳过）
+#[test]
+fn regression_perl_hash_fetch_jsonpath() {
+    let body = r#"{
+        "version": "5.42.2.1",
+        "description": "test",
+        "homepage": "https://x",
+        "license": "GPL-1.0-or-later|Artistic-1.0-Perl",
+        "architecture": {
+            "64bit": {
+                "url": "https://x/strawberry-perl.zip",
+                "hash": "32d83be90cf04b807cfb9477482bc36302cdee6f5b04cf57e81adecbd8f07898"
+            }
+        },
+        "autoupdate": {
+            "architecture": {
+                "64bit": {
+                    "url": "https://x/strawberry-perl-$version.zip",
+                    "hash": {
+                        "url": "https://strawberryperl.com/releases.json",
+                        "jsonpath": "$[?(@.version == '$version')].edition.portable.sha256"
+                    }
+                }
+            }
+        }
+    }"#;
+    let flat = parse_and_resolve(body, Arch::X86_64).unwrap();
+    // 顶层 hash 仍能取出值
+    assert_eq!(
+        flat.inner().hash.as_ref().unwrap().values(),
+        vec!["32d83be90cf04b807cfb9477482bc36302cdee6f5b04cf57e81adecbd8f07898"]
+    );
+}
+
+/// 验证顶层 hash 也支持 Fetch 对象形式（与 autoupdate.hash 一致）
+#[test]
+fn regression_hash_fetch_top_level() {
+    let body = r#"{
+        "version": "1.0",
+        "description": "test",
+        "homepage": "https://x",
+        "license": "MIT",
+        "url": "https://x/app.zip",
+        "hash": {
+            "url": "https://x/releases.json",
+            "jsonpath": "$.sha256"
+        }
+    }"#;
+    let m = parse_str(body).unwrap();
+    assert!(matches!(
+        m.hash,
+        Some(hit_core::manifest::HashField::Fetch { .. })
+    ));
+}
+
+/// 验证 suggest 字段值可以是字符串数组（原 bug：声明为 String 导致数组形式失败）
+/// 参考 digital.json 的 `"suggest": { "JDK": ["java/opendk", "java/oraclejdk"] }`
+#[test]
+fn regression_suggest_array_value() {
+    let body = r#"{
+        "version": "0.31",
+        "description": "test",
+        "homepage": "https://x",
+        "license": "GPL-3.0-only",
+        "suggest": {
+            "JDK": ["java/opendk", "java/oraclejdk"]
+        },
+        "url": "https://x/Digital.zip",
+        "hash": "12f014c8b99140554f8f7464ebc771bbe3de6af39c83c20463492bcb892afc69"
+    }"#;
+    let m = parse_str(body).unwrap();
+    let sug = m.suggest.expect("应有 suggest");
+    let jdk = sug.get("JDK").expect("应有 JDK 条目");
+    assert_eq!(jdk.len(), 2, "suggest.JDK 应有 2 个条目");
+}
+
+/// 验证 suggest 字段值也可以是单字符串（向后兼容）
+#[test]
+fn regression_suggest_single_string_value() {
+    let body = r#"{
+        "version": "1.0",
+        "description": "test",
+        "homepage": "https://x",
+        "license": "MIT",
+        "suggest": {
+            "JDK": "java/openjdk"
+        },
+        "url": "https://x/app.zip",
+        "hash": "12f014c8b99140554f8f7464ebc771bbe3de6af39c83c20463492bcb892afc69"
+    }"#;
+    let m = parse_str(body).unwrap();
+    let sug = m.suggest.expect("应有 suggest");
+    let jdk = sug.get("JDK").expect("应有 JDK 条目");
+    assert_eq!(jdk.len(), 1, "单字符串 suggest 应归一化为 1 个条目");
+}
+
+/// 验证 checkver.script 可以是单字符串（原 bug：声明为 Vec<String> 导致单字符串失败）
+/// 参考 feem.json 的 `"script": "(Invoke-WebRequest ...).Headers['x-bz-file-name']"`
+#[test]
+fn regression_checkver_script_single_string() {
+    let body = r#"{
+        "version": "4.3.0",
+        "description": "test",
+        "homepage": "https://x",
+        "license": "Proprietary",
+        "url": "https://x/feem.zip",
+        "hash": "ff79a85a2949447a73103f0d2dfcac6d94cf9bc9ee8e30940d2eb7e49ff7e076",
+        "checkver": {
+            "script": "(Invoke-WebRequest 'https://feem.link' -Method Head).Headers['x-bz-file-name']",
+            "regex": "Feem_v([\\d.]+)_*"
+        },
+        "autoupdate": {
+            "url": "https://x/Feem_v$version.zip"
+        }
+    }"#;
+    let m = parse_str(body).unwrap();
+    let cv = m.checkver.expect("应有 checkver");
+    match cv {
+        hit_core::manifest::CheckverField::Full(c) => {
+            assert!(c.script.is_some(), "checkver.script 应被解析");
+            assert!(c.regex.is_some(), "checkver.regex 应被解析");
+        }
+        hit_core::manifest::CheckverField::Short(_) => panic!("应为 Full 变体"),
+    }
+}

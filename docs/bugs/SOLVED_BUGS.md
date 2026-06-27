@@ -86,3 +86,93 @@
 **提交**：
 - `94c6d41` — fix(bugs): welcome before --help; config default_path exe fallback
 - `9c1d244` — fix(install): root_path写入config.json;注册HIT_ROOT环境变量
+
+---
+
+## 格式 ⭐（2026-06-27 解决）
+
+`hit status` 展示的内容未对齐:
+```bash
+hit status
+Hit 0.1.0
+
+  已安装软件:           0
+  Bucket 数量:       0
+  可用软件总数:          0
+  缓存文件:            0 (0 B)
+  根目录:             C:\Users\Violet\Downloads\test\hit
+```
+
+**根因**：`status.rs` 使用 `{:<16}` 按字节填充，中文字符占 2 个显示宽度但 Rust 按字节计，导致错位。
+
+**修复**：`crates/hit-cli/src/commands/status.rs` — 引入 `display_width()` 函数按 Unicode 显示宽度（CJK 全角字符占 2 列）计算，动态对齐标签列。
+
+**提交**：`e79afb0` — fix(cli): status和bucket输出按Unicode宽度对齐;bucket add未知bucket提示用法示例
+
+---
+
+## 欢迎页面仍未触发 ⭐（2026-06-27 解决）
+
+上一次修复（`94c6d41`）将欢迎检查移到 `Cli::parse()` 之前，但 `is_first_run()` 仍以 `config.json` 是否存在为判据。安装脚本会预先写好默认 config，导致 `is_first_run()` 永远返回 false，欢迎页彻底无法触发（即使 `hit bucket list` 也不显示）。
+
+**根因**：`is_first_run()` 判据错误——config.json 存在 ≠ 用户完成首次引导。
+
+**修复**：`crates/hit-cli/src/welcome.rs` — 改用"bucket 目录是否为空"作为首次运行判据。安装脚本只预置 config，不预置 bucket，因此 buckets 为空时正确触发引导。
+
+**提交**：`f967a07` — fix(welcome): 改用bucket目录是否为空判断首次运行,避免被预置config误判
+
+---
+
+## Manifest 兼容性缺陷：大量真实 Scoop manifest 解析失败 ⭐⭐⭐⭐⭐（2026-06-27 解决）
+
+对官方 bucket 执行 `hit search`/`hit info`/`hit install` 时，stderr 喷出 ~1500 行 WARN，主流软件（chromium/firefox/vscode/calibre/perl 等）manifest 全部被跳过，违反"Scoop 兼容性"首要约束。
+
+**根因（三类解析失败）**：
+1. **`HashField` 不支持对象形式** — Scoop 的 `hash` 字段在 `autoupdate` 中允许 `{url, jsonpath}`/`{url, regex}` 对象，Hit 仅支持 `String`/`Vec<String>`。
+2. **`suggest` 字段类型错误** — 声明为 `BTreeMap<String, String>`，但 Scoop 中值是字符串数组（如 `"JDK": ["java/opendk", "java/oraclejdk"]`）。
+3. **`CheckverField.script` 不支持单字符串** — 声明为 `Vec<String>`，但 Scoop 允许单字符串形式。
+
+**修复**：
+- `crates/hit-core/src/manifest/schema.rs` — `HashField` 新增 `Fetch{url, regex?, jsonpath?, xpath?}` 变体；`suggest` 改为 `BTreeMap<String, OneOrMany<String>>`；`Checkver.script` 改为 `ScriptField` 类型。
+- `crates/hit-core/src/manifest/validator.rs` — 适配 `suggest` 新类型，逐项校验。
+- `crates/hit-core/src/manifest/variables.rs` — 适配 `ScriptField` 和 `HashField::Fetch` 的变量替换。
+- `crates/hit-core/tests/manifest_test.rs` — 新增 5 个回归测试（`regression_perl_hash_fetch_jsonpath`、`regression_hash_fetch_top_level`、`regression_suggest_array_value`、`regression_suggest_single_string_value`、`regression_checkver_script_single_string`）。
+
+**验证**：26 个 manifest 测试全部通过；`hit search git` 输出 0 WARN。
+
+**提交**：`cf20905` — fix(manifest): HashField支持Fetch对象;suggest改Vec;checkver.script支持单字符串
+
+---
+
+## Hit 本身的 Shim 异常 ⭐⭐⭐（2026-06-27 解决）
+
+`shims\hit.exe` 大小 10873 KB，与根目录 `hit.exe` 相同。应为轻量代理（~200KB）+ sidecar，而非完整程序副本。
+
+**根因**：`scripts/install-hit.ps1` 第 246 行直接 `Copy-Item $exeSource → shims\hit.exe`，把完整 hit.exe（11MB）当作 shim 用，违反 shim 代理设计。
+
+**修复**：
+- `scripts/install-hit.ps1` — 网络下载模式同时下载 `hit-shim.exe`；本地模式从 `hit.exe` 同目录查找 `hit-shim.exe`。部署阶段：完整 `hit.exe` 放根目录，轻量 `hit-shim.exe`（214KB）放 `shims\`，并生成 `hit.shim` sidecar 指向真实 exe。
+
+**验证**：重装后 `shims\hit.exe` = 214,528 字节，`shims\hit.shim` = 53 字节（含 `path = "..."` 指向根目录 hit.exe）。
+
+**提交**：`69f2856` — fix(install): shim目录改用轻量hit-shim.exe代理+sidecar,不再复制完整hit.exe
+
+---
+
+## 设计问题：`bucket add unknownbucket` 提示不友好 ⭐（2026-06-27 解决）
+
+`hit bucket add unknownbucket`（未知名称且无 URL）报错"未知 bucket '...'，请提供 Git 仓库 URL"，但未告知用户具体如何操作。
+
+**修复**：`crates/hit-cli/src/commands/bucket.rs` — 错误信息补充用法示例：`示例：hit bucket add <name> https://github.com/<user>/<bucket>.git`。
+
+**提交**：`e79afb0` — fix(cli): status和bucket输出按Unicode宽度对齐;bucket add未知bucket提示用法示例
+
+---
+
+## 格式问题：所有输出未对齐 ⭐（2026-06-27 解决）
+
+所有命令输出因中文字符宽度计算不准导致错位。
+
+**修复**：`crates/hit-cli/src/commands/status.rs` 和 `bucket.rs` 引入 `display_width()`/`pad()` 辅助函数，按 Unicode 显示宽度对齐。
+
+**提交**：`e79afb0` — fix(cli): status和bucket输出按Unicode宽度对齐;bucket add未知bucket提示用法示例

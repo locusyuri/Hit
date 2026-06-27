@@ -21,46 +21,81 @@ Hit 0.1.0
 ## 欢迎页面仍未触发 ⭐
 这次欢迎页面彻底无法触发了, 就算是执行 `hit bucket list` 也没有显示欢迎页面。(见[SOLVED_BUGS.md](./SOLVED_BUGS.md)中之前的描述)
 
-## 搜索命令出现问题 ⭐⭐⭐⭐⭐
-搜索命令出现问题，比如执行 `hit search zed` 出现以下错误：
+## Manifest 兼容性缺陷：大量真实 Scoop manifest 解析失败 ⭐⭐⭐⭐⭐
+
+> **极为严重** —— 直接破坏"Scoop 兼容性"这一项目首要约束，导致 `search`/`info`/`install` 等核心命令在官方 bucket（main/extras/versions）上可用率大幅下降，且每条命令向 stderr 喷出 ~1500 行 WARN，淹没正常输出。
+
+### 现象
+
+对官方 bucket 执行任意需要扫描 manifest 的命令（`hit search`、`hit info`、`hit install`、`hit bucket list` 等），stderr 输出海量 WARN，形如：
+
 ```
-hit search zed
-
-2026-06-26T15:09:57.689096Z  WARN 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\antigravity-cli.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 39 column 12
-
-                },
-
-        ........^.......
-
-2026-06-26T15:09:57.690250Z  WARN 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\perl.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 48 column 12
-....
-....
-
-名称           版本         描述
-ack          3.10.0     A tool like grep, optimized for programmers
-aws-copilot  1.34.1     A tool for developers to build, release and operate production ready containerized applications on Amazon ECS and AWS Fargate.
-bit          1.1.2      Modernized git CLI
-cloud-sql-proxy 2.22.1     Provides secure access to Cloud SQL Second Generation instances without having to add Authorized networks or configure SSL.
-conan        2.29.1     The open-source, decentralized C/C++ package manager
-crc          2.61.0     Manages a local OpenShift 4.x cluster optimized for testing and development purposes.
-drmemory     2.6.20434  Memory monitoring tool capable of identifying memory-related programming errors such as accesses of uninitialized/unaddressable/freed memory, double frees, memory leaks, handle leaks, GDI API usage errors and accesses to un-reserved thread local storage slots.
-eventstore   24.6.0     The stream database optimized for event sourcing
-lore         0.8.3      An open source version control system designed for unprecedented scalability of both data and teams, optimized for projects that combine code with large binary assets, including games and entertainment.
-loreserver   0.8.3      The server for Lore, an open source version control system designed for unprecedented scalability of both data and teams; it provides the centralized service that hosts Lore repositories.
-mingit-busybox 2.54.0     Minimal Git for Windows (MinGit) is a reduced sized package designed to support application integration (like integrated development environments, graph visualizers, etc.) where full console support (colorization, pagniation, etc.) is not needed.(BusyBox-backed MinGit, experimental, smaller version of MinGit)
-nomad        2.0.3      Easy-to-use, flexible, and performant workload orchestrator that can deploy a mix of microservice, batch, containerized, and non-containerized applications.
-oh-my-pi     16.1.22    AI Coding agent for the terminal — hash-anchored edits, optimized tool harness, LSP, Python, browser, subagents, and more (fork of pi).
-openshift-origin-client 3.11.0     OpenShift Origin is a distribution of Kubernetes optimized for continuous application development and multi-tenant deployment. OpenShift adds developer and operations-centric tools on top of Kubernetes to enable rapid application development, easy deployment and scaling, and long-term lifecycle maintenance for small and large teams.
-oscdimg      2.56       Command-line tool to create an image (.iso) file of a customized 32-bit or 64-bit version of Windows Preinstallation Environment (Windows PE).
-pwsh         7.6.3      Cross-platform automation and configuration tool/framework, known as Powershell Core, that works well with existing tools and is optimized for dealing with structured data.
-tectonic     0.16.9     Tectonic is a modernized, complete, self-contained TeX/LaTeX engine, powered by XeTeX and TeXLive.
-wasmedge     0.17.0     A lightweight, high-performance, and extensible WebAssembly runtime for cloud native, edge, and decentralized applications. It powers serverless apps, embedded functions, microservices, smart contracts, and IoT devices.
+WARN 跳过无效 manifest '...\buckets\main\bucket\perl.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 48 column 12
+WARN 跳过无效 manifest '...\buckets\extras\bucket\digital.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 10 column 8
+WARN 跳过无效 manifest '...\buckets\extras\bucket\feem.json': manifest JSON 解析失败：data did not match any variant of untagged enum CheckverField at line 21 column 5
 ```
 
-虽然最后显示了搜索结果，但中间出现了很多 manifest 解析失败的警告，说明在解析 bucket 中的 manifest 时出现了问题。
-以及搜索结果格式不对，没有对齐，应该使用表格。
+实测在已添加 `main`/`extras`/`versions` 三个官方 bucket 的情况下，单次 `hit search git` 喷出 **约 1500 行 WARN**，被跳过的 manifest 涵盖 chromium、firefox、vscode、calibre、postman、android-studio、dbeaver、thunderbird、eclipse 全家桶等主流软件。这些 manifest 在原版 Scoop 下均正常工作。
 
-!!! 搜索结果似乎并不相关 !!!
+### 根因（三类解析失败）
+
+1. **`HashField` 不支持对象形式的 hash（最严重）**
+   Scoop manifest 的 `hash` 字段在 `autoupdate` 块里允许写成对象，用 `url` + `jsonpath`/`regex` 从远程取哈希。例如 `buckets/main/bucket/perl.json` 第 44-47 行：
+   ```json
+   "hash": {
+       "url": "https://strawberryperl.com/releases.json",
+       "jsonpath": "$[?(@.version == '$version')].edition.portable.sha256"
+   }
+   ```
+   Hit 的 `HashField` enum 显然只接受 `String` 或 `{url, regex}` 形式，不接受 `{url, jsonpath}` 形式，导致整个 manifest 被跳过。同类失败：chromium、firefox、vscode、calibre、aimp、android-studio、anaconda3、postman、thunderbird、eclipse 全家桶、mysql、haskell、qemu、lxc、kapacitor、chronograf、mvndaemon、ossgadget、cherrytree、meshroom、f3d 等（数十个）。
+
+2. **`suggest`/`depends`/`env_add_path`/`notes`/`post_install` 等数组字段被误判为单字符串**
+   Scoop 中 `suggest`、`depends`、`env_add_path`、`notes`、`post_install`、`extract_dir` 等字段允许是字符串**或**字符串数组。Hit 把这些字段声明为 `String` 而非 `StringOrVec`，遇到数组形式就报 `invalid type: sequence, expected a string`。例如 `buckets/extras/bucket/digital.json` 第 6-11 行的 `suggest`：
+   ```json
+   "suggest": {
+       "JDK": ["java/opendk", "java/oraclejdk"]
+   }
+   ```
+   实际报错指向第 10 行第 8 列（数组结尾）。同类失败：digital、megabasterd、megasync、filezilla、bizhawk、flutter、godot-mono、composer、yarn、git-lfs、yt-dlp、spotdl、kibana、logstash、stirling-pdf、plantuml、springboot、ffmpegthumbnailer、wixtoolset、unbound、autoit、sapling、bbdown、twilio-cli、ani-cli、etlas、euler、flamelens 等（数十个）。
+
+3. **`CheckverField` 不支持部分 checkver 变体**
+   Scoop 的 `checkver` 字段支持 `github`+`jsonpath`、`regex`+`reverse`、多字段对象等变体。Hit 的 `CheckverField` enum 漏了若干形式，报 `data did not match any variant of untagged enum CheckverField`。例如 `buckets/extras/bucket/feem.json`、`warp-terminal.json`、`buckets/main/bucket/edgedriver.json`、`buckets/versions/bucket/inkscape-dev.json`、`edgedriver-canary.json`、`edgedriver-dev.json`。
+
+### 影响
+
+- **可用性**：主流软件（chromium/firefox/vscode/calibre/postman/android-studio/eclipse/mysql 等）的 manifest 全部被跳过，`hit install <这些包>` 会报"找不到包"，而原版 Scoop 可正常安装。
+- **性能**：每条 search/info 命令扫描全部 bucket manifest，单次耗时 1-2 分钟，且向 stderr 喷出 ~1500 行 WARN，淹没正常输出，用户几乎无法使用。
+- **项目定位**：Hit 首要约束是"Scoop 兼容性"，此 bug 直接违反该约束，使 Hit 在官方 bucket 上形同不可用。
+
+### 修复方向（给修复 agent）
+
+1. **`HashField` 扩展**：接受 `{ "url": String, "jsonpath": String }` 和 `{ "url": String, "regex": String }` 以及 `{ "jp": String, "url": String }` 等所有 Scoop 支持的取哈希对象形式。参考原版 Scoop 的 `manifest.ps1` 中 `hash` 参数解析逻辑，以及 `ref/Scoop/` 下 PowerShell 源码。
+2. **字段多态**：把 `suggest`/`depends`/`env_add_path`/`notes`/`post_install`/`extract_dir`/`pre_install`/`installer`/`uninstaller`/`shortcuts` 等所有"字符串或字符串数组"或"字符串或对象数组"的字段，统一用 `StringOrVec`（`#[serde(untagged)]` enum）声明。参考 `docs/spec/MANIFEST_FORMAT.md` 与 `ref/Main/` 下真实 manifest。
+3. **`CheckverField` 扩展**：补全 Scoop 支持的所有 checkver 变体（`github`+`jsonpath`、`regex`+`reverse`+`replace`、多字段对象等）。参考原版 Scoop 的 `checkver` 实现。
+4. **WARN 抑制**：解析失败的 manifest 应该聚合计数后一次性输出摘要（如"跳过 N 个无效 manifest，详情见 --verbose"），而非逐条喷 stderr。但这是次要——首要是把上述三类解析 bug 修掉，让真实 manifest 能被解析。
+5. **回归测试**：修复后，对 `ref/Main/`（1591 个 manifest）、`ref/extras`、`ref/versions` 全量解析，要求 0 WARN、0 跳过。可作为单元测试：`parse_all_manifests_in(ref/Main/bucket)` 应全部成功。
+
+### 证据样本
+
+- `buckets/main/bucket/perl.json` 第 44-47 行：`hash` 为 `{url, jsonpath}` 对象 → `HashField` 失败
+- `buckets/extras/bucket/digital.json` 第 6-11 行：`suggest` 值为数组 → `invalid type: sequence, expected a string`
+- `buckets/extras/bucket/feem.json` 第 21 行：`checkver` 变体 → `CheckverField` 失败
+- 完整 WARN 日志（单次 `hit search git`，约 1500 行）：见本次测试会话输出
+
+### 备注
+
+此 bug 使原计划的手动测试无法继续（每条命令输出被 WARN 淹没，REPORT 会达数百 MB）。**需先修复此 bug，再重启测试。** 修完后请通知测试 agent。
 
 ## Hit 本身的 Shim 异常 ⭐⭐⭐
 shim 文件夹下的 `hit.exe` 大小 10873 KB，和根目录下的 `hit.exe` 大小相同。事实上这里应该是轻量的代理文件，而不是真正的 hit 程序。
+
+
+## 设计问题 ⭐
+```markdown
+| 2.1.6 | `hit bucket add unknownbucket`（未知名称且无 URL） | 报错"未知 bucket '...'，请提供 Git 仓库 URL" |
+```
+输出结果确实是这样, 但从用户体验角度来说，应该提示用户具体怎么做。
+以及, 能不能统一一下输出格式。
+
+## 格式问题 ⭐
+所有输出都没有对齐

@@ -199,6 +199,12 @@ if ($FromLocal) {
         Write-Fail "本地二进制不存在：$FromLocal"
     }
     $exeSource = Resolve-Path $FromLocal
+    # shim 代理与 hit.exe 同目录（target/release/ 下）
+    $shimSourceCandidate = Join-Path (Split-Path $exeSource -Parent) 'hit-shim.exe'
+    if (-not (Test-Path $shimSourceCandidate)) {
+        Write-Fail "未找到 hit-shim.exe（应与 hit.exe 同目录）：$shimSourceCandidate`n    请先运行 cargo build --release -p hit-cli -p hit-shim"
+    }
+    $shimSource = Resolve-Path $shimSourceCandidate
     Write-Step "使用本地二进制：$exeSource"
 }
 else {
@@ -213,12 +219,15 @@ else {
 
     if ($Version -eq 'latest') {
         $downloadUrl = "$baseUrl/latest/download/hit.exe"
+        $shimDownloadUrl = "$baseUrl/latest/download/hit-shim.exe"
     }
     else {
         $downloadUrl = "$baseUrl/download/v$Version/hit.exe"
+        $shimDownloadUrl = "$baseUrl/download/v$Version/hit-shim.exe"
     }
 
     $exePath = Join-Path $env:TEMP "hit-$Version-$arch.exe"
+    $shimPath = Join-Path $env:TEMP "hit-shim-$Version-$arch.exe"
     Write-Step "下载 $downloadUrl"
     try {
         Invoke-WebRequest -Uri $downloadUrl -OutFile $exePath -UseBasicParsing
@@ -226,8 +235,16 @@ else {
     catch {
         Write-Fail "下载失败：$($_.Exception.Message)`n    请检查网络或切换镜像 (-Mirror cnb)"
     }
+    Write-Step "下载 $shimDownloadUrl"
+    try {
+        Invoke-WebRequest -Uri $shimDownloadUrl -OutFile $shimPath -UseBasicParsing
+    }
+    catch {
+        Write-Fail "下载 hit-shim.exe 失败：$($_.Exception.Message)`n    请检查网络或切换镜像 (-Mirror cnb)"
+    }
 
     $exeSource = Resolve-Path $exePath
+    $shimSource = Resolve-Path $shimPath
 }
 
 # ── 3. 初始化目录布局 ──────────────────────────────────────────────────
@@ -241,10 +258,17 @@ foreach ($d in $subDirs) {
     }
 }
 
-# 复制 hit.exe 到安装根目录与 shims/
+# 复制 hit.exe 到安装根目录
 Copy-Item -Path $exeSource -Destination $hitExe -Force
-Copy-Item -Path $exeSource -Destination (Join-Path $shimsDir 'hit.exe') -Force
 Write-Ok "hit.exe 已部署到 $Path"
+
+# 部署轻量 shim 代理到 shims/（~200KB，非完整 hit.exe）
+$shimExe = Join-Path $shimsDir 'hit.exe'
+$shimSidecar = Join-Path $shimsDir 'hit.shim'
+Copy-Item -Path $shimSource -Destination $shimExe -Force
+# 生成 sidecar：指向根目录下的真实 hit.exe
+"path = `"$hitExe`"" | Set-Content -Path $shimSidecar -Encoding UTF8
+Write-Ok "hit shim 代理已部署到 $shimsDir（sidecar → $hitExe）"
 
 # 写入默认 config.json（仅首次安装）
 $configPath = Join-Path $Path 'config.json'
@@ -264,8 +288,9 @@ if (-not (Test-Path $configPath)) {
 }
 
 # 清理临时文件
-if (-not $FromLocal -and (Test-Path $exePath)) {
-    Remove-Item $exePath -Force -ErrorAction SilentlyContinue
+if (-not $FromLocal) {
+    if (Test-Path $exePath) { Remove-Item $exePath -Force -ErrorAction SilentlyContinue }
+    if (Test-Path $shimPath) { Remove-Item $shimPath -Force -ErrorAction SilentlyContinue }
 }
 
 # ── 4. 注册环境变量（HIT_ROOT + PATH，仅 CurrentUser，无需管理员） ─────

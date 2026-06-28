@@ -36,24 +36,27 @@ function Run-Case {
 
     Add-Content -Path $warnLog -Value "`n$sep`n[§$Id] $Cmd" -Encoding UTF8
 
-    # 用临时文件捕获 stdout，stderr 直接追加到 warnLog
+    # 用合并捕获 2>&1：stdout 入 REPORT，stderr 同时入 warnLog + 追加到 REPORT（非 WARN 行）
     $stdoutTmp = Join-Path $env:TEMP "hit_out_$Id.txt"
     $stderrTmp = Join-Path $env:TEMP "hit_err_$Id.txt"
+    $mergedTmp = Join-Path $env:TEMP "hit_merged_$Id.txt"
 
     $expr = $Cmd
     try {
-        Invoke-Expression "$expr 2>`$stderrTmp >`$stdoutTmp"
+        Invoke-Expression "$expr *>`$mergedTmp"
     } catch {
         Add-Content -Path $report -Value "[执行异常] $_" -Encoding UTF8
     }
-    if (Test-Path $stdoutTmp) {
-        Get-Content -Path $stdoutTmp -Raw | Add-Content -Path $report -Encoding UTF8
-        Remove-Item $stdoutTmp -Force -ErrorAction SilentlyContinue
+    if (Test-Path $mergedTmp) {
+        $allContent = Get-Content -Path $mergedTmp -Raw
+        # 全部写入 REPORT（原始输出，含 WARN 和错误）
+        Add-Content -Path $report -Value $allContent -Encoding UTF8
+        # WARN/tracing 行单独写入 warnLog
+        Get-Content -Path $mergedTmp | Where-Object { $_ -match '^\d{4}-\d{2}-\d{2}T|^  |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 -Append
+        Remove-Item $mergedTmp -Force -ErrorAction SilentlyContinue
     }
-    if (Test-Path $stderrTmp) {
-        Get-Content -Path $stderrTmp -Raw | Add-Content -Path $warnLog -Encoding UTF8
-        Remove-Item $stderrTmp -Force -ErrorAction SilentlyContinue
-    }
+    if (Test-Path $stdoutTmp) { Remove-Item $stdoutTmp -Force -ErrorAction SilentlyContinue }
+    if (Test-Path $stderrTmp) { Remove-Item $stderrTmp -Force -ErrorAction SilentlyContinue }
 }
 
 # ═══════════════════════════════════════════════════════════════════════

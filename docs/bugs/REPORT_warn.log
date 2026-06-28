@@ -81,13 +81,9 @@
 
 ────────────────────────────────────────────────
 [§4.1] hit info git
-错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\git.json): The system cannot find the file specified. (os error 2)
-
 
 ────────────────────────────────────────────────
 [§4.2] hit info git --bucket main
-错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\git.json): The system cannot find the file specified. (os error 2)
-
 
 ────────────────────────────────────────────────
 [§4.3] hit info nonexistent
@@ -96,32 +92,29 @@
 
 ────────────────────────────────────────────────
 [§4.4] hit info curl
-错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\curl.json): The system cannot find the file specified. (os error 2)
-
 
 ────────────────────────────────────────────────
 [§5.1] hit install curl
-错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\curl.json): The system cannot find the file specified. (os error 2)
-
 
 ────────────────────────────────────────────────
 [§5.2] hit i jq
-错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\jq.json): The system cannot find the file specified. (os error 2)
+错误: 解压失败（C:\Users\Violet\Downloads\test\hit\cache\jq#1.8.2#abde28e.exe）：EXE 文件需通过 manifest.installer 或 innosetup 字段指定处理方式
 
 
 ────────────────────────────────────────────────
 [§5.3] hit install curl
-错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\curl.json): The system cannot find the file specified. (os error 2)
+错误: 安装 'curl' 失败：'curl' 已安装，使用 --force 强制重装
 
 
 ────────────────────────────────────────────────
 [§5.4] hit install curl --force
-错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\curl.json): The system cannot find the file specified. (os error 2)
+错误: IO 错误：创建 Junction: C:\Users\Violet\Downloads\test\hit\apps\curl\current -> C:\Users\Violet\Downloads\test\hit\apps\curl\8.21.0_1：Cannot create a file when that file already exists. (os error 183)
+  原因: Cannot create a file when that file already exists. (os error 183)
 
 
 ────────────────────────────────────────────────
 [§5.5] hit install main/git
-错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\git.json): The system cannot find the file specified. (os error 2)
+错误: 解压失败（C:\Users\Violet\Downloads\test\hit\cache\git#2.54.0#b0a3d5f.7z）：EXE 文件需通过 manifest.installer 或 innosetup 字段指定处理方式
 
 
 ────────────────────────────────────────────────
@@ -131,7 +124,7 @@
 
 ────────────────────────────────────────────────
 [§5.7] hit install jq --arch 64bit
-错误: 读取 manifest 失败 (C:\Users\Violet\Downloads\test\hit\buckets\main\jq.json): The system cannot find the file specified. (os error 2)
+错误: 解压失败（C:\Users\Violet\Downloads\test\hit\cache\jq#1.8.2#abde28e.exe）：EXE 文件需通过 manifest.installer 或 innosetup 字段指定处理方式
 
 
 ────────────────────────────────────────────────
@@ -168,26 +161,18 @@
 
 ────────────────────────────────────────────────
 [§7.2.1] hit hold curl
-错误: 'curl' 未安装
-
 
 ────────────────────────────────────────────────
 [§7.2.2] hit hold curl
-错误: 'curl' 未安装
-
 
 ────────────────────────────────────────────────
 [§7.2.3] hit update --all
 
 ────────────────────────────────────────────────
 [§7.2.4] hit unhold curl
-错误: 'curl' 未安装
-
 
 ────────────────────────────────────────────────
 [§7.2.5] hit unhold curl
-错误: 'curl' 未安装
-
 
 ────────────────────────────────────────────────
 [§7.2.6] hit hold nonexistent
@@ -216,7 +201,8 @@
 
 ────────────────────────────────────────────────
 [§9.2] hit rm curl --purge
-错误: 'curl' 未安装
+错误: IO 错误：移除 Junction: C:\Users\Violet\Downloads\test\hit\apps\curl\current：The file or directory is not a reparse point. (os error 4390)
+  原因: The file or directory is not a reparse point. (os error 4390)
 
 
 ────────────────────────────────────────────────
@@ -236,7 +222,7 @@
 
 ────────────────────────────────────────────────
 [§10-pre] hit install curl
-错误: 未找到软件 'curl'
+错误: 安装 'curl' 失败：'curl' 已安装，使用 --force 强制重装
 
 
 ────────────────────────────────────────────────
@@ -281,8 +267,6 @@
 
 ────────────────────────────────────────────────
 [§12.2.2] hit prefix curl
-错误: 'curl' 未安装
-
 
 ────────────────────────────────────────────────
 [§12.2.3] hit prefix nonexistent

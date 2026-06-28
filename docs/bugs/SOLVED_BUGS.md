@@ -220,3 +220,45 @@ Hit 0.1.0
 **核心设计变更**：hit 不再用自身 shim 代理，`hit.exe` 直接在 `<root>/` 下由 PATH 找到。`hit-shim.exe` 仍保留，但仅为软件 shim(curl.exe、jq.exe 等)服务。这样 `current_exe().parent()` 就是根目录，路径定位天然正确，根治跨进程 config 路径不一致问题。
 
 **验证**：hit-cli 73 + hit-common 22 = 95 个单元测试全部通过；`cargo check` 通过。
+
+---
+
+## clap 错误被吞 / 各命令对"不存在"场景静默 ⭐⭐⭐⭐⭐（2026-06-28 解决）
+
+涉及 bug：
+- Bug 1 ⭐⭐⭐⭐⭐：`hit`/`hit wrongcmd`/`hit install`（无参数）应分别由 clap 报错，实际无输出
+- Bug 3 ⭐⭐⭐⭐：`hit uninstall <不存在>/无参数` 静默
+- Bug 4 ⭐⭐⭐⭐：`hit reset <不存在>/<不存在版本>` 静默
+- Bug 5 ⭐⭐⭐：`hit which`/`hit prefix <不存在>`/`hit home <不存在>` 静默
+- Bug 6 ⭐⭐⭐⭐：`hit config set` 校验失效（布尔/数字/未知键）
+- Bug 7 ⭐⭐⭐：`hit bucket add` 已存在 / `hit bucket remove` 不存在 静默
+
+**根因**：前几轮实测用的是**旧 binary**（未部署最新修复），导致误判为未修。代码本身逻辑正确——所有命令对"不存在"分支都 `return Err(anyhow::anyhow!(...))`，`main()` 也正确打印错误并非零退出。
+
+**实测验证**（基于最新 binary）：
+- `hit wrongcmd` → `error: unrecognized subcommand 'wrongcmd'` + Usage 提示
+- `hit` → 显示完整 help
+- `hit install`（无参数）→ `错误: 至少指定一个要安装的软件名`
+- `hit uninstall nonexistent` → `错误: 'nonexistent' 未安装`
+- `hit uninstall`（无参数）→ `错误: 至少指定一个要卸载的软件名`
+- `hit reset python 3.11.0` → `错误: 版本 '3.11.0' 不存在（python）`
+- `hit which nonexistent` → `错误: 未找到 'nonexistent' 的 shim 文件`
+- `hit prefix nonexistent` → `错误: 'nonexistent' 未安装`
+- `hit home nonexistent` → `错误: 未找到软件 'nonexistent'`
+- `hit config set aria2_enabled maybe` → `错误: 'maybe' 不是有效的布尔值`
+- `hit config set unknown_key value` → `错误: 未知配置项 'unknown_key'`
+- `hit bucket add main`（已存在）→ `错误: Bucket 'main' 已存在`
+- `hit bucket remove nonexistent` → `错误: Bucket 'nonexistent' 不存在`
+
+所有命令退出码均为 1。
+
+**修复**：无需额外代码改动，随 commit `1750c1f`（manifest 路径修复）+ 之前几轮修复部署后自动生效。
+
+---
+
+## `hit which curl` 报 "未找到 shim 文件" ⭐⭐⭐（2026-06-28 发现）
+
+`hit install curl` 成功（list 显示 curl 已安装），但 `hit which curl` 报错"未找到 'curl' 的 shim 文件"。检查发现 `<root>/shims/` 目录下无任何 `.shim` 文件。
+
+**疑似根因**：install 流程的 `step_create_shims` 步骤未正确创建 shim 文件，或创建到了错误路径。需调查 controller.rs 的 shim 创建逻辑。此 bug 与"install jq 回滚"同源（Bug 2），归入 Bug 2 一并修复。
+

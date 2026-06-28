@@ -14,25 +14,21 @@ use hit_common::error::{HitError, Result};
 
 /// 创建目录 Junction 链接
 ///
-/// `lnk` 已存在时先移除（清除 readonly 后删除），创建后设置 readonly 属性
-/// （与 Scoop `attrib +R /L` 一致）。删除失败时仍尝试覆盖创建，
-/// 避免后续 `junction::create` 报 os error 183（文件已存在）。
-///
-/// 注意：使用 `fs::remove_dir`（不跟随 reparse point）而非 `remove_dir_all`，
-/// 避免误删 junction 指向的目标目录内容。
+/// `lnk` 已存在时先尝试移除，创建后设置 readonly 属性
+/// （与 Scoop `attrib +R /L` 一致）。使用多级 fallback 确保删除：
+/// 1. `junction::delete()`（最快，但可能因 readonly 或损坏的 junction 失败）
+/// 2. `cmd.exe /c rmdir`（Windows 原生，正确删除 junction reparse point）
+/// 3. `fs::remove_dir()`（不跟随 junction 的目录删除）
 pub fn create_junction(src: &Path, lnk: &Path) -> Result<()> {
     if lnk.exists() {
-        remove_readonly(lnk);
-        // 先尝试按 junction 删除
-        if junction::delete(lnk).is_err() {
-            // 回退: 用 remove_dir 删除目录项（不跟随 junction，安全）
-            // 即使失败也继续尝试创建（可能 junction 已部分清理）
-            if let Err(e) = fs::remove_dir(lnk) {
-                tracing::warn!(
-                    "移除旧 junction 失败: {} (err: {}), 尝试覆盖创建",
-                    lnk.display(), e
-                );
-            }
+        // 用 cmd.exe attrib 清除 readonly（避免 fs::metadata 跟随到目标目录的问题）
+        remove_junction_readonly(lnk);
+        // 多级 fallback 删除旧 junction
+        let deleted = junction::delete(lnk).is_ok()
+            || rmdir_junction(lnk)
+            || fs::remove_dir(lnk).is_ok();
+        if !deleted {
+            tracing::warn!("移除旧 junction 失败: {}，尝试覆盖创建", lnk.display());
         }
     }
 
@@ -45,6 +41,26 @@ pub fn create_junction(src: &Path, lnk: &Path) -> Result<()> {
     Ok(())
 }
 
+/// 用 `cmd.exe /c rmdir` 删除 junction（Windows 原生，最可靠）。
+/// rmdir 在 junction 上只删除 reparse point，不跟随到目标目录。
+fn rmdir_junction(lnk: &Path) -> bool {
+    std::process::Command::new("cmd.exe")
+        .args(["/C", "rmdir", lnk.to_str().unwrap_or_default()])
+        .status()
+        .map(|s| s.success())
+        .unwrap_or(false)
+}
+
+/// 用 `cmd.exe /c attrib -R` 清除 junction 的 readonly 属性。
+/// Scoop 的 `attrib +R /L` 设置 readonly 在 junction 点自身而非目标目录，
+/// 但 Rust 的 `fs::metadata` 在 junction 上会跟随到目标目录，
+/// 导致 `fs::set_permissions` 设错目标。因此用 cmd.exe 来操作。
+fn remove_junction_readonly(lnk: &Path) {
+    let _ = std::process::Command::new("cmd.exe")
+        .args(["/C", "attrib", "-R", lnk.to_str().unwrap_or_default()])
+        .status();
+}
+
 /// 移除目录 Junction 链接
 ///
 /// 移除前清除 readonly 属性（与 Scoop `attrib -R /L` 一致）。
@@ -52,7 +68,7 @@ pub fn remove_junction(lnk: &Path) -> Result<()> {
     if !lnk.exists() {
         return Ok(());
     }
-    remove_readonly(lnk);
+    remove_junction_readonly(lnk);
     junction::delete(lnk).map_err(|e| HitError::Io {
         context: format!("移除 Junction: {}", lnk.display()),
         source: std::io::Error::other(e.to_string()),
@@ -149,18 +165,6 @@ fn set_readonly(path: &Path) {
         let mut perms = meta.permissions();
         perms.set_readonly(true);
         let _ = fs::set_permissions(path, perms);
-    }
-}
-
-/// 清除目录的 readonly 属性
-#[allow(clippy::permissions_set_readonly_false)]
-fn remove_readonly(path: &Path) {
-    if let Ok(meta) = fs::metadata(path) {
-        let mut perms = meta.permissions();
-        if perms.readonly() {
-            perms.set_readonly(false);
-            let _ = fs::set_permissions(path, perms);
-        }
     }
 }
 

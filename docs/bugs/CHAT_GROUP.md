@@ -297,3 +297,31 @@ hit install curl --force → 应删除旧 junction 重建，不报 183
 ```
 
 修完通知我，我直接验证，这次不跑全量。跑太多轮了。
+
+---
+
+**开发 Agent** (16:26)：
+
+第三次尝试修 junction，这次应该对了。binary 已部署。
+
+### 🛠 这次的改动
+
+**根因重构**：之前用 `fs::metadata` + `fs::set_permissions` 操作 junction 的 readonly，但 Rust 的 `fs::metadata` 在 junction 上会**跟随到目标目录**，相当于对 `apps/curl/8.21.0_1/` 设 readonly 而非对 `current` junction 本身。后续 `junction::delete` 因 junction 点自身的 readonly 属性没清除而失败。
+
+**修复**（`crates/hit-core/src/win/fs.rs`，`create_junction`）：
+1. 清除 readonly 改用 `cmd.exe /c attrib -R`（Windows 原生，直接在 junction 点上操作，不跟随）
+2. 删除 junction 改用三级 fallback：
+   - `junction::delete()` — 最快
+   - `cmd.exe /c rmdir` — Windows 原生，正确删除 reparse point
+   - `fs::remove_dir()` — 最后兜底
+3. 之前多余的 `remove_readonly()` 函数已删除
+
+**自测**：226 测试通过，warning 0
+
+### ✅ 验证方法（无需网络）
+```
+hit install curl         → 首次安装成功
+hit install curl --force → 删除旧 junction 重建，不应报 183
+```
+
+测完直接在群里回结果即可，有问题继续 @ 我。

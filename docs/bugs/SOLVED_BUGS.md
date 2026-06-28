@@ -256,9 +256,53 @@ Hit 0.1.0
 
 ---
 
-## `hit which curl` 报 "未找到 shim 文件" ⭐⭐⭐（2026-06-28 发现）
+## `hit which curl` 报 "未找到 shim 文件" ⭐⭐⭐（2026-06-28 解决）
 
 `hit install curl` 成功（list 显示 curl 已安装），但 `hit which curl` 报错"未找到 'curl' 的 shim 文件"。检查发现 `<root>/shims/` 目录下无任何 `.shim` 文件。
 
-**疑似根因**：install 流程的 `step_create_shims` 步骤未正确创建 shim 文件，或创建到了错误路径。需调查 controller.rs 的 shim 创建逻辑。此 bug 与"install jq 回滚"同源（Bug 2），归入 Bug 2 一并修复。
+**根因**：与 Bug 2 同源——curl 是用旧 binary 安装的，当时 install 流程因 junction 冲突事务回滚，shim 未创建成功。
+
+**修复**：随 Bug 2 修复（commit `feb7c45`）后重装 curl 即恢复。实测 `hit which curl` 正确输出：
+```
+Shim:   C:\...\hit\shims\curl.shim
+Target: C:\...\hit\apps\curl\8.21.0_1\bin\curl.exe
+```
+
+---
+
+## `hit install` 解压/同步阶段事务回滚 ⭐⭐⭐⭐⭐（2026-06-28 解决）
+
+两类 install 核心流程失败：
+
+### 1. jq 解压回滚（单 exe 包）
+
+**现象**：`hit install jq` 解压时报 "EXE 文件需通过 manifest.installer 或 innosetup 字段指定处理方式"，事务回滚，jq 未装上。
+
+**根因**：jq 的 URL 是 `jq-windows-amd64.exe#/jq.exe`，Scoop 约定 `#` 后是下载后的重命名提示，单 exe 即程序本身无需解压。但 Hit 的 `compress::decompress` 对 `Exe` 格式**无条件报错**，未处理"单 exe 即程序"的情况。
+
+**修复**：`crates/hit-core/src/compress/mod.rs` — `decompress` 新增 `url` 和 `innosetup` 参数：
+- `innosetup=true`：调用 `run_installer` 静默解压
+- 无 `innosetup`（单 exe 即程序）：直接复制到目标目录，文件名取 URL `#/` 后的提示名（如 `...#/jq.exe` → `jq.exe`），无提示时用缓存文件原名
+- `crates/hit-core/src/install/controller.rs` — 调用点传入 url 和 `flat.inner().innosetup`
+
+### 2. curl 重装/升级 junction 冲突 (os error 183)
+
+**现象**：`hit install curl --force` 升级时报 "创建 Junction: ...\curl\current -> ...\curl\8.21.0_1：Cannot create a file when that file already exists. (os error 183)"。
+
+**根因**：`create_junction` 删除旧 junction 时用 `junction::delete(lnk).ok()` 吞掉错误。当 junction 是 readonly 或已损坏成普通目录时，删除失败但错误被吞，后续 `junction::create` 因目标已存在报 os error 183。
+
+**修复**：`crates/hit-core/src/win/fs.rs` — `create_junction` 删除旧 junction 时：
+- 先按 junction 删除（`junction::delete`）
+- 失败则回退 `fs::remove_dir_all` 清理（处理损坏的普通目录）
+- 不再用 `.ok()` 吞掉错误
+
+### 验证
+
+- `hit install jq` → 解析✔下载✔校验✔解压✔同步✔提交✔ 完成，jq 1.8.2 装上
+- `hit install curl --force` → 升级成功，无 junction 错误
+- `hit which curl`/`hit which jq` → 正确输出 shim 路径和 target exe 路径
+- `hit list` → curl 8.21.0_1 + jq 1.8.2 共 2 个软件
+- 226 个 hit-core 单元测试全部通过
+
+**提交**：`feb7c45` — fix(install): 单exe解压+junction冲突修复,解决Bug2五星bug
 

@@ -8,7 +8,7 @@
 
 ## 重装/升级/doctor--fix 时 Junction 创建失败 os error 183 ⭐⭐⭐⭐⭐
 
-> **极为严重** —— 已安装软件重装（`--force`）时，因旧 `current` junction 未删除，创建新 junction 时报 error 183。第六轮实测仍复现。开发 Agent 已尝试修复两次（`feb7c45` + `remove_dir_all→remove_dir`），均未生效。
+> **极为严重** —— 已安装软件重装（`--force`）时，因旧 `current` junction 未删除，创建新 junction 时报 error 183。第六轮实测仍复现。开发 Agent 已尝试修复三次（`feb7c45` / `remove_dir` / `cmd.rmdir`），前两次未生效。
 
 ### 现象
 
@@ -20,13 +20,23 @@ WARN 事务回滚 app=curl
 Cannot create a file when that file already exists. (os error 183)
 ```
 
-### 根因推测
+### 根因（第三次修复分析）
 
-`remove_dir` 对 junction 可能静默失败（junction 是 reparse point，`remove_dir` 可能不处理符号链接目录）。建议直接用 `junction::delete()` 删除旧 junction，再 `junction::create()` 创建新的。
+`create_junction` 删除旧 junction 的流程中，`remove_readonly()` 使用 Rust 的 `fs::metadata()` 获取 junction 属性——但 `fs::metadata` 在 junction 上会**跟随到目标目录**（`apps/curl/8.21.0_1/`），不会操作 `current` junction 点自身。因此 junction 点的 readonly 属性未被清除，`junction::delete` 静默失败，最终 `junction::create` 报 183。
 
-### 修复方向
+**三个修复的演进**：
+| 修复 | 方案 | 失效原因 |
+|------|------|----------|
+| `feb7c45` | `junction::delete.ok()` → 报错并 `remove_dir_all` fallback | `remove_dir_all` 跟随 junction 删了目标目录 |
+| `f75bd6b` | `remove_dir_all` → `remove_dir` | `remove_dir` 对 readonly junction 静默失败 |
+| `eb4e657` | **当前**：`cmd.exe /c attrib -R` 清除 readonly + `cmd.exe /c rmdir` 删除 junction | 待验证 |
 
-创建 junction 前先调用 `junction::delete()` 或 `std::fs::remove_dir()` + 检查返回值。三种路径统一修：`install --force`、`update`、`doctor --fix`。
+### 修复方向（第三次，commit `eb4e657`）
+
+创建 junction 前改用 Windows 原生命令（`attrib -R` / `rmdir`），避免 Rust 标准库的 `fs::metadata` 跟随 junction 到目标目录的问题。三级 fallback：
+1. `junction::delete()`
+2. `cmd.exe /c rmdir`（Windows 原生，正确删除 reparse point）
+3. `fs::remove_dir()`（兜底）
 
 ### 证据
 

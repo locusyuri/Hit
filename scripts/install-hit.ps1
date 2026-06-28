@@ -262,13 +262,10 @@ foreach ($d in $subDirs) {
 Copy-Item -Path $exeSource -Destination $hitExe -Force
 Write-Ok "hit.exe 已部署到 $Path"
 
-# 部署轻量 shim 代理到 shims/（~200KB，非完整 hit.exe）
-$shimExe = Join-Path $shimsDir 'hit.exe'
-$shimSidecar = Join-Path $shimsDir 'hit.shim'
-Copy-Item -Path $shimSource -Destination $shimExe -Force
-# 生成 sidecar：指向根目录下的真实 hit.exe
-"path = `"$hitExe`"" | Set-Content -Path $shimSidecar -Encoding UTF8
-Write-Ok "hit shim 代理已部署到 $shimsDir（sidecar → $hitExe）"
+# 部署 hit-shim.exe 模板到根目录（install 时复制为 shims/<name>.exe）
+$shimTemplate = Join-Path $Path 'hit-shim.exe'
+Copy-Item -Path $shimSource -Destination $shimTemplate -Force
+Write-Ok "hit-shim.exe 模板已部署到 $Path"
 
 # 写入默认 config.json（仅首次安装）
 $configPath = Join-Path $Path 'config.json'
@@ -311,18 +308,33 @@ catch {
     Write-Warn "HIT_ROOT 注册失败：$($_.Exception.Message)`n    请手动将 HIT_ROOT 设为 $Path"
 }
 
-Write-Step "注册 shims 目录到用户 PATH..."
+Write-Step "注册根目录和 shims 目录到用户 PATH..."
 try {
     $regKey = 'HKCU:\Environment'
     $currentPath = (Get-ItemProperty -Path $regKey -Name Path -ErrorAction SilentlyContinue).Path
-    if ($currentPath -and ($currentPath -split ';' | ForEach-Object { $_.TrimEnd('\') }) -contains $shimsDir.TrimEnd('\')) {
-        Write-Ok "PATH 已包含 $shimsDir（无需修改）"
+    $pathParts = if ($currentPath) { $currentPath -split ';' | ForEach-Object { $_.TrimEnd('\') } } else { @() }
+
+    # 根目录（hit.exe 直接在此，不再经 shim 代理）
+    $rootNorm = $Path.TrimEnd('\')
+    if ($pathParts -notcontains $rootNorm) {
+        $currentPath = if ($currentPath) { "$currentPath;$Path" } else { $Path }
+        Write-Ok "已追加 $Path 到 PATH"
     }
     else {
-        $newPath = if ($currentPath) { "$currentPath;$shimsDir" } else { $shimsDir }
-        Set-ItemProperty -Path $regKey -Name Path -Value $newPath -Type ExpandString
-        Write-Ok "已追加 $shimsDir 到 HKCU\Environment\Path"
+        Write-Ok "PATH 已包含 $Path（无需修改）"
     }
+
+    # shims 目录（软件 shim 代理：curl.exe、jq.exe 等）
+    $shimsNorm = $shimsDir.TrimEnd('\')
+    if ($pathParts -notcontains $shimsNorm) {
+        $currentPath = if ($currentPath) { "$currentPath;$shimsDir" } else { $shimsDir }
+        Write-Ok "已追加 $shimsDir 到 PATH"
+    }
+    else {
+        Write-Ok "PATH 已包含 $shimsDir（无需修改）"
+    }
+
+    Set-ItemProperty -Path $regKey -Name Path -Value $currentPath -Type ExpandString
 
     # 广播 WM_SETTINGCHANGE 通知其它进程刷新环境变量（HIT_ROOT 与 PATH 同属 Environment）
     Add-Type -TypeDefinition @"
@@ -343,7 +355,7 @@ public class HitBroadcast {
     [HitBroadcast]::SettingChange()
 }
 catch {
-    Write-Warn "PATH 注册失败：$($_.Exception.Message)`n    请手动将 $shimsDir 加入系统 PATH"
+    Write-Warn "PATH 注册失败：$($_.Exception.Message)`n    请手动将 $Path 和 $shimsDir 加入系统 PATH"
 }
 
 # ── 5. 完成 ─────────────────────────────────────────────────────────────

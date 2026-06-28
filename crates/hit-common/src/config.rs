@@ -57,21 +57,33 @@ impl Default for HitConfig {
 }
 
 impl HitConfig {
-    /// 配置文件的默认路径：`~/.hit/config.json`
+    /// 配置文件的默认路径
     ///
     /// 查找顺序：
-    /// 1. 当前 exe 同目录下的 `config.json`（支持自定义安装路径，无需 HIT_ROOT 环境变量）
-    /// 2. `paths::root_path()` 下的 `config.json`（基于 HIT_ROOT / SCOOP / USERPROFILE 回退链）
+    /// 1. 当前 exe 同目录下的 `config.json`（hit.exe 在 `<root>/` 下，与 config.json 同目录）
+    /// 2. 当前 exe 上一级目录的 `config.json`（兼容旧版 shim 代理：exe 在 `<root>/shims/` 下）
+    /// 3. `paths::root_path()` 下的 `config.json`（基于 HIT_ROOT / SCOOP / USERPROFILE 回退链）
+    ///
+    /// 放弃 hit 自身 shim 代理后，hit.exe 直接在 `<root>/` 下执行，
+    /// `current_exe().parent()` 就是根目录，路径天然正确。
     pub fn default_path() -> PathBuf {
-        // 优先检查 exe 同目录：安装脚本将 hit.exe 和 config.json 放在同一目录
         if let Ok(exe) = std::env::current_exe() {
             if let Some(dir) = exe.parent() {
+                // 1. exe 同目录（hit.exe 在 <root>/ 下）
                 let candidate = dir.join("config.json");
                 if candidate.exists() {
                     return candidate;
                 }
+                // 2. exe 上一级目录（兼容旧版 shim 布局：exe 在 <root>/shims/ 下）
+                if let Some(parent) = dir.parent() {
+                    let candidate = parent.join("config.json");
+                    if candidate.exists() {
+                        return candidate;
+                    }
+                }
             }
         }
+        // 3. 兜底：环境变量回退链
         paths::root_path().join("config.json")
     }
 

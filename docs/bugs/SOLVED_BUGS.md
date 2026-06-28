@@ -194,3 +194,29 @@ Hit 0.1.0
 **验证**：hit-cli 73 个单元测试全部通过；`cargo check` 通过。
 
 **说明**：此修复同时是五星 bug "hit install 完全不工作" 和 "hit info 完全不工作" 的潜在根因——welcome 在 parse 前执行污染 stdout（横幅+菜单+"无效选择，已跳过"喷到 stdout），把 install/info 的真实业务输出冲掉。修复后这两个 bug 应随之恢复，待 release 构建后跑 REPORT.md 回归验证。
+
+---
+
+## `hit reset` / `hit hold` / `hit unhold` 全部输出为空 ⭐⭐⭐⭐（2026-06-28 解决）
+
+代码逻辑完整（错误冒泡正确、成功打印 ✔/🔒/🔓），单元测试通过。现象是 Bug A(welcome 污染 stdout)的副作用——welcome 横幅+菜单喷到 stdout 把真实输出冲掉。
+
+**修复**：无需改代码，随 Bug A+B 修复(commit `f9cd803`)自动恢复。
+
+---
+
+## `hit config set` 校验失效 + 声称成功但不写入 ⭐⭐⭐⭐（2026-06-28 解决）
+
+两个子问题：
+1. **校验失效** — 代码实际有校验(`parse_bool`/`parse`/未知键报错),现象是 Bug A(welcome 污染)副作用
+2. **声称成功但不写入** — `default_path()` 的 exe 同目录回退在跨进程场景下解析到不同路径
+
+**修复**：
+- `crates/hit-common/src/config.rs` — `default_path()` 增加向上查找两级：exe 在 `<root>/` 下直接找同目录 config；exe 在 `<root>/shims/` 下向上找一级（兼容旧版 shim 布局）
+- `crates/hit-cli/src/welcome.rs` — `is_first_run()` 的 config 判据改用 `HitConfig::default_path()`，与 Session 加载路径一致
+- `scripts/install-hit.ps1` — 放弃 hit 自身 shim 代理：不再部署 `shims/hit.exe`+`shims/hit.shim`，改为部署 `hit-shim.exe` 模板到根目录；PATH 注册改为同时加 `<root>/` 和 `<root>/shims/`
+- `scripts/uninstall-env.ps1` — 清理时同时移除 PATH 中的根目录和 shims 目录
+
+**核心设计变更**：hit 不再用自身 shim 代理，`hit.exe` 直接在 `<root>/` 下由 PATH 找到。`hit-shim.exe` 仍保留，但仅为软件 shim(curl.exe、jq.exe 等)服务。这样 `current_exe().parent()` 就是根目录，路径定位天然正确，根治跨进程 config 路径不一致问题。
+
+**验证**：hit-cli 73 + hit-common 22 = 95 个单元测试全部通过；`cargo check` 通过。

@@ -5,7 +5,7 @@
 
 .DESCRIPTION
     执行以下清理操作（需两次确认）：
-      1. 从 HKCU\Environment\Path 中移除 Hit 的 shims 目录条目
+      1. 从 HKCU\Environment\Path 中移除 Hit 的根目录和 shims 目录条目
       2. 删除 HKCU\Environment\HIT_ROOT 环境变量（若存在）
     本脚本不会删除 SCOOP 环境变量（与 Scoop 共享），
     也不会删除 ~/.hit/ 目录或已安装的软件（如需请手动删除）。
@@ -68,25 +68,29 @@ $regKey = 'HKCU:\Environment'
 $hitRoot = (Get-ItemProperty -Path $regKey -Name HIT_ROOT -ErrorAction SilentlyContinue).HIT_ROOT
 $currentPath = (Get-ItemProperty -Path $regKey -Name Path -ErrorAction SilentlyContinue).Path
 
-# 从 PATH 中找出所有疑似 Hit shims 的条目（指向 *.hit\shims 或显式 HIT_ROOT 下的 shims）
-$hitShimEntries = @()
+# 从 PATH 中找出所有 Hit 相关条目（根目录 + shims 目录）
+$hitPathEntries = @()
 if ($currentPath) {
     $entries = $currentPath -split ';' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
     foreach ($e in $entries) {
         $eNorm = $e.TrimEnd('\')
-        # 匹配 ~/.hit/shims、<root>/shims（root 来自 HIT_ROOT）、或明显为 hit 测试目录的 shims
         $isHit = $false
+        # 根目录匹配：~/.hit、<HIT_ROOT>、或明显为 hit 测试目录
+        if ($eNorm -match '\\\.hit$') { $isHit = $true }
+        if ($hitRoot -and ($eNorm -eq $hitRoot.TrimEnd('\'))) { $isHit = $true }
+        if ($eNorm -match '\\hit$') { $isHit = $true }
+        # shims 目录匹配
         if ($eNorm -match '\\\.hit\\shims$') { $isHit = $true }
         if ($hitRoot -and ($eNorm -eq (Join-Path $hitRoot 'shims').TrimEnd('\'))) { $isHit = $true }
         if ($eNorm -match '\\hit\\shims$') { $isHit = $true }
-        if ($isHit) { $hitShimEntries += $eNorm }
+        if ($isHit) { $hitPathEntries += $eNorm }
     }
 }
 
 Write-Host ""
 Write-Host "将清理以下内容：" -ForegroundColor Yellow
 Write-Host "  HIT_ROOT 环境变量：$hitRoot" -ForegroundColor Yellow
-Write-Host "  PATH 中的 shims 条目：$($hitShimEntries -join ' ; ')" -ForegroundColor Yellow
+Write-Host "  PATH 中的 Hit 条目：$($hitPathEntries -join ' ; ')" -ForegroundColor Yellow
 Write-Host "  （不会删除 SCOOP 变量、~/.hit 目录、已安装软件）" -ForegroundColor DarkGray
 Write-Host ""
 
@@ -114,14 +118,14 @@ if ($hitRoot) {
     }
 }
 
-# 2. 从 PATH 移除 hit shims 条目
-if ($hitShimEntries.Count -gt 0) {
+# 2. 从 PATH 移除 hit 相关条目（根目录 + shims）
+if ($hitPathEntries.Count -gt 0) {
     try {
         $entries = $currentPath -split ';' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-        $kept = $entries | Where-Object { ($_.TrimEnd('\') -notin $hitShimEntries) }
+        $kept = $entries | Where-Object { ($_.TrimEnd('\') -notin $hitPathEntries) }
         $newPath = ($kept -join ';')
         Set-ItemProperty -Path $regKey -Name Path -Value $newPath -Type ExpandString
-        Write-Ok "已从 PATH 移除 $($hitShimEntries.Count) 个 hit shims 条目"
+        Write-Ok "已从 PATH 移除 $($hitPathEntries.Count) 个 hit shims 条目"
     }
     catch {
         Write-Warn "PATH 清理失败：$($_.Exception.Message)"

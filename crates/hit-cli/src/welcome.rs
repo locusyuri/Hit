@@ -21,20 +21,17 @@ use hit_common::config::HitConfig;
 /// - 安装脚本刚装好但用户还没添加 bucket（config 在 + bucket 空）也不触发，
 ///   避免污染已有配置环境
 ///
-/// 注意：判据必须基于 `paths::root_path()` 解析的真实根目录，
-/// 不能用 `current_exe()` 同目录（通过 shim 调用时 current_exe 是 shim 路径，
-/// 其同目录是 shims/ 而非根目录，会误判）。
+/// config 路径使用 `HitConfig::default_path()`，与 Session 加载配置的路径一致，
+/// 避免因路径解析逻辑不同导致误判。
 pub fn is_first_run() -> bool {
-    use hit_common::paths;
-
-    // 条件 1：config.json 不存在
-    let config_path = paths::root_path().join("config.json");
+    // 条件 1：config.json 不存在（使用 default_path 与 Session 一致）
+    let config_path = HitConfig::default_path();
     if config_path.exists() {
         return false;
     }
 
     // 条件 2：buckets/ 目录不存在或为空
-    let buckets = paths::buckets_path();
+    let buckets = hit_common::paths::buckets_path();
     if !buckets.exists() {
         return true;
     }

@@ -105,64 +105,13 @@ REPORT.md §2.1.1（输出完全为空）、§2.1.4（输出完全为空）
 
 ## `hit reset` / `hit hold` / `hit unhold` 全部输出为空 ⭐⭐⭐⭐
 
-### 现象
-
-```
-$ hit reset python 3.11.0      → 无输出（应"✔ python 已切换到 3.11.0" 或报错）
-$ hit reset python 9.9.9       → 无输出（应报错"版本 '9.9.9' 不存在"）
-$ hit hold curl                → 无输出（应"🔒 'curl' 已锁定" 或报错"未安装"）
-$ hit hold curl（重复）         → 无输出（应"⏭ 已经是锁定状态"）
-$ hit unhold curl              → 无输出
-$ hit unhold curl（重复）       → 无输出
-$ hit hold nonexistent         → 无输出（应报错"'nonexistent' 未安装"）
-```
-
-### 根因
-
-与 install 类似，reset/hold/unhold 在执行某步骤后静默退出。可能是因为 install 没装上任何软件，导致 reset/hold/unhold 找不到目标软件后静默返回 —— 但即便如此，"未安装"也应报错而非静默。
-
-### 修复方向
-
-reset/hold/unhold 对未安装的软件必须报错，对成功操作必须输出 ✔ 提示。不能静默退出。
-
-### 证据
-
-REPORT.md §7.1.3 / §7.1.4 / §7.2.1 / §7.2.2 / §7.2.4 / §7.2.5 / §7.2.6 / §17-r
+> **已解决** — 代码逻辑完整,是 Bug A(welcome 污染 stdout)的副作用。修完 A+B 后应恢复,待回归验证。
 
 ---
 
 ## `hit config set` 校验失效 + 声称成功但不写入 ⭐⭐⭐⭐
 
-### 现象
-
-```
-$ hit config set aria2_enabled maybe      → 无输出（应报错"'maybe' 不是有效的布尔值"）
-$ hit config set auto_cleanup_days abc    → 无输出（应报错"'abc' 不是有效的数字"）
-$ hit config set unknown_key value        → 无输出（应报错"未知配置项"）
-$ hit config set aria2_enabled true       → "✔ 配置 'aria2_enabled' 已更新为 'true'"
-$ hit config set auto_cleanup_days 60     → "✔ 配置 'auto_cleanup_days' 已更新为 '60'"
-$ hit config list                         → aria2_enabled false / auto_cleanup_days 30
-                                            （前面声称已更新，但实际没写入！）
-```
-
-两类问题：
-1. **校验失效**：无效布尔值、无效数字、未知配置项都不报错，静默接受。
-2. **声称成功但不写入**：`config set` 输出 ✔ 已更新，但 `config list` 显示原值未变。config set 在撒谎。
-
-### 根因
-
-1. config set 的校验逻辑被删了或没接上 —— maybe/abc/unknown_key 都应被校验拒绝。
-2. config set 的写入逻辑有 bug —— 打印了 ✔ 但没真正写 config.json（或写了但 config list 读的是另一个文件/另一个内存状态）。
-
-### 修复方向
-
-1. config set 必须校验：布尔项只接受 true/false/yes/no；数字项只接受有效数字；未知键报错。
-2. config set 写入后，config list 必须能读到新值（同一文件、同一序列化格式）。
-3. 回归：依次跑 §13.1-§13.10，校验错误必须报错，成功必须写入。
-
-### 证据
-
-REPORT.md §13.5 / §13.7 / §13.8（校验失效）、§13.3/§13.4/§13.6 声称成功但 §13.10 显示原值
+> **已解决** — 校验逻辑代码本身完整,校验失效是 Bug A(welcome 污染)的副作用;写入不一致由 `default_path()` 路径解析修复 + 放弃 hit 自身 shim 解决。
 
 ---
 

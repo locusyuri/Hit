@@ -14,13 +14,17 @@ pub struct Args {
     /// 限定搜索的 Bucket 名称
     #[arg(short, long)]
     pub bucket: Option<String>,
+
+    /// 同时搜索描述（默认仅匹配名称，避免 digital→git 等误匹配）
+    #[arg(short, long)]
+    pub desc: bool,
 }
 
 /// 执行搜索
 pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     let index = build_index(session)?;
 
-    let mut results = index.search(&args.query);
+    let mut results = index.search(&args.query, args.desc);
 
     // 过滤 bucket
     if let Some(ref bucket_name) = args.bucket {

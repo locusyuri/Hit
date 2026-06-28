@@ -134,6 +134,15 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
             ));
         }
 
+        // 已安装检测（在 println 之前，避免输出"安装..."后静默退出）
+        let app_dir = session.apps_path().join(&spec.name).join("current");
+        if app_dir.exists() && !args.force {
+            return Err(anyhow::anyhow!(
+                "'{}' 已安装，如需重装请使用 --force",
+                spec.name
+            ));
+        }
+
         println!("{} {} ...", "安装".cyan().bold(), spec.name);
 
         let (bucket, app, manifest) = find_manifest(session, &spec)?;

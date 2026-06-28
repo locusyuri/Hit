@@ -340,4 +340,44 @@ Target: C:\...\hit\apps\curl\8.21.0_1\bin\curl.exe
 - 226 个 hit-core 单元测试全部通过（0 failed）
 - `cargo check` 编译通过
 - 回归要求：对 main+extras+versions 全量解析，预期 0 WARN
+- **提交**：`eac5c43` — fix(manifest): 修复6条WARN,解决Bug8兼容性问题
+
+---
+
+## 安装 post_install 脚本被 cmd.exe 执行而非 PowerShell ⭐⭐⭐⭐⭐（2026-06-28 解决）
+
+**现象**：`hit install 7zip` 在提交阶段报 `'$7zip_dir' is not recognized as an internal or external command`，证明 post_install 脚本被 cmd.exe 执行而非 PowerShell。git 也相同。
+
+**根因**（`controller.rs`）：`run_hook_script` 用 `cmd.exe /C` 执行安装钩子脚本。但 Scoop manifest 的 pre/post_install 脚本使用 PowerShell 语法（`$version` 变量、`Set-Content`、`New-Item` 等），cmd.exe 无法识别。
+
+**修复**（commit 待定）：
+- `crates/hit-core/src/install/controller.rs` — `cmd.exe /C` → `pwsh -NoProfile -Command`，与项目约定一致（AGENTS.md 要求本项目用 PowerShell 7）
+
+**验证**：`cargo check` 通过，226 测试通过。
+
+---
+
+## 搜索含描述匹配导致大量无关结果 ⭐⭐⭐⭐⭐（2026-06-28 解决）
+
+**现象**：`hit search git` 返回 162 个结果，包含 caesium-image-compressor（描述含"digital"→子串"git"）、cdex、digital 等。名称匹配本应只有 ~20 个。
+
+**根因**（`index.rs`）：`search()` 用 `contains()` 子串匹配同时搜索名称和描述。`"digital"` 含子串 `"git"`（d-i-g-i-t-a-l），导致大量误匹配。
+
+**修复**（commit 待定）：
+- `crates/hit-core/src/bucket/index.rs` — `search()` 新增 `include_desc: bool` 参数，默认 `false`（仅匹配名称）
+- `crates/hit-cli/src/commands/search.rs` — 新增 `-d`/`--desc` 标志，传入 `include_desc: true`
+- `crates/hit-cli/src/tui.rs` — TUI 交互搜索继续搜索描述（传 `true`）
+- 测试适配：`search_finds_by_description` 验证 `include_desc=false` 时不返回描述匹配结果
+
+---
+
+## install/update 遇到已安装软件时静默退出 ⭐⭐⭐（2026-06-28 解决）
+
+**现象**：`hit install curl`（curl 已装）先输出"安装 curl ..."后无任何后续。不存在的包同样"安装 nonexistent_pkg ..."后静默。
+
+**根因**：`install.rs::execute` 先 `println!("安装 {} ...")` 到 stdout，然后调用 core 层的 `install()`，若返回 `Err` 则由 `main.rs` 输出到 **stderr**。测试脚本仅捕获 stdout 导致"无输出"误报。
+
+**修复**（commit 待定）：
+- `crates/hit-cli/src/commands/install.rs` — 在 `println!("安装...")` 之前增加快速"已安装"检测，提前 return Err，避免先输出后报错的顺序问题
+- CLOSE_WITH_TEST: 测试脚本捕获需求加 `2>&1` 完整捕获 stderr
 

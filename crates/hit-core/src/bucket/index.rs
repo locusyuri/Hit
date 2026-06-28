@@ -133,8 +133,10 @@ fn is_manifest_file(path: &std::path::Path) -> bool {
 }
 
 impl SoftwareIndex {
-    /// 搜索匹配关键词的软件包（名称或描述包含，不区分大小写）
-    pub fn search(&self, query: &str) -> Vec<&PackageSummary> {
+    /// 搜索软件包
+    ///
+    /// 默认仅匹配名称。`include_desc=true` 时同时搜索描述（子串匹配）。
+    pub fn search(&self, query: &str, include_desc: bool) -> Vec<&PackageSummary> {
         let query_lower = query.to_lowercase();
         let mut results: Vec<&PackageSummary> = self
             .packages
@@ -142,7 +144,7 @@ impl SoftwareIndex {
             .flatten()
             .filter(|pkg| {
                 pkg.name.to_lowercase().contains(&query_lower)
-                    || pkg.description.to_lowercase().contains(&query_lower)
+                    || (include_desc && pkg.description.to_lowercase().contains(&query_lower))
             })
             .collect();
         results.sort_by(|a, b| a.name.cmp(&b.name).then(a.bucket.cmp(&b.bucket)));
@@ -303,7 +305,7 @@ mod tests {
         let session = test_session(dir.path());
         let index = build_index(&session).unwrap();
 
-        let results = index.search("git");
+        let results = index.search("git", false);
         assert_eq!(results.len(), 1);
         assert_eq!(results[0].name, "git");
     }
@@ -319,9 +321,14 @@ mod tests {
         let session = test_session(dir.path());
         let index = build_index(&session).unwrap();
 
-        let results = index.search("programming");
-        assert_eq!(results.len(), 1);
-        assert_eq!(results[0].name, "python");
+        // 默认不搜索描述，应匹配不到
+        let results_default = index.search("programming", false);
+        assert_eq!(results_default.len(), 0, "默认不应搜索描述");
+
+        // 传入 include_desc=true 时搜索描述
+        let results_with_desc = index.search("programming", true);
+        assert_eq!(results_with_desc.len(), 1);
+        assert_eq!(results_with_desc[0].name, "python");
     }
 
     #[test]
@@ -334,7 +341,7 @@ mod tests {
         let session = test_session(dir.path());
         let index = build_index(&session).unwrap();
 
-        let results = index.search("GIT");
+        let results = index.search("GIT", false);
         assert_eq!(results.len(), 1);
         assert_eq!(results[0].name, "Git");
     }

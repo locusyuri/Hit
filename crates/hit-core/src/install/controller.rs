@@ -534,8 +534,8 @@ fn run_hook_script(
         body = body.replace(k.as_str(), v.as_str());
     }
 
-    let status = std::process::Command::new("cmd.exe")
-        .args(["/C", &body])
+    let status = std::process::Command::new("pwsh")
+        .args(["-NoProfile", "-Command", &body])
         .current_dir(version_dir)
         .status()
         .map_err(|e| {

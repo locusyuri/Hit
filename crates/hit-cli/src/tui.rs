@@ -41,7 +41,7 @@ impl<'a> App<'a> {
         let results = if initial_query.is_empty() {
             Vec::new()
         } else {
-            index.search(initial_query)
+            index.search(initial_query, true)
         };
 
         Self {
@@ -59,7 +59,7 @@ impl<'a> App<'a> {
         self.results = if self.query.is_empty() {
             Vec::new()
         } else {
-            index.search(&self.query)
+            index.search(&self.query, true)
         };
         self.selected = 0;
         self.scroll = 0;

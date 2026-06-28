@@ -75,14 +75,12 @@ if ($currentPath) {
     foreach ($e in $entries) {
         $eNorm = $e.TrimEnd('\')
         $isHit = $false
-        # 根目录匹配：~/.hit、<HIT_ROOT>、或明显为 hit 测试目录
-        if ($eNorm -match '\\\.hit$') { $isHit = $true }
+        # 精确匹配：HIT_ROOT 本身、HIT_ROOT\shims
         if ($hitRoot -and ($eNorm -eq $hitRoot.TrimEnd('\'))) { $isHit = $true }
-        if ($eNorm -match '\\hit$') { $isHit = $true }
-        # shims 目录匹配
-        if ($eNorm -match '\\\.hit\\shims$') { $isHit = $true }
         if ($hitRoot -and ($eNorm -eq (Join-Path $hitRoot 'shims').TrimEnd('\'))) { $isHit = $true }
-        if ($eNorm -match '\\hit\\shims$') { $isHit = $true }
+        # 默认安装路径匹配：~/.hit、~/.hit/shims
+        if ($eNorm -match '\\\.hit$') { $isHit = $true }
+        if ($eNorm -match '\\\.hit\\shims$') { $isHit = $true }
         if ($isHit) { $hitPathEntries += $eNorm }
     }
 }

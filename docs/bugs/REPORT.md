@@ -1,5 +1,5 @@
 # Hit 实测报告（自动批量执行）
-> 生成时间: 2026-06-28 15:46:00
+> 生成时间: 2026-06-28 16:12:57
 > 按 TEST_FLOW.md 顺序，stdout 入本文件，stderr(WARN) 入 REPORT_warn.log。
 > 跳过: §1/§15/§12.3.1/§20/§14.2/§14.4/§19.4
 
@@ -579,17 +579,7 @@ Bucket:      main
 ▶ [解析] jq...
 ✔ [解析] jq 完成
 ▶ [下载] jq...
-✔ [下载] jq 完成
-▶ [校验] jq...
-✔ [校验] jq 完成
-解压 jq (jq#1.8.2#abde28e.exe)
-▶ [解压] jq...
-✔ [解压] jq 完成
-▶ [同步] jq...
-▶ [提交] jq...
-✔ [提交] jq 完成
-✔ [同步] jq 完成
-✔ jq 1.8.2 安装完成（1）
+错误: 下载失败（https://github.com/jqlang/jq/releases/download/jq-1.8.2/jq-windows-amd64.exe#/jq.exe）：读取响应失败: error decoding response body
 
 
 ────────────────────────────────────────────────
@@ -617,7 +607,7 @@ Bucket:      main
 ✔ [解压] curl 完成
 ▶ [同步] curl...
 ▶ [提交] curl...
-[2m2026-06-28T07:46:37.730312Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mcurl
+[2m2026-06-28T08:14:32.796753Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mcurl
 错误: IO 错误：创建 Junction: C:\Users\Violet\Downloads\test\hit\apps\curl\current -> C:\Users\Violet\Downloads\test\hit\apps\curl\8.21.0_1：Cannot create a file when that file already exists. (os error 183)
   原因: Cannot create a file when that file already exists. (os error 183)
 
@@ -631,24 +621,7 @@ Bucket:      main
 ▶ [解析] git...
 ✔ [解析] git 完成
 ▶ [下载] git...
-✔ [下载] git 完成
-▶ [校验] git...
-✔ [校验] git 完成
-解压 git (git#2.54.0#b0a3d5f.7z)
-▶ [解压] git...
-✔ [解压] git 完成
-▶ [同步] git...
-▶ [提交] git...
-✔ [提交] git 完成
-C:\Users\Violet\Downloads\test\hit\apps\git\2.54.0: The term 'C:\Users\Violet\Downloads\test\hit\apps\git\2.54.0' is not recognized as a name of a cmdlet, function, script file, or executable program.
-Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
-Get-ChildItem: 
-Line |
-   2 |  Get-ChildItem -Path "$bucketsdir\$bucket\scripts\git" -Filter '*.reg' …
-     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     | Cannot find path '\\scripts\git' because it does not exist.
-[2m2026-06-28T07:46:49.200621Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mgit
-错误: 安装 'git' 失败：PostInstall 脚本退出码：1
+错误: 下载失败（https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/PortableGit-2.54.0-64-bit.7z.exe#/dl.7z）：请求失败: error sending request for url (https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/PortableGit-2.54.0-64-bit.7z.exe#/dl.7z)
 
 
 ────────────────────────────────────────────────
@@ -665,7 +638,11 @@ Line |
 ────────────────────────────────────────────────
 命令: hit install jq --arch 64bit
 输出（原样）:
-错误: 'jq' 已安装，如需重装请使用 --force
+安装 jq ...
+▶ [解析] jq...
+✔ [解析] jq 完成
+▶ [下载] jq...
+错误: 下载失败（https://github.com/jqlang/jq/releases/download/jq-1.8.2/jq-windows-amd64.exe#/jq.exe）：请求失败: error sending request for url (https://github.com/jqlang/jq/releases/download/jq-1.8.2/jq-windows-amd64.exe#/jq.exe)
 
 
 ────────────────────────────────────────────────
@@ -674,10 +651,9 @@ Line |
 命令: hit list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T07:46:34Z
-jq           1.8.2      64bit    main       2026-06-28T07:46:36Z
+curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 
-共 2 个软件
+共 1 个软件
 
 
 ────────────────────────────────────────────────
@@ -686,10 +662,9 @@ jq           1.8.2      64bit    main       2026-06-28T07:46:36Z
 命令: hit ls
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T07:46:34Z
-jq           1.8.2      64bit    main       2026-06-28T07:46:36Z
+curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 
-共 2 个软件
+共 1 个软件
 
 
 ────────────────────────────────────────────────
@@ -698,7 +673,7 @@ jq           1.8.2      64bit    main       2026-06-28T07:46:36Z
 命令: hit list curl
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T07:46:34Z
+curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 
 共 1 个软件
 
@@ -767,20 +742,14 @@ curl         8.21.0_1   64bit    main       2026-06-28T07:46:34Z
 刷新 正在更新 Bucket...
 正在更新 bucket 'extras'...
 正在克隆 bucket 'extras'...
-bucket 'extras'：检出文件中...
-bucket 'extras' 克隆完成
-  ✔ extras
+  ✘ extras 失败: Bucket 'extras' 错误：克隆失败：An IO error occurred when talking to the server
 正在更新 bucket 'main'...
 正在克隆 bucket 'main'...
-bucket 'main'：检出文件中...
-bucket 'main' 克隆完成
-  ✔ main
+  ✘ main 失败: Bucket 'main' 错误：克隆失败：An IO error occurred when talking to the server
 正在更新 bucket 'versions'...
 正在克隆 bucket 'versions'...
-bucket 'versions'：检出文件中...
-bucket 'versions' 克隆完成
-  ✔ versions
-✔ Bucket 更新完成（3/3）
+  ✘ versions 失败: Bucket 'versions' 错误：克隆失败：An IO error occurred when talking to the server
+✔ Bucket 更新完成（0/3）
 
 所有软件已是最新版本
 
@@ -815,22 +784,7 @@ bucket 'versions' 克隆完成
 命令: hit update
 输出（原样）:
 刷新 正在更新 Bucket...
-正在更新 bucket 'extras'...
-正在克隆 bucket 'extras'...
-bucket 'extras'：检出文件中...
-bucket 'extras' 克隆完成
-  ✔ extras
-正在更新 bucket 'main'...
-正在克隆 bucket 'main'...
-bucket 'main'：检出文件中...
-bucket 'main' 克隆完成
-  ✔ main
-正在更新 bucket 'versions'...
-正在克隆 bucket 'versions'...
-bucket 'versions'：检出文件中...
-bucket 'versions' 克隆完成
-  ✔ versions
-✔ Bucket 更新完成（3/3）
+✔ Bucket 更新完成（0/0）
 
 所有软件已是最新版本
 
@@ -841,21 +795,8 @@ bucket 'versions' 克隆完成
 命令: hit update --all
 输出（原样）:
 刷新 正在更新 Bucket...
-正在更新 bucket 'extras'...
-正在克隆 bucket 'extras'...
-  ✘ extras 失败: Bucket 'extras' 错误：克隆失败：An IO error occurred when talking to the server
-正在更新 bucket 'main'...
-正在克隆 bucket 'main'...
-bucket 'main'：检出文件中...
-bucket 'main' 克隆完成
-  ✔ main
-正在更新 bucket 'versions'...
-正在克隆 bucket 'versions'...
-bucket 'versions'：检出文件中...
-  ✔ versions
-✔ Bucket 更新完成（2/3）
+✔ Bucket 更新完成（0/0）
 
-bucket 'versions' 克隆完成
 所有软件已是最新版本
 
 
@@ -865,17 +806,7 @@ bucket 'versions' 克隆完成
 命令: hit update curl
 输出（原样）:
 刷新 正在更新 Bucket...
-正在更新 bucket 'main'...
-正在克隆 bucket 'main'...
-bucket 'main'：检出文件中...
-bucket 'main' 克隆完成
-  ✔ main
-正在更新 bucket 'versions'...
-正在克隆 bucket 'versions'...
-bucket 'versions'：检出文件中...
-bucket 'versions' 克隆完成
-  ✔ versions
-✔ Bucket 更新完成（2/2）
+✔ Bucket 更新完成（0/0）
 
 所有软件已是最新版本
 
@@ -886,17 +817,7 @@ bucket 'versions' 克隆完成
 命令: hit update nonexistent
 输出（原样）:
 刷新 正在更新 Bucket...
-正在更新 bucket 'main'...
-正在克隆 bucket 'main'...
-bucket 'main'：检出文件中...
-bucket 'main' 克隆完成
-  ✔ main
-正在更新 bucket 'versions'...
-正在克隆 bucket 'versions'...
-bucket 'versions'：检出文件中...
-bucket 'versions' 克隆完成
-  ✔ versions
-✔ Bucket 更新完成（2/2）
+✔ Bucket 更新完成（0/0）
 
   nonexistent 未安装，跳过
 所有软件已是最新版本
@@ -908,50 +829,9 @@ bucket 'versions' 克隆完成
 命令: hit update --force
 输出（原样）:
 刷新 正在更新 Bucket...
-正在更新 bucket 'main'...
-正在克隆 bucket 'main'...
-bucket 'main'：检出文件中...
-bucket 'main' 克隆完成
-  ✔ main
-正在更新 bucket 'versions'...
-正在克隆 bucket 'versions'...
-bucket 'versions'：检出文件中...
-bucket 'versions' 克隆完成
-  ✔ versions
-✔ Bucket 更新完成（2/2）
+✔ Bucket 更新完成（0/0）
 
-⬆ 可升级 2 个软件
-升级 curl → 8.21.0_1
-▶ [解析] curl...
-✔ [解析] curl 完成
-▶ [下载] curl...
-✔ [下载] curl 完成
-▶ [校验] curl...
-✔ [校验] curl 完成
-解压 curl (curl#8.21.0_1#39c2972.xz)
-▶ [解压] curl...
-✔ [解压] curl 完成
-▶ [同步] curl...
-▶ [提交] curl...
-✔ [提交] curl 完成
-  ✔ 8.21.0_1 升级完成
-升级 jq → 1.8.2
-✔ [同步] curl 完成
-▶ [解析] jq...
-✔ [解析] jq 完成
-▶ [下载] jq...
-✔ [下载] jq 完成
-▶ [校验] jq...
-✔ [校验] jq 完成
-解压 jq (jq#1.8.2#abde28e.exe)
-▶ [解压] jq...
-✔ [解压] jq 完成
-▶ [同步] jq...
-▶ [提交] jq...
-[2m2026-06-28T07:48:31.427469Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mjq
-  ✘ 升级失败: IO 错误：创建 Junction: C:\Users\Violet\Downloads\test\hit\apps\jq\current -> C:\Users\Violet\Downloads\test\hit\apps\jq\1.8.2：Cannot create a file when that file already exists. (os error 183)
-
-✔ 升级完成（1/2）
+所有软件已是最新版本
 
 
 ────────────────────────────────────────────────
@@ -959,9 +839,7 @@ bucket 'versions' 克隆完成
 ────────────────────────────────────────────────
 命令: hit uninstall jq
 输出（原样）:
-卸载 jq ...
-错误: IO 错误：移除 Junction: C:\Users\Violet\Downloads\test\hit\apps\jq\current：The file or directory is not a reparse point. (os error 4390)
-  原因: The file or directory is not a reparse point. (os error 4390)
+错误: 'jq' 未安装
 
 
 ────────────────────────────────────────────────
@@ -970,7 +848,8 @@ bucket 'versions' 克隆完成
 命令: hit rm curl --purge
 输出（原样）:
 卸载 curl ...
-✔ curl 已卸载
+错误: IO 错误：移除 Junction: C:\Users\Violet\Downloads\test\hit\apps\curl\current：The file or directory is not a reparse point. (os error 4390)
+  原因: The file or directory is not a reparse point. (os error 4390)
 
 
 ────────────────────────────────────────────────
@@ -994,9 +873,7 @@ bucket 'versions' 克隆完成
 ────────────────────────────────────────────────
 命令: hit uninstall jq curl
 输出（原样）:
-卸载 jq ...
-错误: IO 错误：移除 Junction: C:\Users\Violet\Downloads\test\hit\apps\jq\current：The file or directory is not a reparse point. (os error 4390)
-  原因: The file or directory is not a reparse point. (os error 4390)
+错误: 'jq' 未安装
 
 
 ────────────────────────────────────────────────
@@ -1014,10 +891,8 @@ bucket 'versions' 克隆完成
 输出（原样）:
 软件                   版本         大小         路径
 curl                 8.21.0_1   4.7 MB     C:\Users\Violet\Downloads\test\hit\cache\curl#8.21.0_1#39c2972.xz
-git                  2.54.0     56.3 MB    C:\Users\Violet\Downloads\test\hit\cache\git#2.54.0#b0a3d5f.7z
-jq                   1.8.2      1011.0 KB  C:\Users\Violet\Downloads\test\hit\cache\jq#1.8.2#abde28e.exe
 
-共 3 个文件（62.0 MB）
+共 1 个文件（4.7 MB）
 
 
 ────────────────────────────────────────────────
@@ -1033,7 +908,7 @@ C:\Users\Violet\Downloads\test\hit\cache
 ────────────────────────────────────────────────
 命令: hit cache clean
 输出（原样）:
-✔ 已清理 3 个缓存文件
+✔ 已清理 1 个缓存文件
 
 
 ────────────────────────────────────────────────
@@ -1065,9 +940,7 @@ C:\Users\Violet\Downloads\test\hit\cache
 ────────────────────────────────────────────────
 命令: hit cleanup --all
 输出（原样）:
-  删除 git 2.54.0
-
-✔ 已清理 1 个旧版本
+没有需要清理的内容
 
 
 ────────────────────────────────────────────────
@@ -1236,11 +1109,9 @@ health_check_interval_days     7
 ────────────────────────────────────────────────
 命令: hit doctor
 输出（原样）:
-⚠ 发现 3 个问题：
+⚠ 发现 1 个问题：
 
-  ⚠ jq: current 链接损坏 (可修复)
-  ✗ curl: 未跟踪的应用目录
-  ✗ git: 未跟踪的应用目录
+  ⚠ curl: current 链接损坏 (可修复)
 
 提示 使用 hit doctor --fix 自动修复可修复的问题
 
@@ -1257,14 +1128,12 @@ health_check_interval_days     7
 ────────────────────────────────────────────────
 命令: hit doctor --fix
 输出（原样）:
-⚠ 发现 3 个问题：
+⚠ 发现 1 个问题：
 
-  ⚠ jq: current 链接损坏 (可修复)
-  ✗ curl: 未跟踪的应用目录
-  ✗ git: 未跟踪的应用目录
+  ⚠ curl: current 链接损坏 (可修复)
 
 修复 正在修复 1 个问题...
-  ✗ jq 修复失败: Cannot create a file when that file already exists. (os error 183)
+  ✗ curl 修复失败: Cannot create a file when that file already exists. (os error 183)
 
 ✔ 已修复 0/1 个问题
 
@@ -1284,8 +1153,8 @@ health_check_interval_days     7
 Hit 0.1.0
 
   已安装软件:    1
-  Bucket 数量:   2
-  可用软件总数:  2185
+  Bucket 数量:   0
+  可用软件总数:  0
   缓存文件:      0 (0 B)
   根目录:        C:\Users\Violet\Downloads\test\hit
 
@@ -1298,8 +1167,8 @@ Hit 0.1.0
 Hit 0.1.0
 
   已安装软件:    1
-  Bucket 数量:   2
-  可用软件总数:  2185
+  Bucket 数量:   0
+  可用软件总数:  0
   缓存文件:      0 (0 B)
   根目录:        C:\Users\Violet\Downloads\test\hit
 
@@ -1327,17 +1196,7 @@ Hit 0.1.0
 命令: hit u nonexistent
 输出（原样）:
 刷新 正在更新 Bucket...
-正在更新 bucket 'main'...
-正在克隆 bucket 'main'...
-bucket 'main'：检出文件中...
-bucket 'main' 克隆完成
-  ✔ main
-正在更新 bucket 'versions'...
-正在克隆 bucket 'versions'...
-bucket 'versions'：检出文件中...
-bucket 'versions' 克隆完成
-  ✔ versions
-✔ Bucket 更新完成（2/2）
+✔ Bucket 更新完成（0/0）
 
   nonexistent 未安装，跳过
 所有软件已是最新版本
@@ -1357,7 +1216,7 @@ bucket 'versions' 克隆完成
 命令: hit ls
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-jq           1.8.2      64bit    main       2026-06-28T07:46:36Z
+curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 
 共 1 个软件
 
@@ -1370,8 +1229,8 @@ jq           1.8.2      64bit    main       2026-06-28T07:46:36Z
 Hit 0.1.0
 
   已安装软件:    1
-  Bucket 数量:   2
-  可用软件总数:  2185
+  Bucket 数量:   0
+  可用软件总数:  0
   缓存文件:      0 (0 B)
   根目录:        C:\Users\Violet\Downloads\test\hit
 
@@ -1381,11 +1240,7 @@ Hit 0.1.0
 ────────────────────────────────────────────────
 命令: hit b ls
 输出（原样）:
-名称                  Manifest    描述
-main                  1593        
-versions              592         
-
-共 2 个 Bucket
+没有已添加的 Bucket
 
 
 ────────────────────────────────────────────────
@@ -1410,7 +1265,7 @@ versions              592
 命令: hit -v list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-jq           1.8.2      64bit    main       2026-06-28T07:46:36Z
+curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 
 共 1 个软件
 
@@ -1421,7 +1276,7 @@ jq           1.8.2      64bit    main       2026-06-28T07:46:36Z
 命令: hit -vv list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-jq           1.8.2      64bit    main       2026-06-28T07:46:36Z
+curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 
 共 1 个软件
 
@@ -1432,7 +1287,7 @@ jq           1.8.2      64bit    main       2026-06-28T07:46:36Z
 命令: hit -vvv list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-jq           1.8.2      64bit    main       2026-06-28T07:46:36Z
+curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 
 共 1 个软件
 
@@ -1509,7 +1364,7 @@ For more information, try '--help'.
 命令: hit list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-jq           1.8.2      64bit    main       2026-06-28T07:46:36Z
+curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 
 共 1 个软件
 

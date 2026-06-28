@@ -74,7 +74,7 @@ Rust CLI 内置子命令简写，无需 shell 包装：
 
 - 所有软件安装在用户目录 `~/.hit/apps/`，无需管理员权限
 - 不写注册表、不修改系统文件
-- **便携化**：解压即用，卸载即删
+- **便携化**：解压即用，通过脚本卸载干净（`scripts\uninstall-env.ps1` 清理环境变量 / `scripts\uninstall-hit.ps1` 彻底删除全部内容）
 
 ### Shim 代理机制
 
@@ -231,10 +231,12 @@ hit/
 │   └── ...
 │
 └── scripts/                      # 辅助脚本
-    ├── build.ps1
-    ├── test.ps1
-    ├── release.ps1
-    └── checkver.ps1
+    ├── install-hit.ps1           # 一键安装（部署 binary + 注册 PATH + 首次引导）
+    ├── uninstall-env.ps1        # 卸载模式1：只清理环境变量，保留已安装软件
+    ├── uninstall-hit.ps1        # 卸载模式2：彻底删除全部内容 + 清理环境变量
+    ├── release.ps1              # 本地发布：编译 release 并复制到 scripts/
+    ├── run-tests.ps1            # 自动批量实测
+    └── checkver.ps1             # 检查 manifest 版本更新
 ```
 
 ---

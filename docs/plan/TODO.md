@@ -297,6 +297,7 @@ crates/
 | 2.1.4 | `hit status` - 状态检查                                                                | ✅ | hit-core/store, hit-core/bucket |
 | 2.1.5 | `hit home` - 打开主页                                                                  | ✅ | hit-core/manifest               |
 | 2.1.6 | `hit uninstall --purge` - 彻底卸载                                                     | ✅ | hit-core/install                |
+| 2.1.13| 卸载 Hit 自身（脚本方案）— 提供 `scripts\uninstall-env.ps1`（模式1：仅清理环境变量，保留已安装软件）和 `scripts\uninstall-hit.ps1`（模式2：彻底删除全部内容），与安装脚本 `install-hit.ps1` 对称，无需 CLI 子命令 | ✅ | hit-common/config, hit-core/win/env |
 | 2.1.7 | `hit which` - 查找命令对应的 shim 路径和真实 exe 路径                                  | ✅ | hit-shim                        |
 | 2.1.8 | `hit prefix` - 显示安装路径                                                            | ✅ | hit-core/store                  |
 | 2.1.9 | `hit hold <pkg>` - 版本锁定：在 db.json 的 InstalledPackage 中设置 `held: true` 字段；被 hold 的包在 `hit update` 时跳过升级；参考 Hok 的 `operation::package_hold` 实现 | ✅ | hit-core/store                  |

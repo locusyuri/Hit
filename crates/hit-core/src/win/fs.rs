@@ -14,11 +14,20 @@ use hit_common::error::{HitError, Result};
 
 /// 创建目录 Junction 链接
 ///
-/// `lnk` 已存在时先移除，创建后设置 readonly 属性（与 Scoop `attrib +R /L` 一致）。
+/// `lnk` 已存在时先移除（清除 readonly 后删除），创建后设置 readonly 属性
+/// （与 Scoop `attrib +R /L` 一致）。删除失败时返回错误而非吞掉，
+/// 避免后续 `junction::create` 报 os error 183（文件已存在）。
 pub fn create_junction(src: &Path, lnk: &Path) -> Result<()> {
     if lnk.exists() {
         remove_readonly(lnk);
-        junction::delete(lnk).ok();
+        // 先尝试按 junction 删除；若失败（非 reparse point，可能是损坏的普通目录），
+        // 回退到 remove_dir_all 清理，避免后续 create 报 os error 183
+        if junction::delete(lnk).is_err() {
+            fs::remove_dir_all(lnk).map_err(|e| HitError::Io {
+                context: format!("移除旧 current 失败（非 junction）: {}", lnk.display()),
+                source: e,
+            })?;
+        }
     }
 
     junction::create(src, lnk).map_err(|e| HitError::Io {

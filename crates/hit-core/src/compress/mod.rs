@@ -125,13 +125,19 @@ pub fn detect_format(path: &Path) -> Result<ArchiveFormat> {
 /// 2. 路由到对应提取函数
 /// 3. 发送 `ExtractStart` + `InstallPhase` 事件
 ///
-/// `Exe` 格式需由上层 install 模块根据 `manifest.innosetup` / `installer` 决定处理方式。
+/// `Exe` 格式分两种处理：
+/// - `innosetup=true`：调用 `run_installer` 静默解压
+/// - 无 `innosetup`（单 exe 即程序，如 jq）：直接复制到目标目录，
+///   文件名取 URL `#` 后的提示名（如 `...#/jq.exe` → `jq.exe`），
+///   无提示时用缓存文件原名
 pub fn decompress(
     session: &Session,
     app: &str,
     archive: &Path,
     destination: &Path,
     extract_dir: Option<&str>,
+    url: Option<&str>,
+    innosetup: bool,
 ) -> Result<()> {
     session.emit(Event::ExtractStart {
         app: app.to_string(),
@@ -153,10 +159,30 @@ pub fn decompress(
         ArchiveFormat::Xz => extract_tar_xz(archive, destination, extract_dir)?,
         ArchiveFormat::Msi => run_msi_extract(archive, destination)?,
         ArchiveFormat::Exe => {
-            return Err(HitError::Compress {
-                archive: archive.display().to_string(),
-                message: "EXE 文件需通过 manifest.installer 或 innosetup 字段指定处理方式".into(),
-            });
+            if innosetup {
+                run_installer(archive, destination, &[], true)?;
+            } else {
+                // 单 exe 即程序（如 jq）：直接复制到目标目录
+                // 文件名优先取 URL `#/` 后的提示名，否则用缓存文件原名
+                let dest_name = url
+                    .and_then(|u| u.split('#').nth(1))
+                    .and_then(|frag| frag.strip_prefix('/'))
+                    .map(|s| s.to_string())
+                    .unwrap_or_else(|| archive.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default());
+
+                if dest_name.is_empty() {
+                    return Err(HitError::Compress {
+                        archive: archive.display().to_string(),
+                        message: "无法确定单 exe 的目标文件名（URL 无 #/ 提示且缓存文件无名）".into(),
+                    });
+                }
+
+                let dest_file = destination.join(&dest_name);
+                fs::copy(archive, &dest_file).map_err(|e| HitError::io(
+                    format!("复制单 exe 失败：{} -> {}", archive.display(), dest_file.display()),
+                    e,
+                ))?;
+            }
         }
     }
 

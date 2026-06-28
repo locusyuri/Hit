@@ -159,7 +159,9 @@ pub fn install(
 
     for (i, archive) in cache_files.iter().enumerate() {
         let extract_dir = extract_dirs.get(i).and_then(|d| d.as_deref());
-        compress::decompress(session, app, archive, &version_dir, extract_dir)?;
+        let url = urls.get(i).map(|s| s.as_str());
+        let innosetup = flat.inner().innosetup.unwrap_or(false);
+        compress::decompress(session, app, archive, &version_dir, extract_dir, url, innosetup)?;
     }
 
     // 构建变量上下文

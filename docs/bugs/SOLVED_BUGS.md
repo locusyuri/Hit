@@ -380,4 +380,34 @@ Target: C:\...\hit\apps\curl\8.21.0_1\bin\curl.exe
 **修复**（commit 待定）：
 - `crates/hit-cli/src/commands/install.rs` — 在 `println!("安装...")` 之前增加快速"已安装"检测，提前 return Err，避免先输出后报错的顺序问题
 - CLOSE_WITH_TEST: 测试脚本捕获需求加 `2>&1` 完整捕获 stderr
+- **提交**：`89768bd` — fix: 修复三个五星/三星bug
+
+---
+
+## 重装/升级/doctor--fix 时 Junction 创建失败 os error 183 ⭐⭐⭐⭐⭐（2026-06-28 解决）
+
+**现象**：`hit install curl --force`（curl 已装）在提交阶段报 os error 183，旧 junction 未删除。`doctor --fix` 也相同。
+
+**根因**（两轮修复）：
+1. **第一次**（`feb7c45`）：`create_junction()` 用 `.ok()` 吞掉 `junction::delete` 错误，删除失败后 `junction::create` 报 183。修复：`junction::delete` 失败时回退 `fs::remove_dir_all`。
+2. **第二次**（`f75bd6b`）：`fs::remove_dir_all` 在 junction 上会跟随 reparse point 删除后端目录（`apps/curl/8.21.0_1/`），导致版本目录被误删后 junction::create 仍报错。修复：改用 `fs::remove_dir`（不跟随 junction），即使删除失败也 warn 并继续尝试创建。
+
+**修复**（commit `f75bd6b`）：
+- `crates/hit-core/src/win/fs.rs` — `create_junction()` fallback 从 `remove_dir_all` 改为 `remove_dir`，不跟随 reparse point
+
+**验证**：226 测试通过，`cargo check` 通过。
+
+---
+
+## post_install 脚本缺少 Scoop 环境变量 ⭐⭐⭐⭐⭐（2026-06-28 解决）
+
+**现象**：`hit install git` 在提交阶段报 `"$bucketsdir\$bucket\scripts\git" 找不到`，`$bucketsdir` 展开为空。
+
+**根因**：`run_hook_script` 用 `pwsh -NoProfile -Command "<body>"` 执行脚本，但 Scoop post_install 脚本依赖 `$bucketsdir`、`$dir`、`$persist_dir` 等 PowerShell 变量，Hit 未定义这些变量。
+
+**修复**（commit `f75bd6b`）：
+- `crates/hit-core/src/install/controller.rs` — 在脚本 body 前追加 preamble 定义 Scoop 兼容变量：`$dir`、`$version`、`$persist_dir`、`$bucketsdir`、`$scoopdir`、`$app`、`$global`
+- 参考原版 Scoop `install.ps1` 中的变量定义
+
+**验证**：226 测试通过，`cargo check` 通过。
 

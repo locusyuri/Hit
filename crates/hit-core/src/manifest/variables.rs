@@ -405,8 +405,8 @@ fn sub_hash(h: &mut HashField, vars: &VarMap) {
     match h {
         HashField::Single(s) => *s = substitute(s, vars),
         HashField::Multiple(v) => {
-            for s in v.iter_mut() {
-                *s = substitute(s, vars);
+            for h in v.iter_mut() {
+                sub_hash(h, vars);
             }
         }
         // Fetch 变体的 url/regex/jsonpath 也需变量替换

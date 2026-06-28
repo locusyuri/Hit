@@ -306,3 +306,38 @@ Target: C:\...\hit\apps\curl\8.21.0_1\bin\curl.exe
 
 **提交**：`feb7c45` — fix(install): 单exe解压+junction冲突修复,解决Bug2五星bug
 
+---
+
+## Manifest 兼容性 6 条 WARN ⭐⭐（2026-06-28 解决）
+
+### 现象
+
+每条 search/info 命令输出 6 条 WARN，解析失败跳过 6 个 manifest。
+
+### 根因
+
+两类问题：
+
+**问题 A（4个manifest）**：`"##"` 字段（maintainer 注释）支持多行字符串数组，但 `schema.rs` 中声明为 `Option<String>`（单字符串），遇到数组报 `invalid type: sequence, expected a string`。
+
+受影响：megasync.json（L6）、filezilla.json（L8）、bizhawk.json（L5）、tablacus-explorer.json（L5）
+
+**问题 B（2个manifest）**：`autoupdate.architecture.<arch>.hash` 允许多个 Fetch 对象的数组（如 `[{"url":"...","regex":"..."}]`），但 `HashField::Multiple` 声明为 `Vec<String>` 而非 `Vec<HashField>`，遇到对象数组报 `data did not match any variant of untagged enum HashField`。
+
+受影响：irfanview.json（L92）、qrencode.json（L89）
+
+### 修复
+
+- `crates/hit-core/src/manifest/schema.rs`：
+  - `maintainer_note`：`Option<String>` → `Option<OneOrMany<String>>`（复用已有多态类型）
+  - `HashField::Multiple`：`Vec<String>` → `Vec<HashField>`，递归包含 Fetch/Single 变体
+  - `HashField::values()`：递归展开 Multiple 的各元素
+- `crates/hit-core/src/manifest/variables.rs`：`sub_hash` 递归处理 Multiple 内的 HashField 元素
+- `crates/hit-core/tests/manifest_validator.rs`：更新测试构造方式以匹配新类型
+
+### 验证
+
+- 226 个 hit-core 单元测试全部通过（0 failed）
+- `cargo check` 编译通过
+- 回归要求：对 main+extras+versions 全量解析，预期 0 WARN
+

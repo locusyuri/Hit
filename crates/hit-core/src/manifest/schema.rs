@@ -72,9 +72,9 @@ pub struct Manifest {
     pub innosetup: Option<bool>,
     pub psmodule: Option<PowerShellModule>,
 
-    /// Maintainer 注释，键名 `"##"`（Scoop 约定）。
+    /// Maintainer 注释，键名 `"##"`（Scoop 约定），支持单字符串或字符串数组。
     #[serde(rename = "##")]
-    pub maintainer_note: Option<String>,
+    pub maintainer_note: Option<OneOrMany<String>>,
 
     // -------- Hit 扩展字段占位（Phase 1 不解析） --------
     // `alias` / `bucket_priority` / `bucket_maintainer` / `bucket_last_update`
@@ -234,18 +234,20 @@ pub enum HashField {
         xpath: Option<String>,
     },
     Single(String),
-    Multiple(Vec<String>),
+    /// 多个哈希值（字符串或 Fetch 对象的混合数组，如 autoupdate 中 `arch.hash` 数组）。
+    Multiple(Vec<HashField>),
 }
 
 impl HashField {
     /// 统一返回所有 hash 字符串。
     ///
     /// `Fetch` 变体无法静态给出 hash 值（需运行时抓取），返回空 Vec。
+    /// `Multiple` 递归展开各元素。
     pub fn values(&self) -> Vec<&str> {
         match self {
             HashField::Fetch { .. } => Vec::new(),
             HashField::Single(s) => vec![s.as_str()],
-            HashField::Multiple(v) => v.iter().map(String::as_str).collect(),
+            HashField::Multiple(v) => v.iter().flat_map(|h| h.values()).collect(),
         }
     }
 }

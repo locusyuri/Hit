@@ -138,8 +138,8 @@ fn error_url_hash_length_mismatch() {
         "https://a.com/3.zip".into(),
     ]));
     m.hash = Some(HashField::Multiple(vec![
-        "a".repeat(64),
-        "b".repeat(64),
+        HashField::Single("a".repeat(64)),
+        HashField::Single("b".repeat(64)),
     ]));
     let diag = validate(&m);
     assert!(
@@ -299,7 +299,7 @@ fn info_missing_maintainer_note() {
 #[test]
 fn no_info_when_maintainer_note_present() {
     let mut m = minimal_valid_manifest();
-    m.maintainer_note = Some("Maintained by team".into());
+    m.maintainer_note = Some(OneOrMany::One("Maintained by team".into()));
     let diag = validate(&m);
     assert!(
         !diag.infos().any(|d| d.field == "##"),
@@ -346,7 +346,7 @@ fn error_arch_branch_url_hash_mismatch() {
                 "https://a.com/2.zip".into(),
                 "https://a.com/3.zip".into(),
             ])),
-            hash: Some(HashField::Multiple(vec!["a".repeat(64), "b".repeat(64)])),
+            hash: Some(HashField::Multiple(vec![HashField::Single("a".repeat(64)), HashField::Single("b".repeat(64))])),
             ..Default::default()
         }),
         ..Default::default()

@@ -15,18 +15,24 @@ use hit_common::error::{HitError, Result};
 /// 创建目录 Junction 链接
 ///
 /// `lnk` 已存在时先移除（清除 readonly 后删除），创建后设置 readonly 属性
-/// （与 Scoop `attrib +R /L` 一致）。删除失败时返回错误而非吞掉，
+/// （与 Scoop `attrib +R /L` 一致）。删除失败时仍尝试覆盖创建，
 /// 避免后续 `junction::create` 报 os error 183（文件已存在）。
+///
+/// 注意：使用 `fs::remove_dir`（不跟随 reparse point）而非 `remove_dir_all`，
+/// 避免误删 junction 指向的目标目录内容。
 pub fn create_junction(src: &Path, lnk: &Path) -> Result<()> {
     if lnk.exists() {
         remove_readonly(lnk);
-        // 先尝试按 junction 删除；若失败（非 reparse point，可能是损坏的普通目录），
-        // 回退到 remove_dir_all 清理，避免后续 create 报 os error 183
+        // 先尝试按 junction 删除
         if junction::delete(lnk).is_err() {
-            fs::remove_dir_all(lnk).map_err(|e| HitError::Io {
-                context: format!("移除旧 current 失败（非 junction）: {}", lnk.display()),
-                source: e,
-            })?;
+            // 回退: 用 remove_dir 删除目录项（不跟随 junction，安全）
+            // 即使失败也继续尝试创建（可能 junction 已部分清理）
+            if let Err(e) = fs::remove_dir(lnk) {
+                tracing::warn!(
+                    "移除旧 junction 失败: {} (err: {}), 尝试覆盖创建",
+                    lnk.display(), e
+                );
+            }
         }
     }
 

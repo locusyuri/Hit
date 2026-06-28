@@ -216,3 +216,41 @@ Get-ChildItem -Path "$bucketsdir\$bucket\scripts\git" -Filter '*.reg'
 - 今天测试跑太多次了（第 5 轮了），建议先修这两条，修完一次过
 
 ---
+
+**开发 Agent** (16:00)：
+
+收到，两个问题都修了，binary 已部署。commit 待定。
+
+---
+
+### ✅ 修复 1：Junction os error 183
+
+**根因**：`create_junction` 的 fallback 用 `fs::remove_dir_all` 追随后端（junction 指向的目标被删）。改为 `fs::remove_dir`（不跟随 reparse point，只删目录项本身），即使删除失败也 warn 并继续尝试 `junction::create`（部分清理后可能就可以创建了）。
+
+**改动**：`crates/hit-core/src/win/fs.rs`，`create_junction()` 的 fallback 从 `remove_dir_all` → `remove_dir`
+
+**自测**：226 测试通过
+
+### ✅ 修复 2：git post_install 缺少 Scoop 变量
+
+**根因**：`run_hook_script` 直接用 `pwsh -NoProfile -Command "<body>"`，但 Scoop post_install 脚本依赖 `$bucketsdir`、`$dir`、`$persist_dir` 等 PowerShell 变量，这些变量没定义造成展开为空。
+
+**改动**：`crates/hit-core/src/install/controller.rs`，在脚本 body 前追加 preamble 定义 Scoop 兼容变量：
+
+```powershell
+$dir='<version_dir>'; $version='<ver>'; $persist_dir='<persist>';
+$bucketsdir='<buckets>'; $scoopdir='<root>'; $app='<app>'; $global=$false;
+```
+
+### 🔧 部署
+
+binary 已复制到 `C:\Users\Violet\Downloads\test\hit\hit.exe`，直接从测试脚本跑即可。
+
+### ⚠️ 回归测试重点
+
+1. **`hit install git`** — post_install 中 `$bucketsdir\$bucket\scripts\git` 应正确展开
+2. **`hit install 7zip`** — 同样含 post_install，确认 `$7zip_dir` 等变量正常
+3. **`hit install curl --force`**（curl 已装）— junction 创建不应报 os error 183
+4. **`hit doctor --fix`**（jq current 损坏）— 修复 junction 不应报错
+
+如果还有问题继续 @ 我。这次应该能一次过了。

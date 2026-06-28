@@ -518,7 +518,7 @@ fn step_setup_env(
 
 /// 执行钩子脚本（pre_install / post_install / pre_uninstall / post_uninstall）
 fn run_hook_script(
-    _session: &Session,
+    session: &Session,
     flat: &FlatManifest,
     hook: HookType,
     version_dir: &Path,
@@ -534,8 +534,27 @@ fn run_hook_script(
         body = body.replace(k.as_str(), v.as_str());
     }
 
+    // 定义 Scoop 兼容的 PowerShell 变量，使 post_install 脚本能引用 $dir、$version 等
+    let app = var_map.get("$app").cloned().unwrap_or_default();
+    let version = flat.inner().version.clone();
+    let persist_dir = session.persist_path().join(&app);
+    let buckets_dir = format!("{}", session.buckets_path().display());
+    let scoop_dir = format!("{}", session.root_path().display());
+    let dir_str = format!("{}", version_dir.display());
+
+    let preamble = format!(
+        "$dir='{}'; $version='{}'; $persist_dir='{}'; $bucketsdir='{}'; $scoopdir='{}'; $app='{}'; $global=$false; ",
+        dir_str.replace('\'', "''"),
+        version.replace('\'', "''"),
+        persist_dir.display().to_string().replace('\'', "''"),
+        buckets_dir.replace('\'', "''"),
+        scoop_dir.replace('\'', "''"),
+        app.replace('\'', "''"),
+    );
+    let full_body = preamble + &body;
+
     let status = std::process::Command::new("pwsh")
-        .args(["-NoProfile", "-Command", &body])
+        .args(["-NoProfile", "-Command", &full_body])
         .current_dir(version_dir)
         .status()
         .map_err(|e| {

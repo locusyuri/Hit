@@ -98,8 +98,6 @@
 
 ────────────────────────────────────────────────
 [§5.2] hit i jq
-错误: 解压失败（C:\Users\Violet\Downloads\test\hit\cache\jq#1.8.2#abde28e.exe）：EXE 文件需通过 manifest.installer 或 innosetup 字段指定处理方式
-
 
 ────────────────────────────────────────────────
 [§5.3] hit install curl
@@ -114,7 +112,9 @@
 
 ────────────────────────────────────────────────
 [§5.5] hit install main/git
-错误: 解压失败（C:\Users\Violet\Downloads\test\hit\cache\git#2.54.0#b0a3d5f.7z）：EXE 文件需通过 manifest.installer 或 innosetup 字段指定处理方式
+'#' is not recognized as an internal or external command,
+operable program or batch file.
+错误: 安装 'git' 失败：PreInstall 脚本退出码：1
 
 
 ────────────────────────────────────────────────
@@ -124,7 +124,7 @@
 
 ────────────────────────────────────────────────
 [§5.7] hit install jq --arch 64bit
-错误: 解压失败（C:\Users\Violet\Downloads\test\hit\cache\jq#1.8.2#abde28e.exe）：EXE 文件需通过 manifest.installer 或 innosetup 字段指定处理方式
+错误: 安装 'jq' 失败：'jq' 已安装，使用 --force 强制重装
 
 
 ────────────────────────────────────────────────
@@ -196,14 +196,12 @@
 
 ────────────────────────────────────────────────
 [§9.1] hit uninstall jq
-错误: 'jq' 未安装
+错误: IO 错误：移除 Junction: C:\Users\Violet\Downloads\test\hit\apps\jq\current：The file or directory is not a reparse point. (os error 4390)
+  原因: The file or directory is not a reparse point. (os error 4390)
 
 
 ────────────────────────────────────────────────
 [§9.2] hit rm curl --purge
-错误: IO 错误：移除 Junction: C:\Users\Violet\Downloads\test\hit\apps\curl\current：The file or directory is not a reparse point. (os error 4390)
-  原因: The file or directory is not a reparse point. (os error 4390)
-
 
 ────────────────────────────────────────────────
 [§9.3] hit uninstall nonexistent
@@ -217,7 +215,8 @@
 
 ────────────────────────────────────────────────
 [§9.5] hit uninstall jq curl
-错误: 'jq' 未安装
+错误: IO 错误：移除 Junction: C:\Users\Violet\Downloads\test\hit\apps\jq\current：The file or directory is not a reparse point. (os error 4390)
+  原因: The file or directory is not a reparse point. (os error 4390)
 
 
 ────────────────────────────────────────────────

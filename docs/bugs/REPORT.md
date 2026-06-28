@@ -1,5 +1,5 @@
 # Hit 实测报告（自动批量执行）
-> 生成时间: 2026-06-28 12:31:29
+> 生成时间: 2026-06-28 15:07:59
 > 按 TEST_FLOW.md 顺序，stdout 入本文件，stderr(WARN) 入 REPORT_warn.log。
 > 跳过: §1/§15/§12.3.1/§20/§14.2/§14.4/§19.4
 
@@ -156,10 +156,10 @@ bucket 'versions' 克隆完成
 正在更新 bucket 'main'...
 正在克隆 bucket 'main'...
 bucket 'main'：检出文件中...
+bucket 'main' 克隆完成
   ✔ main
 
 ✔ Bucket 更新完成（1/1）
-bucket 'main' 克隆完成
 
 
 ────────────────────────────────────────────────
@@ -208,46 +208,6 @@ bucket 'main' 克隆完成
 ────────────────────────────────────────────────
 命令: hit search git
 输出（原样）:
-[2m2026-06-28T04:32:15.057082Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.061094Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:32:15.061737Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.068927Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.069856Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.095843Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 名称           版本         描述
 act          0.2.89     Local Github actions runner.
 actionlint   1.7.12     Static checker for GitHub Actions workflow files
@@ -420,46 +380,6 @@ zizmor       1.26.1     A static analysis tool for GitHub Actions that finds com
 ────────────────────────────────────────────────
 命令: hit s python
 输出（原样）:
-[2m2026-06-28T04:32:15.333621Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.338968Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.345520Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.346476Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.353646Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:32:15.365232Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 名称           版本         描述
 anaconda2    2019.10    The most popular Python distribution for data science. (for Python 2 only)
 anaconda3    2025.12-2  The most popular Python distribution for data science.
@@ -548,46 +468,6 @@ yubikey-manager-cli 5.9.1      Python library and command line tool for configur
 ────────────────────────────────────────────────
 命令: hit search GIT
 输出（原样）:
-[2m2026-06-28T04:32:15.603491Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.607993Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.611094Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.617444Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.626839Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:32:15.635882Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 名称           版本         描述
 act          0.2.89     Local Github actions runner.
 actionlint   1.7.12     Static checker for GitHub Actions workflow files
@@ -760,46 +640,6 @@ zizmor       1.26.1     A static analysis tool for GitHub Actions that finds com
 ────────────────────────────────────────────────
 命令: hit search git --bucket main
 输出（原样）:
-[2m2026-06-28T04:32:15.878916Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.885436Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.890688Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.897522Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:15.898809Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:32:15.917022Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 名称           版本         描述
 act          0.2.89     Local Github actions runner.
 actionlint   1.7.12     Static checker for GitHub Actions workflow files
@@ -901,46 +741,6 @@ zizmor       1.26.1     A static analysis tool for GitHub Actions that finds com
 ────────────────────────────────────────────────
 命令: hit search nonexistent_xyz
 输出（原样）:
-[2m2026-06-28T04:32:16.146411Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.151252Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.153349Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:32:16.158362Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.162147Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.179973Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 未找到匹配 'nonexistent_xyz' 的软件
 
 
@@ -949,46 +749,6 @@ zizmor       1.26.1     A static analysis tool for GitHub Actions that finds com
 ────────────────────────────────────────────────
 命令: hit info git
 输出（原样）:
-[2m2026-06-28T04:32:16.398804Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.401479Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.405733Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:32:16.410434Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.417060Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.423103Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 名称:        git
 版本:        2.54.0
 描述:        A free and open source distributed version control system.
@@ -1004,46 +764,6 @@ Bucket:      main
 ────────────────────────────────────────────────
 命令: hit info git --bucket main
 输出（原样）:
-[2m2026-06-28T04:32:16.674737Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.675081Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.677709Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.688071Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:32:16.688797Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.709209Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 名称:        git
 版本:        2.54.0
 描述:        A free and open source distributed version control system.
@@ -1059,93 +779,12 @@ Bucket:      main
 ────────────────────────────────────────────────
 命令: hit info nonexistent
 输出（原样）:
-[2m2026-06-28T04:32:16.947025Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.951658Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.951929Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.956927Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:32:16.971480Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:16.975014Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
-
 
 ────────────────────────────────────────────────
 ## §4.4
 ────────────────────────────────────────────────
 命令: hit info curl
 输出（原样）:
-[2m2026-06-28T04:32:17.220730Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:17.222700Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:17.233004Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:17.233109Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:17.239558Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:32:17.250807Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 名称:        curl
 版本:        8.21.0_1
 描述:        Command line tool and library for transferring data with URLs
@@ -1162,46 +801,6 @@ Bucket:      main
 命令: hit install curl
 输出（原样）:
 安装 curl ...
-[2m2026-06-28T04:32:17.487443Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:17.496890Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:32:17.507204Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:17.513729Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:17.514324Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:17.518858Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
 ▶ [解析] curl...
 ✔ [解析] curl 完成
 ▶ [下载] curl...
@@ -1214,8 +813,8 @@ Bucket:      main
 ▶ [同步] curl...
 ▶ [提交] curl...
 ✔ [提交] curl 完成
-✔ [同步] curl 完成
 ✔ curl 8.21.0_1 安装完成（1）
+✔ [同步] curl 完成
 
 
 ────────────────────────────────────────────────
@@ -1224,46 +823,6 @@ Bucket:      main
 命令: hit i jq
 输出（原样）:
 安装 jq ...
-[2m2026-06-28T04:32:24.966019Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:24.971083Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:32:24.971697Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:24.975874Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:24.984361Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:25.006402Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 ▶ [解析] jq...
 ✔ [解析] jq 完成
 ▶ [下载] jq...
@@ -1272,7 +831,12 @@ Bucket:      main
 ✔ [校验] jq 完成
 解压 jq (jq#1.8.2#abde28e.exe)
 ▶ [解压] jq...
-[2m2026-06-28T04:32:27.688175Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mjq
+✔ [解压] jq 完成
+▶ [同步] jq...
+▶ [提交] jq...
+✔ [提交] jq 完成
+✔ jq 1.8.2 安装完成（1）
+✔ [同步] jq 完成
 
 
 ────────────────────────────────────────────────
@@ -1281,46 +845,6 @@ Bucket:      main
 命令: hit install curl
 输出（原样）:
 安装 curl ...
-[2m2026-06-28T04:32:27.965118Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:27.967453Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:27.972956Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:27.975004Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:27.988053Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:27.991372Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
 
 
 ────────────────────────────────────────────────
@@ -1329,46 +853,6 @@ Bucket:      main
 命令: hit install curl --force
 输出（原样）:
 安装 curl ...
-[2m2026-06-28T04:32:28.220785Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:28.226001Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:28.226998Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:28.232560Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:28.238591Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:28.242253Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
 ▶ [解析] curl...
 ✔ [解析] curl 完成
 ▶ [下载] curl...
@@ -1380,7 +864,7 @@ Bucket:      main
 ✔ [解压] curl 完成
 ▶ [同步] curl...
 ▶ [提交] curl...
-[2m2026-06-28T04:32:29.287214Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mcurl
+[2m2026-06-28T07:09:01.772484Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mcurl
 
 
 ────────────────────────────────────────────────
@@ -1389,46 +873,6 @@ Bucket:      main
 命令: hit install main/git
 输出（原样）:
 安装 git ...
-[2m2026-06-28T04:32:29.564072Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:29.570963Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:29.572621Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:32:29.574719Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:29.577394Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:29.582404Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 ▶ [解析] git...
 ✔ [解析] git 完成
 ▶ [下载] git...
@@ -1437,7 +881,8 @@ Bucket:      main
 ✔ [校验] git 完成
 解压 git (git#2.54.0#b0a3d5f.7z)
 ▶ [解压] git...
-[2m2026-06-28T04:32:36.828942Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mgit
+✔ [解压] git 完成
+[2m2026-06-28T07:09:26.947700Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mgit
 
 
 ────────────────────────────────────────────────
@@ -1446,46 +891,6 @@ Bucket:      main
 命令: hit install nonexistent_pkg
 输出（原样）:
 安装 nonexistent_pkg ...
-[2m2026-06-28T04:32:37.115526Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:37.119658Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:37.125585Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:37.140491Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:32:37.143089Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:37.160070Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
 
 
 ────────────────────────────────────────────────
@@ -1494,55 +899,6 @@ Bucket:      main
 命令: hit install jq --arch 64bit
 输出（原样）:
 安装 jq ...
-[2m2026-06-28T04:32:37.414328Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:37.418886Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:37.427331Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:32:37.429257Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:37.436584Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:32:37.438074Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-▶ [解析] jq...
-✔ [解析] jq 完成
-▶ [下载] jq...
-✔ [下载] jq 完成
-▶ [校验] jq...
-✔ [校验] jq 完成
-解压 jq (jq#1.8.2#abde28e.exe)
-▶ [解压] jq...
-[2m2026-06-28T04:32:37.462363Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mjq
 
 
 ────────────────────────────────────────────────
@@ -1551,9 +907,10 @@ Bucket:      main
 命令: hit list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
+curl         8.21.0_1   64bit    main       2026-06-28T07:08:56Z
+jq           1.8.2      64bit    main       2026-06-28T07:08:59Z
 
-共 1 个软件
+共 2 个软件
 
 
 ────────────────────────────────────────────────
@@ -1562,9 +919,10 @@ curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
 命令: hit ls
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
+curl         8.21.0_1   64bit    main       2026-06-28T07:08:56Z
+jq           1.8.2      64bit    main       2026-06-28T07:08:59Z
 
-共 1 个软件
+共 2 个软件
 
 
 ────────────────────────────────────────────────
@@ -1573,7 +931,7 @@ curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
 命令: hit list curl
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
+curl         8.21.0_1   64bit    main       2026-06-28T07:08:56Z
 
 共 1 个软件
 
@@ -1649,46 +1007,6 @@ bucket 'versions' 克隆完成
   ✔ versions
 ✔ Bucket 更新完成（3/3）
 
-[2m2026-06-28T04:33:04.906549Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:33:04.913687Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:33:04.915272Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:33:04.926129Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:33:04.933417Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:33:04.936242Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 所有软件已是最新版本
 
 
@@ -1728,54 +1046,14 @@ bucket 'extras' 克隆完成
 正在更新 bucket 'main'...
 正在克隆 bucket 'main'...
 bucket 'main'：检出文件中...
-bucket 'main' 克隆完成
   ✔ main
+bucket 'main' 克隆完成
 正在更新 bucket 'versions'...
 正在克隆 bucket 'versions'...
 bucket 'versions'：检出文件中...
 bucket 'versions' 克隆完成
   ✔ versions
 ✔ Bucket 更新完成（3/3）
-
-[2m2026-06-28T04:33:33.161012Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:33:33.164552Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:33:33.174908Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:33:33.180504Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:33:33.203470Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:33:33.216460Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
 
 所有软件已是最新版本
 
@@ -1803,46 +1081,6 @@ bucket 'versions' 克隆完成
   ✔ versions
 ✔ Bucket 更新完成（3/3）
 
-[2m2026-06-28T04:33:59.386348Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:33:59.402333Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:33:59.403889Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:33:59.421975Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:33:59.432081Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:33:59.442559Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 所有软件已是最新版本
 
 
@@ -1869,46 +1107,6 @@ bucket 'versions' 克隆完成
   ✔ versions
 ✔ Bucket 更新完成（3/3）
 
-[2m2026-06-28T04:34:30.352101Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:34:30.360366Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:34:30.360482Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:34:30.363195Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:34:30.390599Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:34:30.408339Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 所有软件已是最新版本
 
 
@@ -1926,54 +1124,14 @@ bucket 'extras' 克隆完成
 正在更新 bucket 'main'...
 正在克隆 bucket 'main'...
 bucket 'main'：检出文件中...
-  ✔ main
 bucket 'main' 克隆完成
+  ✔ main
 正在更新 bucket 'versions'...
 正在克隆 bucket 'versions'...
 bucket 'versions'：检出文件中...
 bucket 'versions' 克隆完成
   ✔ versions
 ✔ Bucket 更新完成（3/3）
-
-[2m2026-06-28T04:34:58.871257Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:34:58.874954Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:34:58.885739Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:34:58.887512Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:34:58.917898Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:34:58.925651Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
 
   nonexistent 未安装，跳过
 所有软件已是最新版本
@@ -2002,47 +1160,7 @@ bucket 'versions' 克隆完成
   ✔ versions
 ✔ Bucket 更新完成（3/3）
 
-[2m2026-06-28T04:35:27.519185Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:27.527389Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:27.532437Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:27.536270Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:35:27.538314Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:35:27.565078Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
-⬆ 可升级 1 个软件
+⬆ 可升级 2 个软件
 升级 curl → 8.21.0_1
 ▶ [解析] curl...
 ✔ [解析] curl 完成
@@ -2055,10 +1173,25 @@ bucket 'versions' 克隆完成
 ✔ [解压] curl 完成
 ▶ [同步] curl...
 ▶ [提交] curl...
-[2m2026-06-28T04:35:29.638227Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mcurl
-  ✘ 升级失败: IO 错误：创建 Junction: C:\Users\Violet\Downloads\test\hit\apps\curl\current -> C:\Users\Violet\Downloads\test\hit\apps\curl\8.21.0_1：Cannot create a file when that file already exists. (os error 183)
+✔ [提交] curl 完成
+  ✔ 8.21.0_1 升级完成
+✔ [同步] curl 完成
+升级 jq → 1.8.2
+▶ [解析] jq...
+✔ [解析] jq 完成
+▶ [下载] jq...
+✔ [下载] jq 完成
+▶ [校验] jq...
+✔ [校验] jq 完成
+解压 jq (jq#1.8.2#abde28e.exe)
+▶ [解压] jq...
+✔ [解压] jq 完成
+▶ [同步] jq...
+▶ [提交] jq...
+[2m2026-06-28T07:11:41.941796Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mjq
+  ✘ 升级失败: IO 错误：创建 Junction: C:\Users\Violet\Downloads\test\hit\apps\jq\current -> C:\Users\Violet\Downloads\test\hit\apps\jq\1.8.2：Cannot create a file when that file already exists. (os error 183)
 
-✔ 升级完成（0/1）
+✔ 升级完成（1/2）
 
 
 ────────────────────────────────────────────────
@@ -2066,6 +1199,8 @@ bucket 'versions' 克隆完成
 ────────────────────────────────────────────────
 命令: hit uninstall jq
 输出（原样）:
+卸载 jq ...
+
 
 ────────────────────────────────────────────────
 ## §9.2
@@ -2073,6 +1208,7 @@ bucket 'versions' 克隆完成
 命令: hit rm curl --purge
 输出（原样）:
 卸载 curl ...
+✔ curl 已卸载
 
 
 ────────────────────────────────────────────────
@@ -2092,6 +1228,8 @@ bucket 'versions' 克隆完成
 ────────────────────────────────────────────────
 命令: hit uninstall jq curl
 输出（原样）:
+卸载 jq ...
+
 
 ────────────────────────────────────────────────
 ## §10-pre
@@ -2099,46 +1237,6 @@ bucket 'versions' 克隆完成
 命令: hit install curl
 输出（原样）:
 安装 curl ...
-[2m2026-06-28T04:35:30.787085Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:30.794289Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:30.798598Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:35:30.807209Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:30.817414Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:35:30.820358Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
 
 
 ────────────────────────────────────────────────
@@ -2147,11 +1245,12 @@ bucket 'versions' 克隆完成
 命令: hit cache list
 输出（原样）:
 软件                   版本         大小         路径
+7zip                 26.02      1.9 MB     C:\Users\Violet\Downloads\test\hit\cache\7zip#26.02#63f4002.msi
 curl                 8.21.0_1   4.7 MB     C:\Users\Violet\Downloads\test\hit\cache\curl#8.21.0_1#39c2972.xz
 git                  2.54.0     56.3 MB    C:\Users\Violet\Downloads\test\hit\cache\git#2.54.0#b0a3d5f.7z
 jq                   1.8.2      1011.0 KB  C:\Users\Violet\Downloads\test\hit\cache\jq#1.8.2#abde28e.exe
 
-共 3 个文件（62.0 MB）
+共 4 个文件（63.9 MB）
 
 
 ────────────────────────────────────────────────
@@ -2167,7 +1266,7 @@ C:\Users\Violet\Downloads\test\hit\cache
 ────────────────────────────────────────────────
 命令: hit cache clean
 输出（原样）:
-✔ 已清理 3 个缓存文件
+✔ 已清理 4 个缓存文件
 
 
 ────────────────────────────────────────────────
@@ -2199,8 +1298,8 @@ C:\Users\Violet\Downloads\test\hit\cache
 ────────────────────────────────────────────────
 命令: hit cleanup --all
 输出（原样）:
+  删除 7zip 26.02
   删除 git 2.54.0
-  删除 jq 1.8.2
 
 ✔ 已清理 2 个旧版本
 
@@ -2265,47 +1364,6 @@ C:\Users\Violet\Downloads\test\hit\apps\curl
 ────────────────────────────────────────────────
 命令: hit home nonexistent
 输出（原样）:
-[2m2026-06-28T04:35:32.728319Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:32.733868Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:32.738655Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:35:32.741880Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:32.749711Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:35:32.763253Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
-
 
 ────────────────────────────────────────────────
 ## §13.1
@@ -2398,11 +1456,12 @@ health_check_interval_days     7
 ────────────────────────────────────────────────
 命令: hit doctor
 输出（原样）:
-⚠ 发现 3 个问题：
+⚠ 发现 4 个问题：
 
-  ⚠ curl: current 链接损坏 (可修复)
+  ⚠ jq: current 链接损坏 (可修复)
+  ✗ 7zip: 未跟踪的应用目录
+  ✗ curl: 未跟踪的应用目录
   ✗ git: 未跟踪的应用目录
-  ✗ jq: 未跟踪的应用目录
 
 提示 使用 hit doctor --fix 自动修复可修复的问题
 
@@ -2419,14 +1478,15 @@ health_check_interval_days     7
 ────────────────────────────────────────────────
 命令: hit doctor --fix
 输出（原样）:
-⚠ 发现 3 个问题：
+⚠ 发现 4 个问题：
 
-  ⚠ curl: current 链接损坏 (可修复)
+  ⚠ jq: current 链接损坏 (可修复)
+  ✗ 7zip: 未跟踪的应用目录
+  ✗ curl: 未跟踪的应用目录
   ✗ git: 未跟踪的应用目录
-  ✗ jq: 未跟踪的应用目录
 
 修复 正在修复 1 个问题...
-  ✗ curl 修复失败: Cannot create a file when that file already exists. (os error 183)
+  ✗ jq 修复失败: Cannot create a file when that file already exists. (os error 183)
 
 ✔ 已修复 0/1 个问题
 
@@ -2443,51 +1503,11 @@ health_check_interval_days     7
 ────────────────────────────────────────────────
 命令: hit status
 输出（原样）:
-[2m2026-06-28T04:35:34.628328Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:34.630022Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:34.637180Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:35:34.641385Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:35:34.642131Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:34.642848Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 Hit 0.1.0
 
   已安装软件:    1
   Bucket 数量:   3
-  可用软件总数:  4500
+  可用软件总数:  4506
   缓存文件:      0 (0 B)
   根目录:        C:\Users\Violet\Downloads\test\hit
 
@@ -2497,51 +1517,11 @@ Hit 0.1.0
 ────────────────────────────────────────────────
 命令: hit st
 输出（原样）:
-[2m2026-06-28T04:35:34.899570Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:34.903215Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:34.909330Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:34.915839Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:34.917271Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:35:34.920793Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
 Hit 0.1.0
 
   已安装软件:    1
   Bucket 数量:   3
-  可用软件总数:  4500
+  可用软件总数:  4506
   缓存文件:      0 (0 B)
   根目录:        C:\Users\Violet\Downloads\test\hit
 
@@ -2552,46 +1532,6 @@ Hit 0.1.0
 命令: hit i nonexistent_alias_test
 输出（原样）:
 安装 nonexistent_alias_test ...
-[2m2026-06-28T04:35:35.182446Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:35.186161Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:35.186911Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:35.193344Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:35:35.199322Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:35:35.211176Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 
 
 ────────────────────────────────────────────────
@@ -2599,46 +1539,6 @@ Hit 0.1.0
 ────────────────────────────────────────────────
 命令: hit s nonexistent_alias_test
 输出（原样）:
-[2m2026-06-28T04:35:35.458011Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:35.459906Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:35.466636Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:35:35.467029Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:35:35.467323Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:35:35.489013Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 未找到匹配 'nonexistent_alias_test' 的软件
 
 
@@ -2665,46 +1565,6 @@ bucket 'versions' 克隆完成
   ✔ versions
 ✔ Bucket 更新完成（3/3）
 
-[2m2026-06-28T04:36:03.743760Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:36:03.758137Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:36:03.759074Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:36:03.759781Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:36:03.760569Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:36:03.788127Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
   nonexistent 未安装，跳过
 所有软件已是最新版本
 
@@ -2721,7 +1581,7 @@ bucket 'versions' 克隆完成
 命令: hit ls
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
+jq           1.8.2      64bit    main       2026-06-28T07:08:59Z
 
 共 1 个软件
 
@@ -2731,51 +1591,11 @@ curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
 ────────────────────────────────────────────────
 命令: hit st
 输出（原样）:
-[2m2026-06-28T04:36:04.344519Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\megasync.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 6 column 4
-
-	1"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:36:04.346882Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\filezilla.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 8 column 4
-
-	0"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:36:04.348925Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\irfanview.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 92 column 12
-
-	        },
-    
-	........^.......
-
-[2m2026-06-28T04:36:04.349248Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\bizhawk.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	s"
-    ],
-    
-	........^.......
-
-[2m2026-06-28T04:36:04.364707Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\main\bucket\qrencode.json': manifest JSON 解析失败：data did not match any variant of untagged enum HashField at line 89 column 12
-
-	        }
-     
-	........^.......
-
-[2m2026-06-28T04:36:04.379327Z[0m [33m WARN[0m 跳过无效 manifest 'C:\Users\Violet\Downloads\test\hit\buckets\extras\bucket\tablacus-explorer.json': manifest JSON 解析失败：invalid type: sequence, expected a string at line 5 column 4
-
-	."
-    ],
-    
-	........^.......
-
 Hit 0.1.0
 
   已安装软件:    1
   Bucket 数量:   3
-  可用软件总数:  4500
+  可用软件总数:  4506
   缓存文件:      0 (0 B)
   根目录:        C:\Users\Violet\Downloads\test\hit
 
@@ -2813,7 +1633,7 @@ versions              592
 命令: hit -v list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
+jq           1.8.2      64bit    main       2026-06-28T07:08:59Z
 
 共 1 个软件
 
@@ -2824,7 +1644,7 @@ curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
 命令: hit -vv list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
+jq           1.8.2      64bit    main       2026-06-28T07:08:59Z
 
 共 1 个软件
 
@@ -2835,7 +1655,7 @@ curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
 命令: hit -vvv list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
+jq           1.8.2      64bit    main       2026-06-28T07:08:59Z
 
 共 1 个软件
 
@@ -2871,7 +1691,7 @@ curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
 命令: hit list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T04:32:24Z
+jq           1.8.2      64bit    main       2026-06-28T07:08:59Z
 
 共 1 个软件
 

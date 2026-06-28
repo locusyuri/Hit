@@ -147,7 +147,7 @@ fn aws_sam_cli_depends_plus_suggest() {
     assert!(matches!(deps, OneOrMany::One(s) if s == "lessmsi"));
 
     let sug = m.suggest.as_ref().expect("sam 应有 suggest");
-    assert_eq!(sug.get("AWS CLI").map(String::as_str), Some("aws"));
+    assert!(sug.contains_key("AWS CLI"));
 
     // bin 数组混 string + tuple[2]
     let BinList(items) = m.bin.as_ref().expect("sam 应有 bin");

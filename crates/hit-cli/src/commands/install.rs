@@ -90,9 +90,8 @@ fn find_manifest(
     let bucket = summary.bucket.clone();
     let app = summary.name.clone();
 
-    // 读取 manifest 文件（支持两种 bucket 布局）
-    let buckets_dir = session.buckets_path();
-    let manifest_path = buckets_dir.join(&bucket).join(format!("{app}.json"));
+    // 读取 manifest 文件（兼容两种 bucket 布局）
+    let manifest_path = hit_core::bucket::manifest_path(session.buckets_path(), &bucket, &app);
 
     let content = std::fs::read_to_string(&manifest_path).map_err(|e| anyhow::anyhow!(
         "读取 manifest 失败 ({}): {e}",

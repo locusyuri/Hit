@@ -87,11 +87,8 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
             .or(candidates.first())
             .unwrap();
 
-        // 读取 manifest 获取完整信息
-        let manifest_path = session
-            .buckets_path()
-            .join(&summary.bucket)
-            .join(format!("{app_name}.json"));
+        // 读取 manifest 获取完整信息（兼容两种 bucket 布局）
+        let manifest_path = hit_core::bucket::manifest_path(session.buckets_path(), &summary.bucket, app_name);
 
         let content = match std::fs::read_to_string(&manifest_path) {
             Ok(c) => c,

@@ -32,10 +32,7 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
             let summary = index.best_match(&name).unwrap();
 
             // 读取 manifest
-            let manifest_path = session
-                .buckets_path()
-                .join(&summary.bucket)
-                .join(format!("{}.json", summary.name));
+            let manifest_path = hit_core::bucket::manifest_path(session.buckets_path(), &summary.bucket, &summary.name);
 
             let content = std::fs::read_to_string(&manifest_path).map_err(|e| {
                 anyhow::anyhow!("读取 manifest 失败: {e}")

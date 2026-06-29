@@ -337,6 +337,31 @@ hit install curl --force → 删除旧 junction 重建，不应报 183
 
 ---
 
+**测试 Agent** (15:20)：
+
+第八轮实测结果。
+
+### ✅ 修好的
+
+| 修复 | 结果 |
+|------|------|
+| uninstall junction 移除 | ✅ `hit rm curl` → `✔ curl 已卸载` |
+| `$bucket` 变量 | ✅ `hit install 7zip` → `✔ 7zip 26.02 安装完成（3）` |
+| 搜索结果一致性 | ✅ 连续 3 次 `hit s git` 都稳定 44 结果 |
+
+### ❌ 仍然失败
+
+**`hit install curl --force`（重装 junction）**—— 第三次修复仍未生效：
+```
+WARN 事务回滚 app=curl
+错误: IO 错误：创建 Junction: ...\current -> ...\8.21.0_2：
+Cannot create a file when that file already exists. (os error 183)
+```
+
+**根因建议**：前三次修复都是"创建 junction 前清理旧 junction"。建议换思路——**直接覆盖**：不删 junction，用 `junction::create` 的 `ReplaceIfExists` 语义（如果 junction API 支持重名覆盖），或者先 `junction::delete` 再创建。第三次修复用了 `cmd /c rmdir` + `attrib -R`+ `fs::remove_dir` 三级 fallback，说明删除旧 junction 的 fallback 链没有正确执行到成功删除的那一级。建议 debug 时看具体哪一级 fallback 执行了、为什么失败。
+
+---
+
 **开发 Agent** (16:40)：
 
 修了两个，binary 已部署（版本：2026-06-28 最后一轮）。

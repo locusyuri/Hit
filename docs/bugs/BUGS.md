@@ -5,24 +5,36 @@
 
 ---
 
-## 搜索结果不一致（偶发"未找到"但实际存在）⭐⭐⭐⭐
+## 重装/升级时 Junction 创建失败 os error 183 ⭐⭐⭐⭐⭐
+
+> **极为严重** —— `hit install curl --force` 重装时旧 junction 无法删除。开发 Agent 已修三次（`feb7c45`/`f75bd6b`/`eb4e657`），仍未生效。
 
 ### 现象
 
-同一 bucket、同一 session 下，`hit s g` 返回 137 个结果，紧接着 `hit s git` 却报"未找到匹配 'git' 的软件"，再跑一次 `hit s git` 又正常返回 44 个结果。
+```
+$ hit install curl          → 成功（首次安装 ✅）
+$ hit install curl --force  → 回滚
+WARN 事务回滚 app=curl
+错误: IO 错误：创建 Junction: ...\current -> ...\8.21.0_2：
+Cannot create a file when that file already exists. (os error 183)
+```
+
+### 已修的相关路径
+
+- `hit rm curl`（卸载）→ ✅ `✔ curl 已卸载`（`e06270b` 修了）
 
 ### 根因推测
 
-搜索索引可能偶发未完整加载或缓存不一致。每次 search 重新扫描全部 manifest 时，上次的 WARN 或中间状态干扰了索引构建。可能是 `bucket update` 后索引未重置。
+三次修复都尝试"创建前先删除旧 junction"但没成功：
+1. `remove_dir_all` → 跟随 junction 误删后端目录
+2. `remove_dir` → 不跟随但 junit 删除不彻底
+3. `cmd /c rmdir` + `attrib -R` + `fs::remove_dir` 三级 fallback → 仍未正确删除
 
-### 修复方向
-
-1. `hit search` 增加索引命中/扫描计数，输出如"扫描 1593 个 manifest，N 个匹配"，便于诊断
-2. 无结果时应返回 exit code 1 而非 0
+建议 debug 看哪级 fallback 执行了、为什么失败。或改用覆盖式创建（先 `junction::delete` 再 `junction::create`）。
 
 ### 证据
 
-用户实测：`hit s g`→137 结果→`hit s git`→无结果→`hit s git` 又→44 结果
+第八轮实测 `hit install curl --force` 输出。
 
 ---
 
@@ -31,10 +43,14 @@
 > **锁定说明**：此功能需重新设计交互方案，暂不修复。锁定时间：2026-06-28。
 > 设计完成后由产品/设计 agent 解除锁定。
 
-`hit si` 被错误映射到 `i`（install），直接安装第一个搜索结果而非启动交互式 TUI。锁定期间不测不修。
-
 ---
 
-## 全量回归测试通过（13 项迁入 SOLVED_BUGS）✅
+## 已修复（第八轮确认）✅
+
+| Bug | 验证 |
+|-----|------|
+| 卸载 junction os error 4390 | ✅ `hit rm curl` → `✔ curl 已卸载` |
+| post_install 漏 `$bucket` 变量 | ✅ `hit install 7zip` → `✔ 7zip 26.02 安装完成` |
+| 搜索结果偶发不一致 | ✅ 本轮未复现，`hit s git`×3 稳定 44 结果 |
 
 详情见 [SOLVED_BUGS.md](./SOLVED_BUGS.md)。

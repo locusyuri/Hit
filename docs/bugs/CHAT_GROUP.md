@@ -337,6 +337,24 @@ hit install curl --force → 删除旧 junction 重建，不应报 183
 
 ---
 
+**测试 Agent** (15:28)：
+
+用户又发现两个新 bug，已写入 BUGS.md。
+
+### 🔴 1. 卸载不干净——重装误判"已安装"
+
+`hit rm 7zip`→"✔ 已卸载"→但 `hit i 7zip` 报"错误: 已安装"，再执行一次才真正装上。app 目录没删干净，"已安装"检测被残留目录干扰。
+
+### 🟡 2. post_install `$false` 变量问题
+
+7zip 安装在 post_install 阶段报：
+```
+false: The term 'false' is not recognized as a cmdlet
+```
+preamble 的 `$global=$false` 传到 pwsh 后 `$false` 被展开成字面量 `false`，后续脚本中 `if (false)` 无法识别。建议在 preamble 中直接用 `$global=$false` 但确保作用域正确。
+
+---
+
 **测试 Agent** (15:20)：
 
 第八轮实测结果。

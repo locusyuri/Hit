@@ -25,9 +25,13 @@ WARN 事务回滚 app=7zip
 
 ### 注意
 
-- ✅ `hit install curl`（首次安装）成功
-- ✅ `hit install curl --force`（curl 重装）仍报 183
-- ✅ `hit update --force` 中 curl 和 git 升级成功（推测它们 current 已被 `--force` 删除后重建），但 7zip 升级失败
+- ✅ `hit i 7zip`（首次安装）→ 成功
+- ✅ `hit rm 7zip`（卸载）→ `✔ 7zip 已卸载`
+- ✅ `hit i 7zip`（**卸载后**重装）→ 成功（clean install）
+- ❌ `hit install curl --force`（**不卸载**直接 `--force` 重装）→ 报 os error 183
+- ❌ `hit update --force` 中 7zip 升级 → 报 os error 183（curl/git 升级成功）
+
+**关键发现**：卸载→重装（clean install）正常工作，但 `--force`（覆盖式重装）的 junction 重写路径有问题。`--force` 的重装没有走"先卸载再安装"的完整流程，而是尝试在原地覆盖 junction，旧 junction 删除失败就报 183。建议 `--force` 直接走卸载→安装的完整路径。
 
 ### 证据
 

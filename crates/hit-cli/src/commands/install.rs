@@ -155,6 +155,13 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
 
         let (bucket, app, manifest) = find_manifest(session, &spec)?;
 
+        // --force 重装：先卸载旧版本，确保 junction 被清理干净
+        if args.force && db_installed {
+            if let Err(e) = hit_core::install::uninstall(session, &app) {
+                tracing::warn!("卸载旧版本失败（继续重装）: {e}");
+            }
+        }
+
         let options = hit_core::install::InstallOptions {
             force: args.force,
             arch,

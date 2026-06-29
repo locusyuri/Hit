@@ -312,20 +312,20 @@ pub fn uninstall(session: &Session, app: &str) -> Result<()> {
         Some(FlatManifest::resolve_architecture(m, arch))
     });
 
-    // 移除 current junction
+    // 移除 current junction（非致命：失败仅 warn，不中断卸载）
+    // 无论何种情况，最终都会尝试暴力删除 apps/<app>/ 整棵树
     let version_dir = if current_dir.exists() {
-        // 先找到实际版本目录（current junction 指向的目录）
-        // 用 find_latest_version_dir 作为 fallback
         let version = find_latest_version_dir(&app_dir).ok();
-        crate::win::fs::remove_junction(&current_dir)?;
+        if let Err(e) = crate::win::fs::remove_junction(&current_dir) {
+            tracing::warn!(app, error = %e, "移除 junction 失败（继续卸载）");
+        }
         // 安全兜底：如果 current 仍存在（可能是普通目录残留），清理掉
         if current_dir.exists() {
             std::fs::remove_dir(&current_dir).ok();
         }
         version.unwrap_or_else(|| app_dir.join("unknown"))
     } else {
-        // 没有 junction，找最新的版本目录
-        find_latest_version_dir(&app_dir)?
+        find_latest_version_dir(&app_dir).unwrap_or_else(|_| app_dir.join("unknown"))
     };
 
     // 移除 shim

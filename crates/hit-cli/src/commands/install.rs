@@ -134,13 +134,21 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
             ));
         }
 
-        // 已安装检测（在 println 之前，避免输出"安装..."后静默退出）
-        let app_dir = session.apps_path().join(&spec.name).join("current");
-        if app_dir.exists() && !args.force {
+        // 已安装检测：先查 db.json（权威），再查目录残留
+        // 如果 db.json 无记录但目录有残留（上次卸载不干净），清理后继续
+        let db = hit_core::store::Db::load(&hit_core::store::db_path(session)).ok();
+        let db_installed = db.as_ref().map(|d| d.is_installed(&spec.name)).unwrap_or(false);
+        if db_installed && !args.force {
             return Err(anyhow::anyhow!(
-                "'{}' 已安装，如需重装请使用 --force",
+                "'{}' 已安装（db.json 有记录），如需重装请使用 --force",
                 spec.name
             ));
+        }
+
+        // 目录残留清理（db.json 无记录但目录还在）
+        let app_dir = session.apps_path().join(&spec.name);
+        if app_dir.exists() && !db_installed {
+            std::fs::remove_dir_all(&app_dir).ok();
         }
 
         println!("{} {} ...", "安装".cyan().bold(), spec.name);

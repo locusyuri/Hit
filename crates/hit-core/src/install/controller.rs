@@ -374,9 +374,9 @@ pub fn uninstall(session: &Session, app: &str) -> Result<()> {
         })?;
     }
 
-    // 清理 apps/<app>/ 目录（如果为空）
-    if app_dir.exists() && is_dir_empty(&app_dir) {
-        std::fs::remove_dir(&app_dir).ok();
+    // 暴力清理 apps/<app>/ 整棵目录树（包括 current 残留、空父目录等）
+    if app_dir.exists() {
+        std::fs::remove_dir_all(&app_dir).ok();
     }
 
     // persist 数据保留不删除
@@ -614,13 +614,6 @@ fn find_latest_version_dir(app_dir: &Path) -> Result<PathBuf> {
         })
 }
 
-/// 判断目录是否为空
-fn is_dir_empty(path: &Path) -> bool {
-    std::fs::read_dir(path)
-        .map(|mut d| d.next().is_none())
-        .unwrap_or(false)
-}
-
 // ============================================================================
 // 测试
 // ============================================================================
@@ -765,15 +758,6 @@ mod tests {
             }
         }
         assert!(found_resolve, "应发出 Resolve 阶段事件");
-    }
-
-    #[test]
-    fn is_dir_empty_check() {
-        let dir = tempfile::tempdir().unwrap();
-        assert!(is_dir_empty(dir.path()));
-
-        std::fs::write(dir.path().join("file.txt"), "x").unwrap();
-        assert!(!is_dir_empty(dir.path()));
     }
 
     #[test]

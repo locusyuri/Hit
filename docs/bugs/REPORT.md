@@ -1,5 +1,5 @@
 # Hit 实测报告（自动批量执行）
-> 生成时间: 2026-06-28 16:12:57
+> 生成时间: 2026-06-29 16:24:08
 > 按 TEST_FLOW.md 顺序，stdout 入本文件，stderr(WARN) 入 REPORT_warn.log。
 > 跳过: §1/§15/§12.3.1/§20/§14.2/§14.4/§19.4
 
@@ -112,11 +112,9 @@ health_check_interval_days     7
 命令: hit bucket list
 输出（原样）:
 名称                  Manifest    描述
-extras                2321        
-main                  1593        
-versions              592         
+main                  1594        
 
-共 3 个 Bucket
+共 1 个 Bucket
 
 
 ────────────────────────────────────────────────
@@ -125,11 +123,9 @@ versions              592
 命令: hit b ls
 输出（原样）:
 名称                  Manifest    描述
-extras                2321        
-main                  1593        
-versions              592         
+main                  1594        
 
-共 3 个 Bucket
+共 1 个 Bucket
 
 
 ────────────────────────────────────────────────
@@ -137,23 +133,13 @@ versions              592
 ────────────────────────────────────────────────
 命令: hit bucket update
 输出（原样）:
-正在更新 bucket 'extras'...
-正在克隆 bucket 'extras'...
-bucket 'extras'：检出文件中...
-bucket 'extras' 克隆完成
-  ✔ extras
 正在更新 bucket 'main'...
 正在克隆 bucket 'main'...
 bucket 'main'：检出文件中...
 bucket 'main' 克隆完成
   ✔ main
-正在更新 bucket 'versions'...
-正在克隆 bucket 'versions'...
-bucket 'versions'：检出文件中...
-bucket 'versions' 克隆完成
-  ✔ versions
 
-✔ Bucket 更新完成（3/3）
+✔ Bucket 更新完成（1/1）
 
 
 ────────────────────────────────────────────────
@@ -164,10 +150,10 @@ bucket 'versions' 克隆完成
 正在更新 bucket 'main'...
 正在克隆 bucket 'main'...
 bucket 'main'：检出文件中...
-bucket 'main' 克隆完成
   ✔ main
 
 ✔ Bucket 更新完成（1/1）
+bucket 'main' 克隆完成
 
 
 ────────────────────────────────────────────────
@@ -222,26 +208,18 @@ bucket 'main' 克隆完成
 输出（原样）:
 名称           版本         描述
 cocogitto    7.0.0      The Conventional Commits toolbox.
-deepgit      26.1.003   Git Archaeology Tool.
-deepgit402   4.0.2      Git Archaeology Tool.
-digital      0.31       A digital logic designer and circuit simulator
 git          2.54.0     A free and open source distributed version control system.
 git-absorb   0.9.0      git commit --fixup, but automatic
-git-ai       1.6.3      An open source git extension that tracks AI-generated code in your repositories, linking every AI-written line to the agent, model, and transcripts that generated it.
-git-aliases  0.3.8      A PowerShell module that provides partial Git aliases from Oh My Zsh's git plugin.
+git-ai       1.6.4      An open source git extension that tracks AI-generated code in your repositories, linking every AI-written line to the agent, model, and transcripts that generated it.
 git-annex    10.20260624 Manage files with git, without comitting them.
 git-branchless 0.11.1     A suite of tools that enhances Git in several ways.
 git-bug      0.10.1     Distributed, offline-first bug tracker embedded in git, with bridges
 git-chglog   0.15.4     Changelog generator implemented in Go (Golang)
 git-cliff    2.13.1     A highly customizable Changelog Generator that follows Conventional Commit specifications
-git-cola     4.18.2     A highly-caffeinated, powerful, and intuitive graphical user interface for Git
-git-credential-manager 2.8.0      Secure Git credential helper
 git-credential-oauth 0.17.2     A Git credential helper that securely authenticates to GitHub, GitLab and BitBucket using OAuth.
 git-crypt    0.7.0      Store encrypted data in git repository
 git-filter-repo 2.47.0     git filter-branch replacement
 git-flow-next 1.1.0      A modern reimplementation of git-flow in Go that offers greater flexibility while maintaining backward compatibility with the original git-flow and git-flow-avh.
-git-flow-next-pre 1.1.0      A modern reimplementation of git-flow in Go that offers greater flexibility while maintaining backward compatibility with the original git-flow and git-flow-avh. (Pre-release)
-git-graph    0.7.0      Command line tool to show clear git graphs arranged for your branching model
 git-interactive-rebase-tool 2.4.1      An improved sequence editor for Git
 git-istage   0.3.193    A better git add -p
 git-lfs      3.7.1      Git extension for versioning large files.
@@ -250,61 +228,31 @@ git-pkgs     0.16.2     Git subcommand for tracking package dependencies across 
 git-quick-stats 2.11.0     Git quick statistics is a simple and efficient way to access various statistics in git repository.
 git-sizer    1.5.0      Compute various size metrics for a Git repository, flagging those that might cause problems.
 git-tfs      0.34.0     A Git/TFS bridge, similar to git-svn.
-git-tower    12.4.565   An easy to use GUI client for Git with powerful features.
 git-town     23.0.3     Git plugin that adds Git commands that make collaborative software development more efficient and safe.
 git-up       2.4.0      A nicer 'git pull'
 git-with-openssh 2.54.0     A free and open source distributed version control system.
-git-without-openssh 2.54.0     A free and open source distributed version control system.
 git-xargs    0.1.16     A CLI tool for making updates across multiple Github repositories with a single command
 git-xet      0.2.1      Git LFS custom transfer agent that implements upload and download of files using the Xet protocol.
-git19        1.9.5-preview20150319 A free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.
-gitahead     2.7.1      The elegant git gui for dev teams
-gitas        0.0.8      A terminal UI to switch between multiple Git accounts and run git commands as any of them
-gitbutler    0.20.4     A Git client for simultaneous branches on top of your existing workflow.
-gitbutler-nightly 0.5.1705   A Git client for simultaneous branches on top of your existing workflow.
 gitea        1.26.4     A painless self-hosted Git service
-gitea-beta   1.26.4     Git with a cup of tea, painless self-hosted git service. (beta channel)
-gitextensions 7.0.1.86   A graphical user interface for Git that allows you to control Git without using the commandline.
-github       3.6.1      Extend your GitHub workflow beyond your browser.
-github-beta  3.6.1-beta2 Extend your GitHub workflow beyond your browser.
-gitify       6.20.0     GitHub notifications on menu bar
 gitignore    0.2018.07.25 Fetches .gitignore file templates from gitignore.io and writes them to standard output.
-gitkraken    12.2.1     A Git client which helps you track and manage changes to your code.
 gitkube      0.3.0      Build and deploy docker images to Kubernetes using git push
 gitlab-release-cli 0.24.0     Interacts with GitLab's Releases API through the command line and through GitLab CI/CD's configuration file, .gitlab-ci.yml
 gitlab-runner 19.1.1     Run your jobs and send the results back to GitLab
 gitleaks     8.30.1     SAST tool for detecting and preventing hardcoded secrets like passwords, api keys, and tokens in git repos
-gitnuro      1.5.0      A FOSS Git multiplatform client for newbies and pros
 gitomatic    0.2        A tool to monitor git repositories and automatically pull & push changes.
 gitoxide     0.55.0     An idiomatic, lean, fast & safe pure Rust implementation of Git
 gitql        0.43.0     SQL like lanuage to perform queries on .git files
 gitsign      0.16.1     Keyless Git signing with Sigstore!
-gittyup      1.4.0      A continuation of GitAhead client, a graphical Git client designed to help you understand and manage your source code history.
-gitu         0.42.0     A TUI Git client inspired by Magit
 gitui        0.28.1     Terminal client for Git
 gitversion   6.6.2      Easy Semantic Versioning for projects using Git.
-gitversion-beta 6.7.0      Easy Semantic Versioning for projects using Git.
-lazy-posh-git 0.2.0      PowerShell proxy command around Set-Location to defer import of posh-git module until one changes working directory to the root of a git directory.
-lazygit      0.62.2     A simple terminal UI for git commands
 legit        1.2.0      Complementary command-line interface for Git.
-logitech-omm 2.6.1749   OnBoard Memory Manager (OMM) is a utility for pro gamers to quickly view, customize, and fine-tune the onboard memory of a compatible Logitech G mouse.
-metrogit     0.4.0      Git visualization tool that's more than just git.
 mingit       2.54.0     Minimal Git for Windows (MinGit) is a lightweight distribution intended primarily for application-integration scenarios (such as integrated development environments and graphical visualization tools) where full interactive console capabilities, including colorization and pagination, are not required.
 mingit-busybox 2.54.0     Minimal Git for Windows (MinGit) is a reduced sized package designed to support application integration (like integrated development environments, graph visualizers, etc.) where full console support (colorization, pagniation, etc.) is not needed.(BusyBox-backed MinGit, experimental, smaller version of MinGit)
-mpv-git      20260610   Video player based on MPlayer/mplayer2 (builds by shinchiro)
 multi-gitter 0.63.1     A command-line tool for updating multiple repositories with a single command.
-posh-git     1.1.0      A PowerShell module which provides Git/PowerShell integration.
-posh-git-beta 1.1.0      A PowerShell module which provides Git/PowerShell integration. (beta version)
-posh-git-nightly bbc5ac3800 A PowerShell module which provides Git/PowerShell integration. (nightly version)
-prismlauncher-git 12.0.0-2451-475ab8a An open source Minecraft launcher with the ability to manage multiple instances, accounts and mods. Focused on user freedom and free redistributability.
 psgithub     0.15.240   PowerShell module to manage GitHub through its REST API.
-smartgit     26.1.038   A graphical Git client with support for SVN and Pull Requests for GitHub and Bitbucket.
-sourcegit    2026.13    Open-source GUI client for git users.
 stgit        2.6.1      Manage Git commits as a stack of patches
-ungit        1.5.30     The easiest way to use git. On any platform. Anywhere.
-wslgit       1.3.1      A small executable that forwards all arguments to git running inside Bash on Windows/Windows Subsystem for Linux (WSL)
 
-共 82 个结果
+共 44 个结果
 
 
 ────────────────────────────────────────────────
@@ -314,31 +262,9 @@ wslgit       1.3.1      A small executable that forwards all arguments to git ru
 输出（原样）:
 名称           版本         描述
 python       3.14.6     A programming language that lets you work quickly and integrate systems more effectively.
-python-alpha 3.15.0b3   A programming language that lets you work quickly and integrate systems more effectively.
-python-beta  3.15.0b3   A programming language that lets you work quickly and integrate systems more effectively.
-python-pre   3.15.0b3   A programming language that lets you work quickly and integrate systems more effectively.
-python-rc    3.14.5rc1  A programming language that lets you work quickly and integrate systems more effectively.
-python27     2.7.18     A programming language that lets you work quickly and integrate systems more effectively.
-python310    3.10.11    A programming language that lets you work quickly and integrate systems more effectively.
-python311    3.11.9     A programming language that lets you work quickly and integrate systems more effectively.
-python312    3.12.10    A programming language that lets you work quickly and integrate systems more effectively.
-python313    3.13.14    A programming language that lets you work quickly and integrate systems more effectively.
-python314    3.14.6     A programming language that lets you work quickly and integrate systems more effectively.
-python35     3.5.4      A programming language that lets you work quickly and integrate systems more effectively.
-python36     3.6.8      A programming language that lets you work quickly and integrate systems more effectively.
-python37     3.7.9      A programming language that lets you work quickly and integrate systems more effectively.
-python38     3.8.10     A programming language that lets you work quickly and integrate systems more effectively.
-python39     3.9.13     A programming language that lets you work quickly and integrate systems more effectively.
 winpython    3.14.5.0   Free, open-source and portable Python distribution for Windows
-winpython37  3.7.7.1    Free, open-source and portable Python distribution for Windows (3.7.x)
-winpython3741 3.7.4.1    Free, open-source and portable Python distribution for Windows
-winpython37cod 3.7.7.1    Free, open-source and portable Python distribution for Windows (3.7.x w/ VS Code)
-winpython37ps2 3.7.6.0    Free, open-source and portable Python distribution for Windows (3.7.x w/ PySide2)
-winpython38  3.8.9.0    Free, open-source and portable Python distribution for Windows (3.8.x)
-winpython38cod 3.8.7.0    Free, open-source and portable Python distribution for Windows (3.8.x w/ VS Code)
-winpython38ps2 3.8.1.0    Free, open-source and portable Python distribution for Windows (3.8.x w/ PySide2)
 
-共 24 个结果
+共 2 个结果
 
 
 ────────────────────────────────────────────────
@@ -348,26 +274,18 @@ winpython38ps2 3.8.1.0    Free, open-source and portable Python distribution for
 输出（原样）:
 名称           版本         描述
 cocogitto    7.0.0      The Conventional Commits toolbox.
-deepgit      26.1.003   Git Archaeology Tool.
-deepgit402   4.0.2      Git Archaeology Tool.
-digital      0.31       A digital logic designer and circuit simulator
 git          2.54.0     A free and open source distributed version control system.
 git-absorb   0.9.0      git commit --fixup, but automatic
-git-ai       1.6.3      An open source git extension that tracks AI-generated code in your repositories, linking every AI-written line to the agent, model, and transcripts that generated it.
-git-aliases  0.3.8      A PowerShell module that provides partial Git aliases from Oh My Zsh's git plugin.
+git-ai       1.6.4      An open source git extension that tracks AI-generated code in your repositories, linking every AI-written line to the agent, model, and transcripts that generated it.
 git-annex    10.20260624 Manage files with git, without comitting them.
 git-branchless 0.11.1     A suite of tools that enhances Git in several ways.
 git-bug      0.10.1     Distributed, offline-first bug tracker embedded in git, with bridges
 git-chglog   0.15.4     Changelog generator implemented in Go (Golang)
 git-cliff    2.13.1     A highly customizable Changelog Generator that follows Conventional Commit specifications
-git-cola     4.18.2     A highly-caffeinated, powerful, and intuitive graphical user interface for Git
-git-credential-manager 2.8.0      Secure Git credential helper
 git-credential-oauth 0.17.2     A Git credential helper that securely authenticates to GitHub, GitLab and BitBucket using OAuth.
 git-crypt    0.7.0      Store encrypted data in git repository
 git-filter-repo 2.47.0     git filter-branch replacement
 git-flow-next 1.1.0      A modern reimplementation of git-flow in Go that offers greater flexibility while maintaining backward compatibility with the original git-flow and git-flow-avh.
-git-flow-next-pre 1.1.0      A modern reimplementation of git-flow in Go that offers greater flexibility while maintaining backward compatibility with the original git-flow and git-flow-avh. (Pre-release)
-git-graph    0.7.0      Command line tool to show clear git graphs arranged for your branching model
 git-interactive-rebase-tool 2.4.1      An improved sequence editor for Git
 git-istage   0.3.193    A better git add -p
 git-lfs      3.7.1      Git extension for versioning large files.
@@ -376,61 +294,31 @@ git-pkgs     0.16.2     Git subcommand for tracking package dependencies across 
 git-quick-stats 2.11.0     Git quick statistics is a simple and efficient way to access various statistics in git repository.
 git-sizer    1.5.0      Compute various size metrics for a Git repository, flagging those that might cause problems.
 git-tfs      0.34.0     A Git/TFS bridge, similar to git-svn.
-git-tower    12.4.565   An easy to use GUI client for Git with powerful features.
 git-town     23.0.3     Git plugin that adds Git commands that make collaborative software development more efficient and safe.
 git-up       2.4.0      A nicer 'git pull'
 git-with-openssh 2.54.0     A free and open source distributed version control system.
-git-without-openssh 2.54.0     A free and open source distributed version control system.
 git-xargs    0.1.16     A CLI tool for making updates across multiple Github repositories with a single command
 git-xet      0.2.1      Git LFS custom transfer agent that implements upload and download of files using the Xet protocol.
-git19        1.9.5-preview20150319 A free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.
-gitahead     2.7.1      The elegant git gui for dev teams
-gitas        0.0.8      A terminal UI to switch between multiple Git accounts and run git commands as any of them
-gitbutler    0.20.4     A Git client for simultaneous branches on top of your existing workflow.
-gitbutler-nightly 0.5.1705   A Git client for simultaneous branches on top of your existing workflow.
 gitea        1.26.4     A painless self-hosted Git service
-gitea-beta   1.26.4     Git with a cup of tea, painless self-hosted git service. (beta channel)
-gitextensions 7.0.1.86   A graphical user interface for Git that allows you to control Git without using the commandline.
-github       3.6.1      Extend your GitHub workflow beyond your browser.
-github-beta  3.6.1-beta2 Extend your GitHub workflow beyond your browser.
-gitify       6.20.0     GitHub notifications on menu bar
 gitignore    0.2018.07.25 Fetches .gitignore file templates from gitignore.io and writes them to standard output.
-gitkraken    12.2.1     A Git client which helps you track and manage changes to your code.
 gitkube      0.3.0      Build and deploy docker images to Kubernetes using git push
 gitlab-release-cli 0.24.0     Interacts with GitLab's Releases API through the command line and through GitLab CI/CD's configuration file, .gitlab-ci.yml
 gitlab-runner 19.1.1     Run your jobs and send the results back to GitLab
 gitleaks     8.30.1     SAST tool for detecting and preventing hardcoded secrets like passwords, api keys, and tokens in git repos
-gitnuro      1.5.0      A FOSS Git multiplatform client for newbies and pros
 gitomatic    0.2        A tool to monitor git repositories and automatically pull & push changes.
 gitoxide     0.55.0     An idiomatic, lean, fast & safe pure Rust implementation of Git
 gitql        0.43.0     SQL like lanuage to perform queries on .git files
 gitsign      0.16.1     Keyless Git signing with Sigstore!
-gittyup      1.4.0      A continuation of GitAhead client, a graphical Git client designed to help you understand and manage your source code history.
-gitu         0.42.0     A TUI Git client inspired by Magit
 gitui        0.28.1     Terminal client for Git
 gitversion   6.6.2      Easy Semantic Versioning for projects using Git.
-gitversion-beta 6.7.0      Easy Semantic Versioning for projects using Git.
-lazy-posh-git 0.2.0      PowerShell proxy command around Set-Location to defer import of posh-git module until one changes working directory to the root of a git directory.
-lazygit      0.62.2     A simple terminal UI for git commands
 legit        1.2.0      Complementary command-line interface for Git.
-logitech-omm 2.6.1749   OnBoard Memory Manager (OMM) is a utility for pro gamers to quickly view, customize, and fine-tune the onboard memory of a compatible Logitech G mouse.
-metrogit     0.4.0      Git visualization tool that's more than just git.
 mingit       2.54.0     Minimal Git for Windows (MinGit) is a lightweight distribution intended primarily for application-integration scenarios (such as integrated development environments and graphical visualization tools) where full interactive console capabilities, including colorization and pagination, are not required.
 mingit-busybox 2.54.0     Minimal Git for Windows (MinGit) is a reduced sized package designed to support application integration (like integrated development environments, graph visualizers, etc.) where full console support (colorization, pagniation, etc.) is not needed.(BusyBox-backed MinGit, experimental, smaller version of MinGit)
-mpv-git      20260610   Video player based on MPlayer/mplayer2 (builds by shinchiro)
 multi-gitter 0.63.1     A command-line tool for updating multiple repositories with a single command.
-posh-git     1.1.0      A PowerShell module which provides Git/PowerShell integration.
-posh-git-beta 1.1.0      A PowerShell module which provides Git/PowerShell integration. (beta version)
-posh-git-nightly bbc5ac3800 A PowerShell module which provides Git/PowerShell integration. (nightly version)
-prismlauncher-git 12.0.0-2451-475ab8a An open source Minecraft launcher with the ability to manage multiple instances, accounts and mods. Focused on user freedom and free redistributability.
 psgithub     0.15.240   PowerShell module to manage GitHub through its REST API.
-smartgit     26.1.038   A graphical Git client with support for SVN and Pull Requests for GitHub and Bitbucket.
-sourcegit    2026.13    Open-source GUI client for git users.
 stgit        2.6.1      Manage Git commits as a stack of patches
-ungit        1.5.30     The easiest way to use git. On any platform. Anywhere.
-wslgit       1.3.1      A small executable that forwards all arguments to git running inside Bash on Windows/Windows Subsystem for Linux (WSL)
 
-共 82 个结果
+共 44 个结果
 
 
 ────────────────────────────────────────────────
@@ -442,7 +330,7 @@ wslgit       1.3.1      A small executable that forwards all arguments to git ru
 cocogitto    7.0.0      The Conventional Commits toolbox.
 git          2.54.0     A free and open source distributed version control system.
 git-absorb   0.9.0      git commit --fixup, but automatic
-git-ai       1.6.3      An open source git extension that tracks AI-generated code in your repositories, linking every AI-written line to the agent, model, and transcripts that generated it.
+git-ai       1.6.4      An open source git extension that tracks AI-generated code in your repositories, linking every AI-written line to the agent, model, and transcripts that generated it.
 git-annex    10.20260624 Manage files with git, without comitting them.
 git-branchless 0.11.1     A suite of tools that enhances Git in several ways.
 git-bug      0.10.1     Distributed, offline-first bug tracker embedded in git, with bridges
@@ -539,7 +427,7 @@ Bucket:      main
 命令: hit info curl
 输出（原样）:
 名称:        curl
-版本:        8.21.0_1
+版本:        8.21.0_2
 描述:        Command line tool and library for transferring data with URLs
 主页:      https://curl.se/
 许可证:      Identifier("MIT")
@@ -560,14 +448,14 @@ Bucket:      main
 ✔ [下载] curl 完成
 ▶ [校验] curl...
 ✔ [校验] curl 完成
-解压 curl (curl#8.21.0_1#39c2972.xz)
+解压 curl (curl#8.21.0_2#e00337e.xz)
 ▶ [解压] curl...
 ✔ [解压] curl 完成
 ▶ [同步] curl...
 ▶ [提交] curl...
 ✔ [提交] curl 完成
 ✔ [同步] curl 完成
-✔ curl 8.21.0_1 安装完成（1）
+✔ curl 8.21.0_2 安装完成（1）
 
 
 ────────────────────────────────────────────────
@@ -579,7 +467,17 @@ Bucket:      main
 ▶ [解析] jq...
 ✔ [解析] jq 完成
 ▶ [下载] jq...
-错误: 下载失败（https://github.com/jqlang/jq/releases/download/jq-1.8.2/jq-windows-amd64.exe#/jq.exe）：读取响应失败: error decoding response body
+✔ [下载] jq 完成
+▶ [校验] jq...
+✔ [校验] jq 完成
+解压 jq (jq#1.8.2#abde28e.exe)
+▶ [解压] jq...
+✔ [解压] jq 完成
+▶ [同步] jq...
+▶ [提交] jq...
+✔ [提交] jq 完成
+✔ [同步] jq 完成
+✔ jq 1.8.2 安装完成（1）
 
 
 ────────────────────────────────────────────────
@@ -587,7 +485,7 @@ Bucket:      main
 ────────────────────────────────────────────────
 命令: hit install curl
 输出（原样）:
-错误: 'curl' 已安装，如需重装请使用 --force
+错误: 'curl' 已安装（db.json 有记录），如需重装请使用 --force
 
 
 ────────────────────────────────────────────────
@@ -602,13 +500,13 @@ Bucket:      main
 ✔ [下载] curl 完成
 ▶ [校验] curl...
 ✔ [校验] curl 完成
-解压 curl (curl#8.21.0_1#39c2972.xz)
+解压 curl (curl#8.21.0_2#e00337e.xz)
 ▶ [解压] curl...
 ✔ [解压] curl 完成
 ▶ [同步] curl...
 ▶ [提交] curl...
-[2m2026-06-28T08:14:32.796753Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mcurl
-错误: IO 错误：创建 Junction: C:\Users\Violet\Downloads\test\hit\apps\curl\current -> C:\Users\Violet\Downloads\test\hit\apps\curl\8.21.0_1：Cannot create a file when that file already exists. (os error 183)
+[2m2026-06-29T08:24:40.113035Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mcurl
+错误: IO 错误：创建 Junction: C:\Users\Violet\Downloads\test\hit\apps\curl\current -> C:\Users\Violet\Downloads\test\hit\apps\curl\8.21.0_2：Cannot create a file when that file already exists. (os error 183)
   原因: Cannot create a file when that file already exists. (os error 183)
 
 
@@ -621,7 +519,19 @@ Bucket:      main
 ▶ [解析] git...
 ✔ [解析] git 完成
 ▶ [下载] git...
-错误: 下载失败（https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/PortableGit-2.54.0-64-bit.7z.exe#/dl.7z）：请求失败: error sending request for url (https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/PortableGit-2.54.0-64-bit.7z.exe#/dl.7z)
+✔ [下载] git 完成
+▶ [校验] git...
+✔ [校验] git 完成
+解压 git (git#2.54.0#b0a3d5f.7z)
+▶ [解压] git...
+✔ [解压] git 完成
+▶ [同步] git...
+▶ [提交] git...
+✔ [提交] git 完成
+C:\Users\Violet\Downloads\test\hit\apps\git\2.54.0: The term 'C:\Users\Violet\Downloads\test\hit\apps\git\2.54.0' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+✔ [同步] git 完成
+✔ git 2.54.0 安装完成（8）
 
 
 ────────────────────────────────────────────────
@@ -638,11 +548,7 @@ Bucket:      main
 ────────────────────────────────────────────────
 命令: hit install jq --arch 64bit
 输出（原样）:
-安装 jq ...
-▶ [解析] jq...
-✔ [解析] jq 完成
-▶ [下载] jq...
-错误: 下载失败（https://github.com/jqlang/jq/releases/download/jq-1.8.2/jq-windows-amd64.exe#/jq.exe）：请求失败: error sending request for url (https://github.com/jqlang/jq/releases/download/jq-1.8.2/jq-windows-amd64.exe#/jq.exe)
+错误: 'jq' 已安装（db.json 有记录），如需重装请使用 --force
 
 
 ────────────────────────────────────────────────
@@ -651,9 +557,12 @@ Bucket:      main
 命令: hit list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
+7zip         26.02      64bit    main       2026-06-29T08:22:51Z
+curl         8.21.0_2   64bit    main       2026-06-29T08:24:37Z
+git          2.54.0     64bit    main       2026-06-29T08:24:50Z
+jq           1.8.2      64bit    main       2026-06-29T08:24:38Z
 
-共 1 个软件
+共 4 个软件
 
 
 ────────────────────────────────────────────────
@@ -662,9 +571,12 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 命令: hit ls
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
+7zip         26.02      64bit    main       2026-06-29T08:22:51Z
+curl         8.21.0_2   64bit    main       2026-06-29T08:24:37Z
+git          2.54.0     64bit    main       2026-06-29T08:24:50Z
+jq           1.8.2      64bit    main       2026-06-29T08:24:38Z
 
-共 1 个软件
+共 4 个软件
 
 
 ────────────────────────────────────────────────
@@ -673,7 +585,7 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 命令: hit list curl
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
+curl         8.21.0_2   64bit    main       2026-06-29T08:24:37Z
 
 共 1 个软件
 
@@ -740,16 +652,12 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 命令: hit update --all
 输出（原样）:
 刷新 正在更新 Bucket...
-正在更新 bucket 'extras'...
-正在克隆 bucket 'extras'...
-  ✘ extras 失败: Bucket 'extras' 错误：克隆失败：An IO error occurred when talking to the server
 正在更新 bucket 'main'...
 正在克隆 bucket 'main'...
-  ✘ main 失败: Bucket 'main' 错误：克隆失败：An IO error occurred when talking to the server
-正在更新 bucket 'versions'...
-正在克隆 bucket 'versions'...
-  ✘ versions 失败: Bucket 'versions' 错误：克隆失败：An IO error occurred when talking to the server
-✔ Bucket 更新完成（0/3）
+bucket 'main'：检出文件中...
+bucket 'main' 克隆完成
+  ✔ main
+✔ Bucket 更新完成（1/1）
 
 所有软件已是最新版本
 
@@ -784,7 +692,12 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 命令: hit update
 输出（原样）:
 刷新 正在更新 Bucket...
-✔ Bucket 更新完成（0/0）
+正在更新 bucket 'main'...
+正在克隆 bucket 'main'...
+bucket 'main'：检出文件中...
+bucket 'main' 克隆完成
+  ✔ main
+✔ Bucket 更新完成（1/1）
 
 所有软件已是最新版本
 
@@ -795,7 +708,12 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 命令: hit update --all
 输出（原样）:
 刷新 正在更新 Bucket...
-✔ Bucket 更新完成（0/0）
+正在更新 bucket 'main'...
+正在克隆 bucket 'main'...
+bucket 'main'：检出文件中...
+bucket 'main' 克隆完成
+  ✔ main
+✔ Bucket 更新完成（1/1）
 
 所有软件已是最新版本
 
@@ -806,7 +724,12 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 命令: hit update curl
 输出（原样）:
 刷新 正在更新 Bucket...
-✔ Bucket 更新完成（0/0）
+正在更新 bucket 'main'...
+正在克隆 bucket 'main'...
+bucket 'main'：检出文件中...
+bucket 'main' 克隆完成
+  ✔ main
+✔ Bucket 更新完成（1/1）
 
 所有软件已是最新版本
 
@@ -817,8 +740,13 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 命令: hit update nonexistent
 输出（原样）:
 刷新 正在更新 Bucket...
-✔ Bucket 更新完成（0/0）
+正在更新 bucket 'main'...
+正在克隆 bucket 'main'...
+bucket 'main'：检出文件中...
+  ✔ main
+✔ Bucket 更新完成（1/1）
 
+bucket 'main' 克隆完成
   nonexistent 未安装，跳过
 所有软件已是最新版本
 
@@ -829,9 +757,77 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 命令: hit update --force
 输出（原样）:
 刷新 正在更新 Bucket...
-✔ Bucket 更新完成（0/0）
+正在更新 bucket 'main'...
+正在克隆 bucket 'main'...
+bucket 'main'：检出文件中...
+bucket 'main' 克隆完成
+  ✔ main
+✔ Bucket 更新完成（1/1）
 
-所有软件已是最新版本
+⬆ 可升级 4 个软件
+升级 7zip → 26.02
+▶ [解析] 7zip...
+✔ [解析] 7zip 完成
+▶ [下载] 7zip...
+✔ [下载] 7zip 完成
+▶ [校验] 7zip...
+✔ [校验] 7zip 完成
+解压 7zip (7zip#26.02#63f4002.msi)
+▶ [解压] 7zip...
+✔ [解压] 7zip 完成
+▶ [同步] 7zip...
+▶ [提交] 7zip...
+[2m2026-06-29T08:25:34.023395Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0m7zip
+  ✘ 升级失败: IO 错误：创建 Junction: C:\Users\Violet\Downloads\test\hit\apps\7zip\current -> C:\Users\Violet\Downloads\test\hit\apps\7zip\26.02：Cannot create a file when that file already exists. (os error 183)
+升级 curl → 8.21.0_2
+▶ [解析] curl...
+✔ [解析] curl 完成
+▶ [下载] curl...
+✔ [下载] curl 完成
+▶ [校验] curl...
+✔ [校验] curl 完成
+解压 curl (curl#8.21.0_2#e00337e.xz)
+▶ [解压] curl...
+✔ [解压] curl 完成
+▶ [同步] curl...
+▶ [提交] curl...
+✔ [提交] curl 完成
+✔ [同步] curl 完成
+  ✔ 8.21.0_2 升级完成
+升级 git → 2.54.0
+▶ [解析] git...
+✔ [解析] git 完成
+▶ [下载] git...
+✔ [下载] git 完成
+▶ [校验] git...
+✔ [校验] git 完成
+解压 git (git#2.54.0#b0a3d5f.7z)
+▶ [解压] git...
+✔ [解压] git 完成
+▶ [同步] git...
+▶ [提交] git...
+'attrib' is not recognized as an internal or external command,
+operable program or batch file.
+[2m2026-06-29T08:25:36.448231Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mgit
+  ✘ 升级失败: IO 错误：创建 Junction: C:\Users\Violet\Downloads\test\hit\apps\git\current -> C:\Users\Violet\Downloads\test\hit\apps\git\2.54.0：Cannot create a file when that file already exists. (os error 183)
+升级 jq → 1.8.2
+▶ [解析] jq...
+✔ [解析] jq 完成
+▶ [下载] jq...
+✔ [下载] jq 完成
+▶ [校验] jq...
+✔ [校验] jq 完成
+解压 jq (jq#1.8.2#abde28e.exe)
+▶ [解压] jq...
+✔ [解压] jq 完成
+▶ [同步] jq...
+▶ [提交] jq...
+'attrib' is not recognized as an internal or external command,
+operable program or batch file.
+[2m2026-06-29T08:25:38.038577Z[0m [33m WARN[0m 事务回滚 [3mapp[0m[2m=[0mjq
+  ✘ 升级失败: IO 错误：创建 Junction: C:\Users\Violet\Downloads\test\hit\apps\jq\current -> C:\Users\Violet\Downloads\test\hit\apps\jq\1.8.2：Cannot create a file when that file already exists. (os error 183)
+
+✔ 升级完成（1/4）
 
 
 ────────────────────────────────────────────────
@@ -839,7 +835,8 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 ────────────────────────────────────────────────
 命令: hit uninstall jq
 输出（原样）:
-错误: 'jq' 未安装
+卸载 jq ...
+✔ jq 已卸载
 
 
 ────────────────────────────────────────────────
@@ -848,8 +845,7 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 命令: hit rm curl --purge
 输出（原样）:
 卸载 curl ...
-错误: IO 错误：移除 Junction: C:\Users\Violet\Downloads\test\hit\apps\curl\current：The file or directory is not a reparse point. (os error 4390)
-  原因: The file or directory is not a reparse point. (os error 4390)
+✔ curl 已卸载
 
 
 ────────────────────────────────────────────────
@@ -881,7 +877,21 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 ────────────────────────────────────────────────
 命令: hit install curl
 输出（原样）:
-错误: 'curl' 已安装，如需重装请使用 --force
+安装 curl ...
+▶ [解析] curl...
+✔ [解析] curl 完成
+▶ [下载] curl...
+✔ [下载] curl 完成
+▶ [校验] curl...
+✔ [校验] curl 完成
+解压 curl (curl#8.21.0_2#e00337e.xz)
+▶ [解压] curl...
+✔ [解压] curl 完成
+▶ [同步] curl...
+▶ [提交] curl...
+✔ [提交] curl 完成
+✔ [同步] curl 完成
+✔ curl 8.21.0_2 安装完成（1）
 
 
 ────────────────────────────────────────────────
@@ -890,9 +900,12 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 命令: hit cache list
 输出（原样）:
 软件                   版本         大小         路径
-curl                 8.21.0_1   4.7 MB     C:\Users\Violet\Downloads\test\hit\cache\curl#8.21.0_1#39c2972.xz
+7zip                 26.02      1.9 MB     C:\Users\Violet\Downloads\test\hit\cache\7zip#26.02#63f4002.msi
+curl                 8.21.0_2   4.7 MB     C:\Users\Violet\Downloads\test\hit\cache\curl#8.21.0_2#e00337e.xz
+git                  2.54.0     56.3 MB    C:\Users\Violet\Downloads\test\hit\cache\git#2.54.0#b0a3d5f.7z
+jq                   1.8.2      1011.0 KB  C:\Users\Violet\Downloads\test\hit\cache\jq#1.8.2#abde28e.exe
 
-共 1 个文件（4.7 MB）
+共 4 个文件（63.9 MB）
 
 
 ────────────────────────────────────────────────
@@ -908,7 +921,7 @@ C:\Users\Violet\Downloads\test\hit\cache
 ────────────────────────────────────────────────
 命令: hit cache clean
 输出（原样）:
-✔ 已清理 1 个缓存文件
+✔ 已清理 4 个缓存文件
 
 
 ────────────────────────────────────────────────
@@ -962,7 +975,8 @@ C:\Users\Violet\Downloads\test\hit\cache
 ────────────────────────────────────────────────
 命令: hit which curl
 输出（原样）:
-错误: 未找到 'curl' 的 shim 文件
+Shim:   C:\Users\Violet\Downloads\test\hit\shims\curl.shim
+Target: C:\Users\Violet\Downloads\test\hit\apps\curl\8.21.0_2\bin\curl.exe
 
 
 ────────────────────────────────────────────────
@@ -1109,9 +1123,10 @@ health_check_interval_days     7
 ────────────────────────────────────────────────
 命令: hit doctor
 输出（原样）:
-⚠ 发现 1 个问题：
+⚠ 发现 2 个问题：
 
-  ⚠ curl: current 链接损坏 (可修复)
+  ⚠ 7zip: current 链接损坏 (可修复)
+  ⚠ git: current 链接损坏 (可修复)
 
 提示 使用 hit doctor --fix 自动修复可修复的问题
 
@@ -1128,14 +1143,16 @@ health_check_interval_days     7
 ────────────────────────────────────────────────
 命令: hit doctor --fix
 输出（原样）:
-⚠ 发现 1 个问题：
+⚠ 发现 2 个问题：
 
-  ⚠ curl: current 链接损坏 (可修复)
+  ⚠ 7zip: current 链接损坏 (可修复)
+  ⚠ git: current 链接损坏 (可修复)
 
-修复 正在修复 1 个问题...
-  ✗ curl 修复失败: Cannot create a file when that file already exists. (os error 183)
+修复 正在修复 2 个问题...
+  ✗ 7zip 修复失败: Cannot create a file when that file already exists. (os error 183)
+  ✗ git 修复失败: Cannot create a file when that file already exists. (os error 183)
 
-✔ 已修复 0/1 个问题
+✔ 已修复 0/2 个问题
 
 
 ────────────────────────────────────────────────
@@ -1152,9 +1169,9 @@ health_check_interval_days     7
 输出（原样）:
 Hit 0.1.0
 
-  已安装软件:    1
-  Bucket 数量:   0
-  可用软件总数:  0
+  已安装软件:    3
+  Bucket 数量:   1
+  可用软件总数:  1594
   缓存文件:      0 (0 B)
   根目录:        C:\Users\Violet\Downloads\test\hit
 
@@ -1166,9 +1183,9 @@ Hit 0.1.0
 输出（原样）:
 Hit 0.1.0
 
-  已安装软件:    1
-  Bucket 数量:   0
-  可用软件总数:  0
+  已安装软件:    3
+  Bucket 数量:   1
+  可用软件总数:  1594
   缓存文件:      0 (0 B)
   根目录:        C:\Users\Violet\Downloads\test\hit
 
@@ -1196,7 +1213,12 @@ Hit 0.1.0
 命令: hit u nonexistent
 输出（原样）:
 刷新 正在更新 Bucket...
-✔ Bucket 更新完成（0/0）
+正在更新 bucket 'main'...
+正在克隆 bucket 'main'...
+bucket 'main'：检出文件中...
+bucket 'main' 克隆完成
+  ✔ main
+✔ Bucket 更新完成（1/1）
 
   nonexistent 未安装，跳过
 所有软件已是最新版本
@@ -1216,9 +1238,11 @@ Hit 0.1.0
 命令: hit ls
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
+7zip         26.02      64bit    main       2026-06-29T08:22:51Z
+curl         8.21.0_2   64bit    main       2026-06-29T08:25:40Z
+git          2.54.0     64bit    main       2026-06-29T08:24:50Z
 
-共 1 个软件
+共 3 个软件
 
 
 ────────────────────────────────────────────────
@@ -1228,9 +1252,9 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 输出（原样）:
 Hit 0.1.0
 
-  已安装软件:    1
-  Bucket 数量:   0
-  可用软件总数:  0
+  已安装软件:    3
+  Bucket 数量:   1
+  可用软件总数:  1594
   缓存文件:      0 (0 B)
   根目录:        C:\Users\Violet\Downloads\test\hit
 
@@ -1240,7 +1264,10 @@ Hit 0.1.0
 ────────────────────────────────────────────────
 命令: hit b ls
 输出（原样）:
-没有已添加的 Bucket
+名称                  Manifest    描述
+main                  1594        
+
+共 1 个 Bucket
 
 
 ────────────────────────────────────────────────
@@ -1265,9 +1292,11 @@ Hit 0.1.0
 命令: hit -v list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
+7zip         26.02      64bit    main       2026-06-29T08:22:51Z
+curl         8.21.0_2   64bit    main       2026-06-29T08:25:40Z
+git          2.54.0     64bit    main       2026-06-29T08:24:50Z
 
-共 1 个软件
+共 3 个软件
 
 
 ────────────────────────────────────────────────
@@ -1276,9 +1305,11 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 命令: hit -vv list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
+7zip         26.02      64bit    main       2026-06-29T08:22:51Z
+curl         8.21.0_2   64bit    main       2026-06-29T08:25:40Z
+git          2.54.0     64bit    main       2026-06-29T08:24:50Z
 
-共 1 个软件
+共 3 个软件
 
 
 ────────────────────────────────────────────────
@@ -1287,9 +1318,11 @@ curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
 命令: hit -vvv list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
+7zip         26.02      64bit    main       2026-06-29T08:22:51Z
+curl         8.21.0_2   64bit    main       2026-06-29T08:25:40Z
+git          2.54.0     64bit    main       2026-06-29T08:24:50Z
 
-共 1 个软件
+共 3 个软件
 
 
 ────────────────────────────────────────────────
@@ -1364,7 +1397,9 @@ For more information, try '--help'.
 命令: hit list
 输出（原样）:
 名称           版本         架构       Bucket     安装时间
-curl         8.21.0_1   64bit    main       2026-06-28T08:13:55Z
+7zip         26.02      64bit    main       2026-06-29T08:22:51Z
+curl         8.21.0_2   64bit    main       2026-06-29T08:25:40Z
+git          2.54.0     64bit    main       2026-06-29T08:24:50Z
 
-共 1 个软件
+共 3 个软件
 

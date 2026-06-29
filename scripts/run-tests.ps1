@@ -52,7 +52,7 @@ function Run-Case {
         # 全部写入 REPORT（原始输出，含 WARN 和错误）
         Add-Content -Path $report -Value $allContent -Encoding UTF8
         # WARN/tracing 行单独写入 warnLog
-        Get-Content -Path $mergedTmp | Where-Object { $_ -match '^\d{4}-\d{2}-\d{2}T|^  |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 -Append
+        Get-Content -Path $mergedTmp | Where-Object { $_ -match '^\d{4}-\d{2}-\d{2}T|^  |WARN|ERROR|错误' } | Add-Content -Path $warnLog -Encoding UTF8
         Remove-Item $mergedTmp -Force -ErrorAction SilentlyContinue
     }
     if (Test-Path $stdoutTmp) { Remove-Item $stdoutTmp -Force -ErrorAction SilentlyContinue }

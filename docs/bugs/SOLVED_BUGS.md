@@ -411,3 +411,29 @@ Target: C:\...\hit\apps\curl\8.21.0_1\bin\curl.exe
 
 **验证**：226 测试通过，`cargo check` 通过。
 
+---
+
+## 卸载时 junction 移除失败 os error 4390 ⭐⭐⭐⭐⭐（2026-06-28 解决）
+
+**现象**：`hit rm curl` 卸载时报 `The file or directory is not a reparse point. (os error 4390)`。
+
+**根因**：上一轮 `create_junction` 的 `remove_dir` fallback 创建了普通目录而非真正 junction。卸载时 `remove_junction` 中的 `junction::delete` 发现不是 reparse point 报 4390。
+
+**修复**（commit 待定）：
+- `crates/hit-core/src/win/fs.rs` — `remove_junction()` 在 `junction::delete` 失败时回退 `fs::remove_dir` 删除普通目录
+
+**验证**：226 测试通过，`cargo check` 通过。
+
+---
+
+## post_install 变量 `$bucket` 未定义 ⭐⭐⭐⭐⭐（2026-06-28 解决）
+
+**现象**：`hit install 7zip` 在 post_install 阶段报 `Cannot find path 'C:\...\buckets\scripts\7-zip'`，`$bucket` 展开为空。
+
+**根因**：preamble 定义了 `$bucketsdir` 但漏了 `$bucket`，导致 `$bucketsdir\$bucket\scripts\7-zip` 路径缺少 bucket 名称段。
+
+**修复**（commit 待定）：
+- `crates/hit-core/src/install/controller.rs` — `run_hook_script` 新增 `bucket: &str` 参数，preamble 追加 `$bucket='<bucket_name>'`；3 处调用点同步更新
+
+**验证**：226 测试通过，`cargo check` 通过。
+

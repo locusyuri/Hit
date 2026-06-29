@@ -178,7 +178,7 @@ pub fn install(
     let var_map = vars.to_var_map();
 
     // Step 5.5: 执行 pre_install 脚本
-    run_hook_script(session, &flat, HookType::PreInstall, &version_dir, &var_map)?;
+    run_hook_script(session, &flat, HookType::PreInstall, &version_dir, &var_map, bucket)?;
 
     // Step 6: 创建 shim
     let shims_created = step_create_shims(session, app, &version_dir, &flat, &var_map, &mut tx)?;
@@ -201,7 +201,7 @@ pub fn install(
     emit_phase(session, app, InstallPhase::Commit, false);
 
     // Step 10: 执行 post_install 脚本
-    run_hook_script(session, &flat, HookType::PostInstall, &version_dir, &var_map)?;
+    run_hook_script(session, &flat, HookType::PostInstall, &version_dir, &var_map, bucket)?;
 
     // Step 11: 保存安装信息到 db.json
     {
@@ -357,7 +357,7 @@ pub fn uninstall(session: &Session, app: &str) -> Result<()> {
             original_dir: None,
         };
         let var_map = vars.to_var_map();
-        run_hook_script(session, flat, HookType::PreUninstall, &version_dir, &var_map).ok();
+        run_hook_script(session, flat, HookType::PreUninstall, &version_dir, &var_map, &info.bucket).ok();
     }
 
     // 移除版本目录
@@ -523,6 +523,7 @@ fn run_hook_script(
     hook: HookType,
     version_dir: &Path,
     var_map: &BTreeMap<String, String>,
+    bucket: &str,
 ) -> Result<()> {
     let script = match flat.resolve_script(hook) {
         Some(s) => s,
@@ -543,13 +544,14 @@ fn run_hook_script(
     let dir_str = format!("{}", version_dir.display());
 
     let preamble = format!(
-        "$dir='{}'; $version='{}'; $persist_dir='{}'; $bucketsdir='{}'; $scoopdir='{}'; $app='{}'; $global=$false; ",
+        "$dir='{}'; $version='{}'; $persist_dir='{}'; $bucketsdir='{}'; $scoopdir='{}'; $app='{}'; $bucket='{}'; $global=$false; ",
         dir_str.replace('\'', "''"),
         version.replace('\'', "''"),
         persist_dir.display().to_string().replace('\'', "''"),
         buckets_dir.replace('\'', "''"),
         scoop_dir.replace('\'', "''"),
         app.replace('\'', "''"),
+        bucket.replace('\'', "''"),
     );
     let full_body = preamble + &body;
 

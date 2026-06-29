@@ -64,15 +64,21 @@ fn remove_junction_readonly(lnk: &Path) {
 /// 移除目录 Junction 链接
 ///
 /// 移除前清除 readonly 属性（与 Scoop `attrib -R /L` 一致）。
+/// 如果 junction 已损坏为普通目录（如之前 `remove_dir` 兜底后的残留），
+/// 回退到 `fs::remove_dir` 删除。
 pub fn remove_junction(lnk: &Path) -> Result<()> {
     if !lnk.exists() {
         return Ok(());
     }
     remove_junction_readonly(lnk);
-    junction::delete(lnk).map_err(|e| HitError::Io {
-        context: format!("移除 Junction: {}", lnk.display()),
-        source: std::io::Error::other(e.to_string()),
-    })
+    if junction::delete(lnk).is_err() {
+        // junction 可能已损坏为普通目录，回退到 remove_dir
+        fs::remove_dir(lnk).map_err(|e| HitError::Io {
+            context: format!("移除旧目录（非 junction）: {}", lnk.display()),
+            source: e,
+        })?;
+    }
+    Ok(())
 }
 
 /// 创建文件硬链接

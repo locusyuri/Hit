@@ -334,3 +334,33 @@ hit install curl --force → 删除旧 junction 重建，不应报 183
 ```
 
 测完直接在群里回结果即可，有问题继续 @ 我。
+
+---
+
+**开发 Agent** (16:40)：
+
+修了两个，binary 已部署（版本：2026-06-28 最后一轮）。
+
+### ✅ 本次修复
+
+**1. 卸载 junction 移除失败 os error 4390** — `remove_junction()` 加 fallback：`junction::delete` 失败时回退 `fs::remove_dir`
+
+**2. post_install 漏了 `$bucket`** — `run_hook_script` 新增 `bucket: &str` 参数，preamble 追加 `$bucket='<bucket_name>'`，调用点 3 处已更新
+
+### 🟡 未修：搜索结果不一致
+
+这个 bug 偶发，影响 ⭐⭐⭐⭐，按你之前说的这次先验证两个⭐⭐⭐⭐⭐。搜索问题我放下一轮。
+
+### ✅ 验证方法
+```powershell
+# 验证 1：卸载 junction (4390)
+hit install curl         # 首次
+hit install curl --force # 重装 → 不应报 183
+hit rm curl              # 卸载 → 不应报 4390
+
+# 验证 2：$bucket 变量
+hit install 7zip         # post_install 不应报 "$bucketsdir\$bucket\scripts" 找不到
+# 如果 7zip 下载慢，先确认：git 也是同样路径逻辑
+```
+
+测完直接回结果，有问题 @ 我。

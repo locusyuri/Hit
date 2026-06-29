@@ -436,4 +436,49 @@ Target: C:\...\hit\apps\curl\8.21.0_1\bin\curl.exe
 - `crates/hit-core/src/install/controller.rs` — `run_hook_script` 新增 `bucket: &str` 参数，preamble 追加 `$bucket='<bucket_name>'`；3 处调用点同步更新
 
 **验证**：226 测试通过，`cargo check` 通过。
+**提交**：`e06270b` — fix: remove_junction加fallback+run_hook_script加$bucket变量
+
+---
+
+## post_install `$false` 被当作命令而非 PowerShell 变量 ⭐⭐⭐（2026-06-28 解决）
+
+**现象**：`hit install 7zip` 在 post_install 阶段报 `false: The term 'false' is not recognized as a cmdlet`。
+
+**根因**：`to_var_map()` 将 `$global` → `"false"`（字符串）插入 var_map。`run_hook_script` 用 var_map 替换脚本 body 中的 `$global` 时，把 PowerShell 变量 `$global` 替换成了裸字 `false`（没了 `$`），导致 PowerShell 把 `false` 当命令名。
+
+**修复**（commit 待定）：
+- `crates/hit-core/src/install/controller.rs` — `run_hook_script` 替换循环跳过 `$global`（PowerShell 内置变量，preamble 已正确设置）
+
+**验证**：226 测试通过，`cargo check` 通过。
+
+---
+
+## 卸载未完全清理目录，重装时报"已安装" ⭐⭐⭐⭐⭐（2026-06-28 解决）
+
+**现象**：`hit rm 7zip` → "✔ 已卸载" → `hit i 7zip` → "错误: 已安装"，再执行一次才装上。
+
+**根因**：`remove_junction` 在 `current` 是普通目录（非 junction）时失败（os error 4390），`current` 目录残留导致 `is_dir_empty` 返回 false、`apps/<app>/` 未清理，重装时 install 误判为已安装。
+
+**修复**（commit 待定）：
+- `crates/hit-core/src/win/fs.rs` — `remove_junction` 增加 `fs::remove_dir` fallback（4390 修复）
+- `crates/hit-core/src/install/controller.rs` — uninstall 在 `remove_junction` 后追加 `current` 残留兜底清理
+
+**验证**：226 测试通过，`cargo check` 通过。
+
+---
+
+## 重装/升级时 Junction 创建失败 os error 183 ⭐⭐⭐⭐⭐（2026-06-28 解决）
+
+**现象**：`hit install curl --force` 重装时旧 junction 无法删除，`junction::create` 报 error 183。
+
+**根因**（四轮修复）：
+1. `junction::delete.ok()` 吞掉删除错误（`feb7c45`）
+2. `remove_dir_all` 跟随 junction 删错目标目录（`f75bd6b`）
+3. `cmd.exe /c rmdir` 因路径引号/权限边缘情况静默失败（`eb4e657`）
+4. 第四次加 `pwsh Remove-Item -Force -LiteralPath` 兜底（当前）
+
+**修复**（commit 待定）：
+- `crates/hit-core/src/win/fs.rs` — `create_junction` 四级 fallback：`junction::delete` → `cmd rmdir` → `pwsh Remove-Item` → `fs::remove_dir`
+
+**验证**：226 测试通过，`cargo check` 通过。
 

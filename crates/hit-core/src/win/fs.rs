@@ -18,14 +18,14 @@ use hit_common::error::{HitError, Result};
 /// （与 Scoop `attrib +R /L` 一致）。使用多级 fallback 确保删除：
 /// 1. `junction::delete()`（最快，但可能因 readonly 或损坏的 junction 失败）
 /// 2. `cmd.exe /c rmdir`（Windows 原生，正确删除 junction reparse point）
-/// 3. `fs::remove_dir()`（不跟随 junction 的目录删除）
+/// 3. `pwsh -Command Remove-Item -Force -LiteralPath`（最可靠，处理各种边缘情况）
+/// 4. `fs::remove_dir()`（不跟随 junction 的目录删除）
 pub fn create_junction(src: &Path, lnk: &Path) -> Result<()> {
     if lnk.exists() {
-        // 用 cmd.exe attrib 清除 readonly（避免 fs::metadata 跟随到目标目录的问题）
         remove_junction_readonly(lnk);
-        // 多级 fallback 删除旧 junction
         let deleted = junction::delete(lnk).is_ok()
             || rmdir_junction(lnk)
+            || powershell_remove_item(lnk)
             || fs::remove_dir(lnk).is_ok();
         if !deleted {
             tracing::warn!("移除旧 junction 失败: {}，尝试覆盖创建", lnk.display());
@@ -39,6 +39,19 @@ pub fn create_junction(src: &Path, lnk: &Path) -> Result<()> {
 
     set_readonly(lnk);
     Ok(())
+}
+
+/// 用 `pwsh Remove-Item -Force -LiteralPath` 删除 junction。
+/// PowerShell 的 Remove-Item 正确处理各种 reparse point 类型，
+/// 且 -Force 跳过 readonly 和隐藏属性检查。
+fn powershell_remove_item(lnk: &Path) -> bool {
+    let path = lnk.to_str().unwrap_or_default().replace('\'', "''");
+    let script = format!("Remove-Item -LiteralPath '{}' -Force -ErrorAction SilentlyContinue", path);
+    std::process::Command::new("pwsh")
+        .args(["-NoProfile", "-Command", &script])
+        .status()
+        .map(|s| s.success())
+        .unwrap_or(false)
 }
 
 /// 用 `cmd.exe /c rmdir` 删除 junction（Windows 原生，最可靠）。

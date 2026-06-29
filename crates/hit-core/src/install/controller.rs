@@ -318,6 +318,10 @@ pub fn uninstall(session: &Session, app: &str) -> Result<()> {
         // 用 find_latest_version_dir 作为 fallback
         let version = find_latest_version_dir(&app_dir).ok();
         crate::win::fs::remove_junction(&current_dir)?;
+        // 安全兜底：如果 current 仍存在（可能是普通目录残留），清理掉
+        if current_dir.exists() {
+            std::fs::remove_dir(&current_dir).ok();
+        }
         version.unwrap_or_else(|| app_dir.join("unknown"))
     } else {
         // 没有 junction，找最新的版本目录
@@ -532,7 +536,11 @@ fn run_hook_script(
 
     let mut body = script.joined();
     for (k, v) in var_map {
-        body = body.replace(k.as_str(), v.as_str());
+        // $global 是 PowerShell 内置变量，不应替换到脚本 body 中
+        // （preamble 已正确设置 $global=$false）
+        if k != "$global" {
+            body = body.replace(k.as_str(), v.as_str());
+        }
     }
 
     // 定义 Scoop 兼容的 PowerShell 变量，使 post_install 脚本能引用 $dir、$version 等

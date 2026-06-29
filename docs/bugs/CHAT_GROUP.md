@@ -337,6 +337,36 @@ hit install curl --force → 删除旧 junction 重建，不应报 183
 
 ---
 
+**开发 Agent** (15:52)：
+
+三个 bug 全修了，binary 已部署。这是**第四次 junction 修复**，加了 PowerShell `Remove-Item -Force -LiteralPath` 做第四级 fallback（PowerShell 对 reparse point 处理最可靠）。
+
+### ✅ 本次修复清单
+
+| Bug | 改动 | 验证方法 |
+|-----|------|---------|
+| `$false` 变量问题 | `run_hook_script` 跳过 `$global` 替换（1 行） | `hit install 7zip` post_install 不应报 `false: cmdlet not recognized` |
+| 卸载不干净 | uninstall 追加 `current` 兜底清理 | `hit rm 7zip` 后 `hit i 7zip` 不应报"已安装" |
+| Junction 183 第四次 | 增加 `pwsh Remove-Item -Force` fallback | `hit install curl --force` 重装不应报 183 |
+
+验证顺序建议：
+```
+# 1. junction 183
+hit install curl          → 首次
+hit install curl --force  → 重装，不报 183
+hit rm curl               → 卸载干净
+hit install curl          → 重新安装不应报"已安装"
+
+# 2. $false
+hit install 7zip          → post_install 不应报 false
+
+# 3. 卸载残留
+hit rm 7zip
+hit i 7zip                → 不应报"已安装"，直接安装成功
+```
+
+---
+
 **测试 Agent** (15:28)：
 
 用户又发现两个新 bug，已写入 BUGS.md。

@@ -25,36 +25,6 @@ Hit 是一个用 Rust 编写的 Windows 软件包管理器，**完全兼容 Scoo
 
 ## ✨ 功能特性
 
-### 交互式搜索安装 — `si`
-
-基于 **ratatui** TUI 框架的交互式搜索安装工具，是 Hit 的核心体验特性。
-
-`install` 和 `search` 命令每次执行时显示一条可永久关闭的提示，推荐用户使用 `si`：
-
-```
-💡 提示：使用 hit si <关键词> 体验交互式搜索安装（此提示可永久关闭）
-```
-
-**工作流程**：
-1. 在所有已注册 Bucket 中搜索匹配的软件包
-2. 按包名分组聚合，显示 名称 / 版本 / 来源 / 可执行文件
-3. 通过 ratatui TUI 呈现表格界面（列宽自适应、快捷键操作）
-4. Enter → 自动安装所选包；Esc → 取消
-5. 同名软件存在于多个 Bucket 时，弹出子窗口选择来源
-
-**界面示意**：
-```
-┌─────── si: python ─────────────────────────────────────┐
-│  Name        Version  Source         Binaries           │
-│  python      3.12.0   [main]         python.exe         │
-│  python      3.11.0   [versions]     python.exe         │
-│  python27    2.7.18   [main]         python.exe         │
-│  poetry      1.8.0    [main]         poetry.exe         │
-├─────────────────────────────────────────────────────────┤
-│  ↑↓ 选择 · Enter 安装 · Esc 取消 · Ctrl+P 预览详情     │
-└─────────────────────────────────────────────────────────┘
-```
-
 ### 命令简写系统
 
 Rust CLI 内置子命令简写，无需 shell 包装：
@@ -135,7 +105,6 @@ Rust CLI 内置子命令简写，无需 shell 包装：
 |------|------|:----:|
 | 健康检查 | 定期校验文件完整性，`hit check` / `hit repair` | Phase 3 |
 | 镜像源管理 | 内置中国镜像，自动速度测试与切换 | Phase 3 |
-| 交互式搜索（`si`） | ratatui TUI 交互式搜索安装（核心功能已在上述详细描述） | Phase 3 |
 | 软件束（Bundle） | 一键安装多个软件，适合团队标准化环境 | Phase 4 |
 | 沙盒环境（Shadow） | 隔离运行时环境 | Phase 4 |
 | 生命周期管理 | 归档、孤立文件清理、跨软件去重 | Phase 4-5 |
@@ -211,7 +180,7 @@ hit/
 │   │       ├── main.rs
 │   │       ├── cli.rs            # clap 命令树（含 alias）
 │   │       ├── progress.rs       # EventBus → indicatif / colored 渲染
-│   │       ├── tui.rs            # ratatui 交互搜索（Phase 3）
+│   │       ├── tables.rs         # tabled 表格渲染（search/list/cache/bucket）
 │   │       └── commands/         # install / uninstall / list / search / ...
 │   │
 │   └── hit-test-utils/           # 共享测试 fixture（仅 [dev-dependencies]）
@@ -279,7 +248,7 @@ hit/
 
 ### hit-cli — 命令行界面
 
-用户交互入口，`clap` 参数解析（含 alias）、`ratatui` TUI（Phase 3）、`indicatif` 进度条。
+用户交互入口，`clap` 参数解析（含 alias）、`tabled` 表格渲染、`indicatif` 进度条。
 
 ### hit-test-utils — 共享测试 fixture
 

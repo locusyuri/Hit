@@ -64,7 +64,7 @@ crates/
 │       ├── main.rs
 │       ├── cli.rs        # clap 命令树（含 alias：i/s/u/rm/ls/st/b/c）
 │       ├── progress.rs   # EventBus 订阅 → indicatif / colored 渲染
-│       ├── tui.rs        # ratatui 交互搜索（Phase 3）
+│       ├── tables.rs     # tabled 表格渲染（search/list/cache/bucket）
 │       └── commands/     # install.rs, uninstall.rs, list.rs, search.rs,
 │                         # info.rs, update.rs, bucket.rs, hold.rs, ...
 └── hit-test-utils/       # 共享测试 fixture（仅 [dev-dependencies]）
@@ -342,14 +342,15 @@ crates/
 | 3.2.2 | 实现速度测试   | 📋 | hit-core/download |
 | 3.2.3 | 自动选择最快源 | 📋 | 3.2.2             |
 
-### 3.3 交互式搜索
+### 3.3 CLI 表格渲染（tabled）
 
-> ratatui 选型已在 TECH_STACK.md 确认，替换原 dialoguer 方案。
+> 原 ratatui 交互式搜索（si 命令）已移除，改用 tabled 为 search/list/cache/bucket 命令提供自动表格渲染。
 
-| 序号  | 任务                     | 状态 | 依赖    |
+| 序号  | 任务                                                                                   | 状态 | 依赖    |
 | :--- | --- | :--: | --- |
-| 3.3.1 | 集成 TUI 交互界面（ratatui） | ✅ | ratatui |
-| 3.3.2 | 上下箭头选择，Enter 安装 | ✅ | 3.3.1   |
+| 3.3.1 | 新增 `tables.rs` 模块：使用 `#[derive(Tabled, Clone)]` 声明式定义 SearchRow、ListRow、CacheRow、BucketRow 4 种表格行类型 | ✅ | tabled |
+| 3.3.2 | 统一 search/list/cache/bucket 命令的表格输出：调用 `tables::print_*_table()` 函数渲染表格，移除手写 `println!` 格式化逻辑 | ✅ | 3.3.1  |
+| 3.3.3 | 移除 ratatui/crossterm/comfy-table 依赖，删除 `tui.rs` 和 `si` 命令                    | ✅ | -      |
 
 ---
 

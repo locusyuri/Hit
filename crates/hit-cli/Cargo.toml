@@ -19,8 +19,7 @@ tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 anyhow = { workspace = true }
 flume = { workspace = true }
-ratatui = { workspace = true }
-crossterm = "0.28"
+tabled = { workspace = true }
 
 [target.'cfg(windows)'.dependencies]
 junction = { workspace = true }

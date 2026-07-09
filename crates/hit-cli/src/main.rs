@@ -9,7 +9,7 @@ mod cli;
 mod commands;
 mod progress;
 mod welcome;
-mod tui;
+mod tables;
 
 use std::process::ExitCode;
 
@@ -68,7 +68,6 @@ fn run() -> anyhow::Result<()> {
         Command::Unhold(args) => commands::unhold::execute(args, &session),
         Command::Config(args) => commands::config::execute(args, &session),
         Command::Doctor(args) => commands::doctor::execute(args, &session),
-        Command::Si(args) => commands::si::execute(args, &session),
     };
 
     progress.stop();

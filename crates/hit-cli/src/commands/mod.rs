@@ -16,4 +16,3 @@ pub mod hold;
 pub mod unhold;
 pub mod config;
 pub mod doctor;
-pub mod si;

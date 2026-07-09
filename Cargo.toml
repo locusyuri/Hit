@@ -62,7 +62,7 @@ url = "2"
 clap = { version = "4", features = ["derive"] }
 indicatif = "0.17"
 colored = "2"
-ratatui = "0.29"
+tabled = "0.16"
 
 [profile.release]
 opt-level = 3

@@ -93,9 +93,6 @@ pub enum Command {
 
     /// 健康检查与修复
     Doctor(commands::doctor::Args),
-
-    /// 交互式搜索并安装
-    Si(commands::si::Args),
 }
 
 #[cfg(test)]

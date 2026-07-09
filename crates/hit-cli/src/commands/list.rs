@@ -1,8 +1,9 @@
 //! `hit list` — 列出已安装软件
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
 use hit_common::Session;
+
+use crate::tables::{self, ListRow};
 
 /// 列表参数
 #[derive(ClapArgs, Debug)]
@@ -18,49 +19,43 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     let packages = db.list_packages();
 
     // 按 filter 过滤
-    let filtered: Vec<_> = packages.iter().filter(|(name, _)| {
-        match &args.filter {
+    let filtered: Vec<_> = packages
+        .iter()
+        .filter(|(name, _)| match &args.filter {
             Some(f) => name.contains(f.as_str()),
             None => true,
-        }
-    }).collect();
+        })
+        .collect();
 
     if filtered.is_empty() {
         if args.filter.is_some() {
-            println!("没有匹配 '{}' 的已安装软件", args.filter.as_deref().unwrap_or(""));
+            println!(
+                "没有匹配 '{}' 的已安装软件",
+                args.filter.as_deref().unwrap_or("")
+            );
         } else {
             println!("没有已安装的软件");
         }
         return Ok(());
     }
 
-    // 表头
-    println!(
-        "{:<12} {:<10} {:<8} {:<10} {}",
-        "名称".bold(),
-        "版本".bold(),
-        "架构".bold(),
-        "Bucket".bold(),
-        "安装时间".bold()
-    );
+    let rows: Vec<ListRow> = filtered
+        .iter()
+        .map(|(name, pkg)| ListRow {
+            name: (*name).clone(),
+            version: pkg.version.clone(),
+            architecture: pkg.architecture.clone(),
+            bucket: pkg.bucket.clone(),
+            install_date: pkg.install_date.clone(),
+            held: if pkg.held {
+                "[held]".into()
+            } else {
+                String::new()
+            },
+        })
+        .collect();
 
-    for (name, pkg) in &filtered {
-        let held_mark = if pkg.held {
-            " [held]".yellow().to_string()
-        } else {
-            String::new()
-        };
-        println!(
-            "{:<12} {:<10} {:<8} {:<10} {}{held_mark}",
-            name,
-            pkg.version,
-            pkg.architecture,
-            pkg.bucket,
-            pkg.install_date,
-        );
-    }
-
-    println!("\n共 {} 个软件", filtered.len());
+    tables::print_list_table(&rows, &format!("共 {} 个软件", filtered.len()));
 
     Ok(())
 }

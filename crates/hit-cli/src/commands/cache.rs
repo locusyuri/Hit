@@ -4,6 +4,8 @@ use clap::{Args as ClapArgs, Subcommand};
 use colored::Colorize;
 use hit_common::Session;
 
+use crate::tables::{self, CacheRow};
+
 /// 缓存管理参数
 #[derive(ClapArgs, Debug)]
 pub struct Args {
@@ -44,31 +46,23 @@ fn cmd_list(session: &Session) -> anyhow::Result<()> {
         return Ok(());
     }
 
-    println!(
-        "{:<20} {:<10} {:<10} {}",
-        "软件".bold(),
-        "版本".bold(),
-        "大小".bold(),
-        "路径".bold()
-    );
-
     let mut total_size: u64 = 0;
-    for entry in &entries {
-        total_size += entry.size;
-        let size_str = format_bytes(entry.size);
-        println!(
-            "{:<20} {:<10} {:<10} {}",
-            entry.app,
-            entry.version,
-            size_str,
-            entry.path.display()
-        );
-    }
+    let rows: Vec<CacheRow> = entries
+        .iter()
+        .map(|e| {
+            total_size += e.size;
+            CacheRow {
+                app: e.app.clone(),
+                version: e.version.clone(),
+                size: format_bytes(e.size),
+                path: e.path.display().to_string(),
+            }
+        })
+        .collect();
 
-    println!(
-        "\n共 {} 个文件（{}）",
-        entries.len(),
-        format_bytes(total_size)
+    tables::print_cache_table(
+        &rows,
+        &format!("共 {} 个文件（{}）", rows.len(), format_bytes(total_size)),
     );
 
     Ok(())

@@ -6,6 +6,8 @@ use clap::{Args as ClapArgs, Subcommand};
 use colored::Colorize;
 use hit_common::Session;
 
+use crate::tables::{self, BucketRow};
+
 /// Bucket 管理参数
 #[derive(ClapArgs, Debug)]
 pub struct Args {
@@ -108,45 +110,25 @@ fn cmd_list(session: &Session) -> anyhow::Result<()> {
         return Ok(());
     }
 
-    println!(
-        "{}  {}  {}",
-        pad("名称", 20).bold(),
-        pad("Manifest", 10).bold(),
-        "描述".bold()
-    );
+    let rows: Vec<BucketRow> = buckets
+        .iter()
+        .map(|b| {
+            let count = b.manifest_count().unwrap_or(0);
+            let desc = b
+                .metadata
+                .as_ref()
+                .map(|m| m.description.as_str())
+                .unwrap_or("");
+            BucketRow {
+                name: b.name.clone(),
+                manifests: count.to_string(),
+                description: desc.to_string(),
+            }
+        })
+        .collect();
 
-    for bucket in &buckets {
-        let count = bucket.manifest_count().unwrap_or(0);
-        let desc = bucket
-            .metadata
-            .as_ref()
-            .map(|m| m.description.as_str())
-            .unwrap_or("");
-        println!(
-            "{}  {}  {}",
-            pad(&bucket.name, 20),
-            pad(&count.to_string(), 10),
-            desc
-        );
-    }
-
-    println!("\n共 {} 个 Bucket", buckets.len());
+    tables::print_bucket_table(&rows, &format!("共 {} 个 Bucket", buckets.len()));
     Ok(())
-}
-
-/// 按显示宽度右补空格对齐（CJK 全角字符占 2 列）
-fn pad(s: &str, width: usize) -> String {
-    let dw = display_width(s);
-    if dw >= width {
-        s.to_string()
-    } else {
-        format!("{s}{}", " ".repeat(width - dw))
-    }
-}
-
-/// 计算字符串的终端显示宽度（CJK 全角字符占 2，其余占 1）
-fn display_width(s: &str) -> usize {
-    s.chars().map(|c| if (c as u32) > 0x2E80 { 2 } else { 1 }).sum()
 }
 
 /// bucket update — 更新 Bucket

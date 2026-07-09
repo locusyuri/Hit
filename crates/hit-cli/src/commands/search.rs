@@ -1,9 +1,10 @@
 //! `hit search` — 搜索软件包
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
 use hit_common::Session;
 use hit_core::bucket::index::build_index;
+
+use crate::tables::{self, SearchRow};
 
 /// 搜索参数
 #[derive(ClapArgs, Debug)]
@@ -36,23 +37,16 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
         return Ok(());
     }
 
-    println!(
-        "{:<12} {:<10} {}",
-        "名称".bold(),
-        "版本".bold(),
-        "描述".bold()
-    );
+    let rows: Vec<SearchRow> = results
+        .iter()
+        .map(|p| SearchRow {
+            name: p.name.clone(),
+            version: p.version.clone(),
+            description: p.description.clone(),
+        })
+        .collect();
 
-    for pkg in &results {
-        println!(
-            "{:<12} {:<10} {}",
-            pkg.name,
-            pkg.version,
-            pkg.description
-        );
-    }
-
-    println!("\n共 {} 个结果", results.len());
+    tables::print_search_table(&rows, &format!("共 {} 个结果", results.len()));
 
     Ok(())
 }
@@ -89,6 +83,7 @@ mod tests {
         let args = Args {
             query: "git".into(),
             bucket: None,
+            desc: false,
         };
 
         let result = execute(&args, &session);
@@ -117,6 +112,7 @@ mod tests {
         let args = Args {
             query: "git".into(),
             bucket: None,
+            desc: false,
         };
 
         let result = execute(&args, &session);
@@ -140,6 +136,7 @@ mod tests {
         let args = Args {
             query: "git".into(),
             bucket: Some("extras".into()),
+            desc: false,
         };
 
         let result = execute(&args, &session);
@@ -162,6 +159,7 @@ mod tests {
         let args = Args {
             query: "git".into(),
             bucket: None,
+            desc: false,
         };
 
         let result = execute(&args, &session);

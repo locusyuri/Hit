@@ -21,6 +21,7 @@
 - ~~**快速创建 bucket 命令** — 新增 `hit bucket create` 命令，交互式引导用户创建自己的 bucket 仓库（初始化目录结构、生成 bucket.json、提示推送到 GitHub 等）。~~ ✅ **已列入 [PROJECT.md](./PROJECT.md)**
 - ~~**卸载 Hit 自身** — 通过 PowerShell 脚本实现两种卸载模式，与安装脚本 `install-hit.ps1` 对称：`uninstall-env.ps1`（模式1：只清理环境变量，保留已安装软件）和 `uninstall-hit.ps1`（模式2：彻底删除全部内容）。无需 CLI 子命令。~~ ✅ **已实现（脚本方案）**
 - ~~**tabled 美化 CLI 输出** — 将 `search`、`list`、`cache list`、`bucket list` 等命令的手写文本表格改为 `tabled` crate 自动渲染的表格，列宽自适应、对齐整齐、无需手写格式化逻辑，比 `println!` 拼接更美观且零维护成本。~~ ✅ **已实现**
+- **交互式搜索安装（`hit si`）** — 基于 TUI 框架（如 ratatui）的交互式搜索安装命令，在所有已注册 Bucket 中搜索匹配软件包，通过表格界面展示（名称/版本/来源/可执行文件），支持上下箭头选择、Enter 安装、Esc 取消、同名多 Bucket 来源选择。原 ratatui 实现已移除（对简单命令过重），待 TUI 框架选型稳定后重新实现。
 
 ---
 

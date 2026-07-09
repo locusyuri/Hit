@@ -7,7 +7,7 @@
 | CLI | clap | 参数解析 | ✅ 事实标准，稳定 |
 | CLI | indicatif | 进度条 | ✅ 事实标准 |
 | CLI | colored | 彩色输出 | ✅ 简单够用，不引入额外复杂度 |
-| CLI | ratatui | TUI 交互界面 | ✅ 生态最活跃的 Rust TUI 框架 |
+| CLI | tabled | 表格渲染 | ✅ 声明式 derive，零侵入，自动列宽对齐 |
 | Core | serde + sonic-rs | JSON 序列化 | ✅ sonic-rs 比 serde_json 快 1.5~2x |
 | Core | thiserror | 错误处理 | ✅ 事实标准 |
 | Core | petgraph | 依赖图 | ✅ 唯一成熟的依赖图库 |
@@ -69,15 +69,15 @@
 
 **迁移成本**：极低，sonic-rs 完全兼容 serde。
 
-### 🖥️ TUI：dialoguer → ratatui
+### 🖥️ 表格渲染：tabled
 
-| 对比 | dialoguer | ratatui |
-|------|-----------|---------|
-| 定位 | 简单交互提示 | 完整 TUI 框架 |
-| 表格 | ❌ 不支持 | ✅ 表格/列表/多列 |
-| 快捷键 | ❌ 有限 | ✅ 自定义按键绑定 |
-| 预览面板 | ❌ 不支持 | ✅ 分屏预览 |
-| 适用场景 | 简单 yes/no 选择 | `si` 交互搜索、进度面板 |
+原方案使用 ratatui 实现交互式搜索（si 命令），但对 search/list 等简单命令过于重量级。现改用 `tabled` crate 为 search/list/cache/bucket 命令提供自动表格渲染。
+
+**tabled 优势**：
+- 声明式 `#[derive(Tabled)]`，零侵入
+- 自动计算列宽、对齐、分区线
+- 无需 TUI event loop，直接从 `Vec<struct>` 输出格式化表格
+- 零运行时依赖，编译期生成表格布局代码
 
 ### ♻️ 存储：rusqlite → 纯 JSON 文件
 

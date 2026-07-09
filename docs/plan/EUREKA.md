@@ -21,7 +21,7 @@
 - ~~**快速创建 bucket 命令** — 新增 `hit bucket create` 命令，交互式引导用户创建自己的 bucket 仓库（初始化目录结构、生成 bucket.json、提示推送到 GitHub 等）。~~ ✅ **已列入 [PROJECT.md](./PROJECT.md)**
 - ~~**卸载 Hit 自身** — 通过 PowerShell 脚本实现两种卸载模式，与安装脚本 `install-hit.ps1` 对称：`uninstall-env.ps1`（模式1：只清理环境变量，保留已安装软件）和 `uninstall-hit.ps1`（模式2：彻底删除全部内容）。无需 CLI 子命令。~~ ✅ **已实现（脚本方案）**
 - ~~**tabled 美化 CLI 输出** — 将 `search`、`list`、`cache list`、`bucket list` 等命令的手写文本表格改为 `tabled` crate 自动渲染的表格，列宽自适应、对齐整齐、无需手写格式化逻辑，比 `println!` 拼接更美观且零维护成本。~~ ✅ **已实现**
-- **交互式搜索安装（`hit si`）** — 基于 TUI 框架（如 ratatui）的交互式搜索安装命令，在所有已注册 Bucket 中搜索匹配软件包，通过表格界面展示（名称/版本/来源/可执行文件），支持上下箭头选择、Enter 安装、Esc 取消、同名多 Bucket 来源选择。原 ratatui 实现已移除（对简单命令过重），待 TUI 框架选型稳定后重新实现。
+- **交互式搜索安装（`hit si`）** — 交互式搜索安装命令，在所有已注册 Bucket 中搜索匹配软件包，通过列表界面展示（名称/版本/来源/可执行文件），支持上下箭头选择、Enter 安装、Esc 取消、同名多 Bucket 来源选择。原 ratatui 实现已移除（全屏 TUI 过重），改用 **dialoguer**（内联选择器，fzf 风格交互，不接管终端）。
 
 ---
 
@@ -88,3 +88,65 @@
 4. **列宽自适应** — tabled 自动计算列宽、对齐、分区线，效果比手写 `println!` 好得多
 
 **现有依赖**：`tabled = "0.16"`（在 workspace Cargo.toml 中声明）。
+
+---
+
+### 🟡 **交互式搜索安装 `hit si`**（2026-07-09 重新评估）
+
+**需求**：`hit si <关键词>` 在所有已注册 Bucket 中搜索匹配软件包，提供交互式列表选择，Enter 安装、Esc 取消。
+
+**技术选型分析**：
+
+| 方案 | 交互模式 | 适用场景 | 评价 |
+|------|---------|---------|:----:|
+| ratatui | 全屏 TUI，接管终端 | 复杂多面板应用（htop、lazygit） | ❌ 过重，体验割裂 |
+| dialoguer | 内联选择器，fzf 风格 | 简单交互选择、确认 | ✅ **推荐** |
+| inquire | 内联选择器，功能丰富 | 自动补全、自定义渲染 | 🟡 备选 |
+| cliclack | 超轻量提示 | 最基础的 select/confirm | 🟡 备选 |
+
+**为什么 ratatui 不合适**：
+
+ratatui 是"终端应用框架"，设计哲学是构建持续运行的 TUI 应用（需要事件循环、状态管理、多面板）。对于 `hit si` 这种"输入命令 → 选择 → 退出"的一次性交互，全屏模式大材小用且体验割裂。
+
+**为什么 dialoguer 合适**：
+
+dialoguer 是"提示框库"，专为内联交互设计：
+- 在当前终端行下方渲染选择列表（不进入备用屏幕）
+- 无需事件循环，API 简单直接
+- 自动处理终端状态（光标、颜色、信号）
+- 支持 Select、MultiSelect、Input、Confirm 等组件
+
+**示例代码**：
+
+```rust
+use dialoguer::Select;
+
+let items = vec![
+    "python 3.12.0 [main]",
+    "python 3.11.0 [versions]",
+    "python27 2.7.18 [main]",
+];
+
+let selection = Select::new()
+    .with_prompt("选择要安装的软件（↑↓ 选择，Enter 确认，Esc 取消）")
+    .items(&items)
+    .default(0)
+    .interact_opt()?;  // 返回 Option<usize>，Esc 时为 None
+
+match selection {
+    Some(index) => { /* 安装选中的软件 */ }
+    None => { /* 用户取消 */ }
+}
+```
+
+**实施建议**：
+
+| 步骤 | 说明 |
+|------|------|
+| 1 | 添加依赖 `dialoguer = "0.11"` |
+| 2 | 在 `commands/si.rs` 中实现搜索逻辑（复用 `bucket::search()`） |
+| 3 | 用 dialoguer `Select` 渲染搜索结果列表 |
+| 4 | Enter 后调用 `install::execute()` 安装所选软件 |
+| 5 | 同名多 Bucket 时，二次 Select 选择来源 |
+
+**预计改动量**：约 50-80 行代码（vs ratatui 的 200+ 行）。

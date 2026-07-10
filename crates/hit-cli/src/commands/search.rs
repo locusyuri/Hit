@@ -3,6 +3,7 @@
 use clap::Args as ClapArgs;
 use hit_common::Session;
 use hit_core::bucket::index::build_index;
+use rusty_rich::{Console, Text};
 
 use crate::tables::{self, SearchRow};
 
@@ -33,7 +34,11 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     }
 
     if results.is_empty() {
-        println!("未找到匹配 '{}' 的软件", args.query);
+        let mut console = Console::new();
+        console.println(&Text::from_markup(&format!(
+            "[yellow]未找到匹配 '{}' 的软件[/yellow]",
+            args.query
+        )));
         return Ok(());
     }
 

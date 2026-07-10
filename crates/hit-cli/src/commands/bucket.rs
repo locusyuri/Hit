@@ -1,48 +1,35 @@
-//! `hit bucket` — 管理 Bucket 仓库
-
 use std::sync::atomic::AtomicBool;
 
 use clap::{Args as ClapArgs, Subcommand};
-use colored::Colorize;
 use hit_common::Session;
+use rusty_rich::{Console, Text};
 
 use crate::tables::{self, BucketRow};
 
-/// Bucket 管理参数
 #[derive(ClapArgs, Debug)]
 pub struct Args {
-    /// Bucket 子命令
     #[command(subcommand)]
     pub subcmd: BucketCmd,
 }
 
-/// Bucket 子子命令
 #[derive(Subcommand, Debug)]
 pub enum BucketCmd {
-    /// 添加 Bucket
     Add {
-        /// Bucket 名称
         name: String,
-        /// Bucket Git 仓库 URL（可选，默认使用已知 Bucket）
+        #[arg(short, long)]
         url: Option<String>,
     },
-    /// 移除 Bucket
     #[clap(alias = "rm")]
     Remove {
-        /// Bucket 名称
         name: String,
     },
-    /// 列出所有 Bucket
     #[clap(alias = "ls")]
     List,
-    /// 更新 Bucket
     Update {
-        /// 指定 Bucket 名称（留空则更新全部）
         name: Option<String>,
     },
 }
 
-/// 执行 Bucket 操作
 pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     match &args.subcmd {
         BucketCmd::Add { name, url } => cmd_add(session, name, url.as_deref()),
@@ -52,9 +39,7 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     }
 }
 
-/// bucket add — 添加新 Bucket
 fn cmd_add(session: &Session, name: &str, url: Option<&str>) -> anyhow::Result<()> {
-    // 查找 URL：优先使用参数，其次查找已知 bucket
     let bucket_url = match url {
         Some(u) => u.to_string(),
         None => hit_core::bucket::resolve_known_bucket(name)
@@ -71,14 +56,20 @@ fn cmd_add(session: &Session, name: &str, url: Option<&str>) -> anyhow::Result<(
         return Err(anyhow::anyhow!("Bucket '{name}' 已存在"));
     }
 
-    println!("{} 正在添加 bucket '{}'...", "添加".cyan().bold(), name);
+    let mut console = Console::new();
+    console.println(&Text::from_markup(&format!(
+        "[bold cyan]添加[/bold cyan] 正在添加 bucket '{}'...",
+        name
+    )));
     hit_core::bucket::clone_bucket(session, name, &bucket_url, &hit_core::bucket::CloneOptions::default(), &should_interrupt)?;
 
-    println!("{} bucket '{}' 添加完成", "✔".green().bold(), name);
+    console.println(&Text::from_markup(&format!(
+        "[bold green]✔[/bold green] bucket '{}' 添加完成",
+        name
+    )));
     Ok(())
 }
 
-/// bucket remove — 移除 Bucket
 fn cmd_remove(session: &Session, name: &str) -> anyhow::Result<()> {
     let target = session.buckets_path().join(name);
 
@@ -86,27 +77,33 @@ fn cmd_remove(session: &Session, name: &str) -> anyhow::Result<()> {
         return Err(anyhow::anyhow!("Bucket '{name}' 不存在"));
     }
 
-    println!("{} 正在移除 bucket '{}'...", "移除".cyan().bold(), name);
+    let mut console = Console::new();
+    console.println(&Text::from_markup(&format!(
+        "[bold cyan]移除[/bold cyan] 正在移除 bucket '{}'...",
+        name
+    )));
 
     std::fs::remove_dir_all(&target).map_err(|e| {
         anyhow::anyhow!("删除 bucket 目录失败：{e}")
     })?;
 
-    // 从 db.json 移除记录
     let mut db = hit_core::store::Db::load(&hit_core::store::db_path(session))?;
     db.remove_bucket(name);
     db.save()?;
 
-    println!("{} bucket '{}' 已移除", "✔".green().bold(), name);
+    console.println(&Text::from_markup(&format!(
+        "[bold green]✔[/bold green] bucket '{}' 已移除",
+        name
+    )));
     Ok(())
 }
 
-/// bucket list — 列出所有 Bucket
 fn cmd_list(session: &Session) -> anyhow::Result<()> {
     let buckets = hit_core::bucket::list_buckets(session)?;
 
     if buckets.is_empty() {
-        println!("没有已添加的 Bucket");
+        let mut console = Console::new();
+        console.println(&Text::from_markup("[yellow]没有已添加的 Bucket[/yellow]"));
         return Ok(());
     }
 
@@ -131,7 +128,6 @@ fn cmd_list(session: &Session) -> anyhow::Result<()> {
     Ok(())
 }
 
-/// bucket update — 更新 Bucket
 fn cmd_update(session: &Session, name: Option<&str>) -> anyhow::Result<()> {
     let should_interrupt = AtomicBool::new(false);
 
@@ -143,24 +139,35 @@ fn cmd_update(session: &Session, name: Option<&str>) -> anyhow::Result<()> {
     };
 
     if to_update.is_empty() {
-        println!("没有可更新的 Bucket");
+        let mut console = Console::new();
+        console.println(&Text::from_markup("[yellow]没有可更新的 Bucket[/yellow]"));
         return Ok(());
     }
 
+    let mut console = Console::new();
     let mut updated = 0;
     for bucket in &to_update {
         match hit_core::bucket::pull_bucket(session, &bucket.name, &should_interrupt) {
             Ok(_path) => {
                 updated += 1;
-                println!("  {} {}", "✔".green(), bucket.name);
+                console.println(&Text::from_markup(&format!(
+                    "  [green]✔[/green] {}",
+                    bucket.name
+                )));
             }
             Err(e) => {
-                println!("  {} {} 失败: {e}", "✘".red(), bucket.name);
+                console.println(&Text::from_markup(&format!(
+                    "  [red]✘[/red] {} 失败: {}",
+                    bucket.name, e
+                )));
             }
         }
     }
 
-    println!("\n{} Bucket 更新完成（{updated}/{}）", "✔".green(), to_update.len());
+    console.println(&Text::from_markup(&format!(
+        "\n[green]✔[/green] Bucket 更新完成（{updated}/{}）",
+        to_update.len()
+    )));
     Ok(())
 }
 

@@ -1,8 +1,8 @@
 //! `hit status` — 查看系统状态
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
 use hit_common::Session;
+use rusty_rich::{Console, Text};
 
 /// 状态参数
 #[derive(ClapArgs, Debug)]
@@ -27,13 +27,13 @@ pub fn execute(_args: &Args, session: &Session) -> anyhow::Result<()> {
     let cache_count = cache_entries.len();
     let cache_size: u64 = cache_entries.iter().map(|e| e.size).sum();
 
-    // 输出（使用 Unicode 显示宽度对齐，中文字符占 2 列）
-    println!(
-        "{} {}",
-        "Hit".bold().cyan(),
+    let mut console = Console::new();
+    console.println(&Text::from_markup(&format!(
+        "[bold cyan]Hit[/bold cyan] {}",
         env!("CARGO_PKG_VERSION")
-    );
-    println!();
+    )));
+    console.println(&Text::new(""));
+
     let rows: Vec<(&str, String)> = vec![
         ("已安装软件:", installed_count.to_string()),
         ("Bucket 数量:", bucket_count.to_string()),
@@ -41,11 +41,15 @@ pub fn execute(_args: &Args, session: &Session) -> anyhow::Result<()> {
         ("缓存文件:", format!("{} ({})", cache_count, format_bytes(cache_size))),
         ("根目录:", session.root_path().display().to_string()),
     ];
-    // 计算标签列最大显示宽度
     let max_label_w = rows.iter().map(|(l, _)| display_width(l)).max().unwrap_or(0);
     for (label, value) in &rows {
         let pad = max_label_w - display_width(label);
-        println!("  {}{}  {}", label.bold(), " ".repeat(pad), value);
+        console.println(&Text::from_markup(&format!(
+            "  [bold]{}{}[/bold]  {}",
+            label,
+            " ".repeat(pad),
+            value
+        )));
     }
 
     Ok(())

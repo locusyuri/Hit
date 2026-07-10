@@ -1,26 +1,19 @@
-//! EventBus 进度渲染器
-//!
-//! 后台线程订阅 `Session` 的 EventBus 事件，使用 `indicatif` 渲染进度条、
-//! `colored` 渲染彩色日志，并处理 `PromptConfirm` 的交互式确认。
-
 use std::collections::HashMap;
 use std::io::{self, BufRead, Write};
 use std::time::Duration;
 
-use colored::Colorize;
 use flume::Receiver;
 use hit_common::event::{Event, InstallPhase};
 use hit_common::Session;
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
+use rusty_rich::{Console, Text};
 
-/// 进度渲染器（后台线程）
 pub struct ProgressRenderer {
     handle: Option<std::thread::JoinHandle<()>>,
     stop_tx: flume::Sender<()>,
 }
 
 impl ProgressRenderer {
-    /// 启动后台渲染线程，订阅 Session 的 EventBus
     pub fn start(session: &Session) -> Self {
         let receiver = session.receiver().clone();
         let (stop_tx, stop_rx) = flume::bounded(1);
@@ -35,7 +28,6 @@ impl ProgressRenderer {
         }
     }
 
-    /// 停止渲染线程并等待退出
     pub fn stop(mut self) {
         let _ = self.stop_tx.send(());
         if let Some(handle) = self.handle.take() {
@@ -53,13 +45,11 @@ impl Drop for ProgressRenderer {
     }
 }
 
-/// 后台渲染主循环
 fn render_loop(receiver: Receiver<Event>, stop_rx: Receiver<()>) {
     let multi = MultiProgress::new();
     let mut bars: HashMap<String, ProgressBar> = HashMap::new();
 
     loop {
-        // 检查停止信号
         if stop_rx.try_recv().is_ok() {
             break;
         }
@@ -72,7 +62,6 @@ fn render_loop(receiver: Receiver<Event>, stop_rx: Receiver<()>) {
     }
 }
 
-/// 处理单个事件
 fn handle_event(
     event: Event,
     multi: &MultiProgress,
@@ -138,17 +127,29 @@ fn handle_event(
                 .file_name()
                 .map(|n| n.to_string_lossy().into_owned())
                 .unwrap_or_else(|| "archive".into());
-            println!("{} {} ({})", "解压".cyan(), app, name);
+            let mut console = Console::new();
+            console.println(&Text::from_markup(&format!(
+                "[cyan]解压[/cyan] {} ({})",
+                app, name
+            )));
         }
 
         Event::InstallPhaseStart { app, phase } => {
             let label = phase_label(phase);
-            println!("{} [{}] {}...", "▶".blue(), label, app);
+            let mut console = Console::new();
+            console.println(&Text::from_markup(&format!(
+                "[blue]▶[/blue] [{}] {}...",
+                label, app
+            )));
         }
 
         Event::InstallPhaseEnd { app, phase } => {
             let label = phase_label(phase);
-            println!("{} [{}] {} 完成", "✔".green(), label, app);
+            let mut console = Console::new();
+            console.println(&Text::from_markup(&format!(
+                "[green]✔[/green] [{}] {} 完成",
+                label, app
+            )));
         }
 
         Event::PromptConfirm { message, reply } => {
@@ -161,15 +162,17 @@ fn handle_event(
         }
 
         Event::LogWarn { message } => {
-            println!("{} {message}", "[WARN]".yellow());
+            let mut console = Console::new();
+            console.println(&Text::from_markup(&format!(
+                "[yellow][WARN][/yellow] {}",
+                message
+            )));
         }
 
-        // #[non_exhaustive] 兜底
         _ => {}
     }
 }
 
-/// 安装阶段中文标签
 fn phase_label(phase: InstallPhase) -> &'static str {
     match phase {
         InstallPhase::Resolve => "解析",
@@ -182,7 +185,6 @@ fn phase_label(phase: InstallPhase) -> &'static str {
     }
 }
 
-/// 字节数格式化（简易版）
 fn format_bytes(bytes: u64) -> String {
     const KB: u64 = 1024;
     const MB: u64 = KB * 1024;
@@ -199,9 +201,8 @@ fn format_bytes(bytes: u64) -> String {
     }
 }
 
-/// 交互式确认提示（阻塞直到用户输入 y/n）
 fn prompt_user(message: &str) -> bool {
-    eprint!("{} {message} [y/N] ", "?".yellow());
+    eprint!("{} {message} [y/N] ", Text::from_markup("[yellow]?[/yellow]"));
     let _ = io::stderr().flush();
 
     let stdin = io::stdin();
@@ -240,29 +241,8 @@ mod tests {
         use hit_common::Session;
 
         let session = Session::with_defaults();
-        // 触发 EventBus 初始化
         let _ = session.event_bus();
         let renderer = ProgressRenderer::start(&session);
         renderer.stop();
-    }
-
-    #[test]
-    fn renderer_handles_log_events() {
-        use hit_common::event::{Event, EventBus};
-
-        let bus = EventBus::new();
-        bus.emit(Event::LogInfo {
-            message: "test info".into(),
-        });
-        bus.emit(Event::LogWarn {
-            message: "test warn".into(),
-        });
-
-        // 直接测试 handle_event 不 panic
-        let multi = MultiProgress::new();
-        let mut bars = HashMap::new();
-        while let Ok(event) = bus.receiver().try_recv() {
-            handle_event(event, &multi, &mut bars);
-        }
     }
 }

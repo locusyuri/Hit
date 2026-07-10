@@ -2,6 +2,7 @@
 
 use clap::Args as ClapArgs;
 use hit_common::Session;
+use rusty_rich::{Console, Text};
 
 use crate::tables::{self, ListRow};
 
@@ -34,13 +35,14 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     tracing::info!(filtered = filtered.len(), "过滤后数量");
 
     if filtered.is_empty() {
+        let mut console = Console::new();
         if args.filter.is_some() {
-            println!(
-                "没有匹配 '{}' 的已安装软件",
+            console.println(&Text::from_markup(&format!(
+                "[yellow]没有匹配 '{}' 的已安装软件[/yellow]",
                 args.filter.as_deref().unwrap_or("")
-            );
+            )));
         } else {
-            println!("没有已安装的软件");
+            console.println(&Text::from_markup("[yellow]没有已安装的软件[/yellow]"));
         }
         return Ok(());
     }

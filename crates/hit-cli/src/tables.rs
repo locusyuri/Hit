@@ -1,64 +1,9 @@
-//! 共享表格行类型和渲染辅助函数
-//!
-//! 使用 `tabled` crate 渲染表格，列宽自适应、对齐整齐。
+use rusty_rich::{Cell, Column, Console, Table};
 
-use tabled::{builder::Builder, Table, Tabled};
-
-/// 搜索结果行
-#[derive(Tabled, Clone)]
-pub struct SearchRow {
-    #[tabled(rename = "名称")]
-    pub name: String,
-    #[tabled(rename = "版本")]
-    pub version: String,
-    #[tabled(rename = "描述")]
-    pub description: String,
-}
-
-/// 已安装软件行
-#[derive(Tabled, Clone)]
-pub struct ListRow {
-    #[tabled(rename = "名称")]
-    pub name: String,
-    #[tabled(rename = "版本")]
-    pub version: String,
-    #[tabled(rename = "架构")]
-    pub architecture: String,
-    #[tabled(rename = "Bucket")]
-    pub bucket: String,
-    #[tabled(rename = "安装时间")]
-    pub install_date: String,
-    #[tabled(rename = "状态")]
-    pub held: String,
-}
-
-/// 缓存文件行
-#[derive(Tabled, Clone)]
-pub struct CacheRow {
-    #[tabled(rename = "软件")]
-    pub app: String,
-    #[tabled(rename = "版本")]
-    pub version: String,
-    #[tabled(rename = "大小")]
-    pub size: String,
-    #[tabled(rename = "路径")]
-    pub path: String,
-}
-
-/// Bucket 行
-#[derive(Tabled, Clone)]
-pub struct BucketRow {
-    #[tabled(rename = "名称")]
-    pub name: String,
-    #[tabled(rename = "Manifest")]
-    pub manifests: String,
-    #[tabled(rename = "描述")]
-    pub description: String,
-}
+use crate::output::header_style;
 
 const MAX_DESC_WIDTH: usize = 40;
 
-/// 截断字符串到指定长度，超出部分用 `…` 替换
 fn truncate(s: &str, max_len: usize) -> String {
     if s.len() <= max_len {
         s.to_string()
@@ -67,62 +12,148 @@ fn truncate(s: &str, max_len: usize) -> String {
     }
 }
 
-/// 渲染搜索结果表格
+pub struct SearchRow {
+    pub name: String,
+    pub version: String,
+    pub description: String,
+}
+
+pub struct ListRow {
+    pub name: String,
+    pub version: String,
+    pub architecture: String,
+    pub bucket: String,
+    pub install_date: String,
+    pub held: String,
+}
+
+pub struct CacheRow {
+    pub app: String,
+    pub version: String,
+    pub size: String,
+    pub path: String,
+}
+
+pub struct BucketRow {
+    pub name: String,
+    pub manifests: String,
+    pub description: String,
+}
+
 pub fn print_search_table(rows: &[SearchRow], title: &str) {
     if rows.is_empty() {
         println!("{title}");
         return;
     }
 
-    let mut builder = Builder::default();
-    builder.push_record(["名称", "版本", "描述"]);
+    let mut console = Console::new();
+    let mut table = Table::new();
+
+    let header_style = header_style();
+    table.add_column(Column::new("名称").style(header_style.clone()));
+    table.add_column(Column::new("版本").style(header_style.clone()));
+    table.add_column(Column::new("描述").style(header_style));
+
     for row in rows {
-        builder.push_record([
-            &row.name,
-            &row.version,
-            &truncate(&row.description, MAX_DESC_WIDTH),
+        table.add_row(vec![
+            Cell::from(row.name.clone()),
+            Cell::from(row.version.clone()),
+            Cell::from(truncate(&row.description, MAX_DESC_WIDTH)),
         ]);
     }
 
-    let table = builder.build().to_string();
-    println!("{table}");
-    println!("\n{title}");
+    console.println(&table);
+    console.print_str(title);
+    console.print_str("\n");
 }
 
-/// 渲染已安装软件表格
 pub fn print_list_table(rows: &[ListRow], title: &str) {
     if rows.is_empty() {
         println!("{title}");
         return;
     }
 
-    let table = Table::new(rows.to_vec()).to_string();
-    println!("{table}");
-    println!("\n{title}");
+    let mut console = Console::new();
+    let mut table = Table::new();
+
+    let header_style = header_style();
+    table.add_column(Column::new("名称").style(header_style.clone()));
+    table.add_column(Column::new("版本").style(header_style.clone()));
+    table.add_column(Column::new("架构").style(header_style.clone()));
+    table.add_column(Column::new("Bucket").style(header_style.clone()));
+    table.add_column(Column::new("安装时间").style(header_style.clone()));
+    table.add_column(Column::new("状态").style(header_style));
+
+    for row in rows {
+        table.add_row(vec![
+            Cell::from(row.name.clone()),
+            Cell::from(row.version.clone()),
+            Cell::from(row.architecture.clone()),
+            Cell::from(row.bucket.clone()),
+            Cell::from(row.install_date.clone()),
+            Cell::from(row.held.clone()),
+        ]);
+    }
+
+    console.println(&table);
+    console.print_str(title);
+    console.print_str("\n");
 }
 
-/// 渲染缓存表格
 pub fn print_cache_table(rows: &[CacheRow], title: &str) {
     if rows.is_empty() {
         println!("{title}");
         return;
     }
 
-    let table = Table::new(rows.to_vec()).to_string();
-    println!("{table}");
-    println!("\n{title}");
+    let mut console = Console::new();
+    let mut table = Table::new();
+
+    let header_style = header_style();
+    table.add_column(Column::new("软件").style(header_style.clone()));
+    table.add_column(Column::new("版本").style(header_style.clone()));
+    table.add_column(Column::new("大小").style(header_style.clone()));
+    table.add_column(Column::new("路径").style(header_style));
+
+    for row in rows {
+        table.add_row(vec![
+            Cell::from(row.app.clone()),
+            Cell::from(row.version.clone()),
+            Cell::from(row.size.clone()),
+            Cell::from(row.path.clone()),
+        ]);
+    }
+
+    console.println(&table);
+    console.print_str(title);
+    console.print_str("\n");
 }
 
-/// 渲染 Bucket 表格
 pub fn print_bucket_table(rows: &[BucketRow], title: &str) {
     if rows.is_empty() {
         println!("{title}");
         return;
     }
 
-    let table = Table::new(rows.to_vec()).to_string();
-    println!("{table}");
-    println!("\n{title}");
+    let mut console = Console::new();
+    let mut table = Table::new();
+
+    let header_style = header_style();
+    table.add_column(Column::new("名称").style(header_style.clone()));
+    table.add_column(Column::new("Manifest").style(header_style.clone()));
+    table.add_column(Column::new("描述").style(header_style));
+
+    for row in rows {
+        table.add_row(vec![
+            Cell::from(row.name.clone()),
+            Cell::from(row.manifests.clone()),
+            Cell::from(row.description.clone()),
+        ]);
+    }
+
+    console.println(&table);
+    console.print_str(title);
+    console.print_str("\n");
 }
 
 #[cfg(test)]

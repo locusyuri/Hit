@@ -20,6 +20,7 @@ tracing-subscriber = { workspace = true }
 anyhow = { workspace = true }
 flume = { workspace = true }
 tabled = { workspace = true }
+rusty-rich = { workspace = true }
 
 [target.'cfg(windows)'.dependencies]
 junction = { workspace = true }

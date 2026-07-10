@@ -7,6 +7,7 @@
 
 mod cli;
 mod commands;
+mod output;
 mod progress;
 mod welcome;
 mod tables;
@@ -14,7 +15,7 @@ mod tables;
 use std::process::ExitCode;
 
 use clap::Parser;
-use colored::Colorize;
+use rusty_rich::{Console, Text};
 
 use cli::{Cli, Command};
 use progress::ProgressRenderer;
@@ -23,13 +24,20 @@ fn main() -> ExitCode {
     match run() {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
+            let mut console = Console::new();
             let err_str = e.to_string();
             let err_str = filter_clap_suggestion(&err_str);
-            eprintln!("{}: {}", "错误".red(), err_str);
+            console.println(&Text::from_markup(&format!(
+                "[red]错误[/red]: {}",
+                err_str
+            )));
             for cause in e.chain().skip(1) {
                 let cause_str = cause.to_string();
                 let cause_str = filter_clap_suggestion(&cause_str);
-                eprintln!("  {}: {}", "原因".red(), cause_str);
+                console.println(&Text::from_markup(&format!(
+                    "  [red]原因[/red]: {}",
+                    cause_str
+                )));
             }
             ExitCode::FAILURE
         }

@@ -1,10 +1,10 @@
 //! `hit info` — 查看软件包详情
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
 use hit_common::Session;
 use hit_core::bucket::index::build_index;
 use hit_core::manifest::{parse_str, supported_architectures};
+use rusty_rich::{Console, Text};
 
 /// info 参数
 #[derive(ClapArgs, Debug)]
@@ -59,31 +59,52 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
         )
     })?;
 
-    // 格式化输出
-    println!("{}:        {}", "名称".bold(), summary.name);
-    println!("{}:        {}", "版本".bold(), manifest.version);
-    println!("{}:        {}", "描述".bold(), manifest.description);
-    println!("{}:      {}", "主页".bold(), manifest.homepage);
-    println!("{}:      {:?}", "许可证".bold(), manifest.license);
+    let mut console = Console::new();
+    console.println(&Text::from_markup(&format!(
+        "[bold cyan]名称[/bold cyan]:        {}",
+        summary.name
+    )));
+    console.println(&Text::from_markup(&format!(
+        "[bold cyan]版本[/bold cyan]:        {}",
+        manifest.version
+    )));
+    console.println(&Text::from_markup(&format!(
+        "[bold cyan]描述[/bold cyan]:        {}",
+        manifest.description
+    )));
+    console.println(&Text::from_markup(&format!(
+        "[bold cyan]主页[/bold cyan]:      {}",
+        manifest.homepage
+    )));
+    console.println(&Text::from_markup(&format!(
+        "[bold cyan]许可证[/bold cyan]:      {:?}",
+        manifest.license
+    )));
 
-    // 架构
     let archs = supported_architectures(&manifest);
     if archs.is_empty() {
-        println!("{}:    无", "架构".bold());
+        console.println(&Text::from_markup("[bold cyan]架构[/bold cyan]:    无"));
     } else {
         let arch_strs: Vec<&str> = archs.iter().map(|a| a.scoop_key()).collect();
-        println!("{}:    {}", "架构".bold(), arch_strs.join(", "));
+        console.println(&Text::from_markup(&format!(
+            "[bold cyan]架构[/bold cyan]:    {}",
+            arch_strs.join(", ")
+        )));
     }
 
-    // 依赖
     if manifest.depends_list().is_empty() {
-        println!("{}:      无", "依赖".bold());
+        console.println(&Text::from_markup("[bold cyan]依赖[/bold cyan]:      无"));
     } else {
-        println!("{}:      {}", "依赖".bold(), manifest.depends_list().join(", "));
+        console.println(&Text::from_markup(&format!(
+            "[bold cyan]依赖[/bold cyan]:      {}",
+            manifest.depends_list().join(", ")
+        )));
     }
 
-    // Bucket
-    println!("{}:      {}", "Bucket".bold(), summary.bucket);
+    console.println(&Text::from_markup(&format!(
+        "[bold cyan]Bucket[/bold cyan]:      {}",
+        summary.bucket
+    )));
 
     Ok(())
 }

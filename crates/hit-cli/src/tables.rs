@@ -2,7 +2,7 @@
 //!
 //! 使用 `tabled` crate 渲染表格，列宽自适应、对齐整齐。
 
-use tabled::{Table, Tabled};
+use tabled::{builder::Builder, Table, Tabled};
 
 /// 搜索结果行
 #[derive(Tabled, Clone)]
@@ -56,6 +56,17 @@ pub struct BucketRow {
     pub description: String,
 }
 
+const MAX_DESC_WIDTH: usize = 40;
+
+/// 截断字符串到指定长度，超出部分用 `…` 替换
+fn truncate(s: &str, max_len: usize) -> String {
+    if s.len() <= max_len {
+        s.to_string()
+    } else {
+        s.chars().take(max_len - 1).collect::<String>() + "…"
+    }
+}
+
 /// 渲染搜索结果表格
 pub fn print_search_table(rows: &[SearchRow], title: &str) {
     if rows.is_empty() {
@@ -63,7 +74,17 @@ pub fn print_search_table(rows: &[SearchRow], title: &str) {
         return;
     }
 
-    let table = Table::new(rows.to_vec()).to_string();
+    let mut builder = Builder::default();
+    builder.push_record(["名称", "版本", "描述"]);
+    for row in rows {
+        builder.push_record([
+            &row.name,
+            &row.version,
+            &truncate(&row.description, MAX_DESC_WIDTH),
+        ]);
+    }
+
+    let table = builder.build().to_string();
     println!("{table}");
     println!("\n{title}");
 }

@@ -3,6 +3,7 @@
 use clap::Args as ClapArgs;
 use colored::Colorize;
 use hit_common::Session;
+use hit_core::win::fs::{create_junction, remove_junction};
 
 /// 健康检查参数
 #[derive(ClapArgs, Debug)]
@@ -70,11 +71,24 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
             }
 
             match &issue.issue {
+                hit_core::health::IssueType::MissingAppDir => {
+                    let db_path = hit_core::store::db_path(session);
+                    if let Ok(mut db) = hit_core::store::Db::load(&db_path) {
+                        db.remove_package(&issue.app);
+                        if let Ok(()) = db.save() {
+                            fixed += 1;
+                            println!("  {} {} 已移除孤立记录", "✔".green(), issue.app);
+                        } else {
+                            println!("  {} {} 修复失败: 保存数据库失败", "✗".red(), issue.app);
+                        }
+                    } else {
+                        println!("  {} {} 修复失败: 加载数据库失败", "✗".red(), issue.app);
+                    }
+                }
                 hit_core::health::IssueType::MissingCurrent => {
-                    // 尝试找到最新版本目录并重建 junction
                     #[cfg(windows)]
                     if let Some(version_dir) = find_latest_version(issue.path.parent().unwrap()) {
-                        match junction::create(&version_dir, &issue.path) {
+                        match create_junction(&version_dir, &issue.path) {
                             Ok(()) => {
                                 fixed += 1;
                                 println!("  {} {} → {}", "✔".green(), issue.app, version_dir.display());
@@ -88,12 +102,11 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
                     { let _ = issue; }
                 }
                 hit_core::health::IssueType::BrokenJunction => {
-                    // 删除旧 junction 并重建
                     #[cfg(windows)]
                     {
-                        let _ = junction::delete(&issue.path);
+                        let _ = remove_junction(&issue.path);
                         if let Some(version_dir) = find_latest_version(issue.path.parent().unwrap()) {
-                            match junction::create(&version_dir, &issue.path) {
+                            match create_junction(&version_dir, &issue.path) {
                                 Ok(()) => {
                                     fixed += 1;
                                     println!("  {} {} → {}", "✔".green(), issue.app, version_dir.display());

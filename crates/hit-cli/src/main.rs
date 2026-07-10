@@ -23,19 +23,33 @@ fn main() -> ExitCode {
     match run() {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
-            eprintln!("{}: {e}", "错误".red());
+            let err_str = e.to_string();
+            let err_str = filter_clap_suggestion(&err_str);
+            eprintln!("{}: {}", "错误".red(), err_str);
             for cause in e.chain().skip(1) {
-                eprintln!("  {}: {cause}", "原因".red());
+                let cause_str = cause.to_string();
+                let cause_str = filter_clap_suggestion(&cause_str);
+                eprintln!("  {}: {}", "原因".red(), cause_str);
             }
             ExitCode::FAILURE
         }
     }
 }
 
+/// 过滤 clap 错误信息中的相似子命令建议，避免误导用户
+fn filter_clap_suggestion(msg: &str) -> String {
+    msg.lines()
+        .filter(|line| !line.starts_with("  tip: a similar subcommand exists"))
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
 fn run() -> anyhow::Result<()> {
-    // clap 必须先解析：让 clap 处理 --help / 无子命令 / 错误命令 / 缺参数，
-    // 直接报错退出，不被 welcome 拦截（修 BUGS.md "clap 错误被 welcome 吞掉"）
-    let cli = Cli::parse();
+    let cli = Cli::try_parse().map_err(|e| {
+        let err_str = e.to_string();
+        let filtered = filter_clap_suggestion(&err_str);
+        anyhow::anyhow!("{}", filtered)
+    })?;
 
     init_tracing(cli.verbose);
 

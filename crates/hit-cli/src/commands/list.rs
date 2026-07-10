@@ -14,9 +14,14 @@ pub struct Args {
 
 /// 执行列表
 pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
+    tracing::info!("列出已安装软件");
+    tracing::debug!(filter = ?args.filter, "列表过滤条件");
+
     let db = hit_core::store::Db::load(&hit_core::store::db_path(session))?;
+    tracing::trace!(db_path = ?hit_core::store::db_path(session), "数据库路径");
 
     let packages = db.list_packages();
+    tracing::debug!(total = packages.len(), "软件总数");
 
     // 按 filter 过滤
     let filtered: Vec<_> = packages
@@ -26,6 +31,7 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
             None => true,
         })
         .collect();
+    tracing::info!(filtered = filtered.len(), "过滤后数量");
 
     if filtered.is_empty() {
         if args.filter.is_some() {

@@ -3,18 +3,14 @@
 ## 0. 先和大家打个招呼吧 👋
 
 * **我是谁：** 
-  我是 locusyuri（在 CNB 云原生平台上也是 @catmono 的主要维护者之一），一名热爱系统级工具开发的独立开发者。
+  我是 CatMono，一名热爱系统级工具开发的独立开发者。
 
 * **我是怎么用 TRAE 把 Demo 做出来的：**
   作为日常高频使用 Windows 进行开发的技术人员，配置环境、安装依赖和管理各种软件版本是一件极其琐碎却高频的事。之前用 Scoop 等包管理器时，总是遇到 PowerShell 脚本冷启动慢、PATH 容易被污染、版本锁定和多版本切换繁琐等痛点。于是，我萌生了用 Rust 重写一个包管理器的想法，这便是 **Hit**。
   
-  在这段开发历程中，**TRAE** 扮演了我无可替代的“结对编程专家”。虽然我有清晰的架构思路，但要从零编写一个高效且零外部依赖的 Windows 运行时代理（Shim），并实现流畅的交互式 TUI 搜索、多版本切换和自修复功能，工作量极其庞大。
-
-  我通过 **TRAE 的 Auto 模式**，将我脑子里的需求模块“一句句”讲给它听。例如：
-  - “我需要用 Rust 实现一个极度精简、零依赖的 Windows `.shim` 代理，它需要读取 sidecar 配置并极速转发进程。”
-  - “帮我优化 `hit si` 命令的 TUI 交互体验。我们原本使用 `ratatui` 实现，但在 Windows 控制台下显得有些笨重，我们能不能换成 `dialoguer` 或者使用 `tabled` 重构表格渲染？”
+  在这段开发历程中，**TRAE** 扮演了我无可替代的“结对编程专家”。虽然我有清晰的架构思路，但要从零编写一个高效且零外部依赖的 Windows 运行时代理（Shim），并实现流畅的交互式搜索、多版本切换和自修复功能，工作量极其庞大。
   
-  TRAE 不仅能完美理解我的意图，而且每一次的代码重构（比如从 `ratatui` 迁移到 `tabled` 优化表格显示）都准而快。它帮我跨过了最枯燥的底层系统调用封装（如 Windows Junction/Symlink 链接修复）以及大量自动化测试脚本编写的坎，让我能把全部精力集中在架构设计、交互逻辑和核心算法上。与 TRAE 配合的感受就是：**灵感能以 10 倍速落地，编程的摩擦感彻底消失了！**
+  TRAE 不仅能完美理解我的意图，而且每一次的代码重构（比如从 `rusty-rich` 迁移到 `tabled` 优化表格显示）都准而快。它帮我跨过了最枯燥的底层系统调用封装（如 Windows Junction/Symlink 链接修复）以及大量自动化测试脚本编写的坎，让我能把全部精力集中在架构设计、交互逻辑和核心算法上。与 TRAE 配合的感受就是：**灵感能以 10 倍速落地，编程的摩擦感彻底消失了！**
 
 ---
 
@@ -69,7 +65,6 @@
 
 * **国内极速访问镜像 & 云原生构建（CNB）：**
   👉 [catmono/Hit (CNB · Cloud Native Build)](https://cnb.cool/catmono/Hit)
-  *(我们在 CNB 上集成了自动化 CI/CD，虽然目前的 pipeline 因特定配置正在调试，但完全不影响国内用户直接在此流畅拉取最新 Rust 源码构建体验。)*
 
 ---
 
@@ -79,28 +74,28 @@
 
 ### 开发过程截图
 
-#### 1. TRAE 协助实现表格渲染模块
+#### 1. TRAE 协助自动化测试
 ![TRAE 开发截图1](https://locus622.oss-cn-beijing.aliyuncs.com/material/trae1.png?x-oss-credential=LTAI5tEEsQCmu7iQx23XbFi9%2F20260710%2Fcn-beijing%2Foss%2Faliyun_v4_request&x-oss-date=20260710T132935Z&x-oss-expires=604800&x-oss-signature=c0164719dcb6e84e21f435bd12f6108319df97efa008e386187ea20a1dc2933b&x-oss-signature-version=OSS4-HMAC-SHA256)
 
-#### 2. TRAE 协助修复 Windows Junction 链接问题
+#### 2. TRAE 协助修复 BUG
 ![TRAE 开发截图2](https://locus622.oss-cn-beijing.aliyuncs.com/material/trae2.png?x-oss-credential=LTAI5tEEsQCmu7iQx23XbFi9%2F20260710%2Fcn-beijing%2Foss%2Faliyun_v4_request&x-oss-date=20260710T132935Z&x-oss-expires=604800&x-oss-signature=98d9487b5b38b114d3bf21485a5cb09cc2f8c8c1fa98a8d8149a04b11813d3e6&x-oss-signature-version=OSS4-HMAC-SHA256)
 
-#### 3. TRAE 协助编写自动化测试用例
+#### 3. TRAE 协助编写色彩渲染功能
 ![TRAE 开发截图3](https://locus622.oss-cn-beijing.aliyuncs.com/material/trae3.png?x-oss-credential=LTAI5tEEsQCmu7iQx23XbFi9%2F20260710%2Fcn-beijing%2Foss%2Faliyun_v4_request&x-oss-date=20260710T132935Z&x-oss-expires=604800&x-oss-signature=89a32ccdeb2ad12ed0eb743bb50efeeccc9201ac50124f6fed4c6932b3a13a5e&x-oss-signature-version=OSS4-HMAC-SHA256)
 
 ### 关键步骤与 Session ID 记录：
 
 #### 1. 🌟 功能开发（Feature Development）
 - **核心任务**：使用 `tabled` 库替换 `ratatui` 实现超轻量、美观的命令行表格渲染，为 search/list/cache/bucket 命令提供统一的表格输出。
-- **关键 Session ID**：`6a50c984cbc8cdf245e171ee`
+- **关键 Session ID**：`.133507582525852:be994597a36d27d1e236caa77d110670_6a50c984cbc8cdf245e171ee.6a50f2e8cbc8cdf245e1759c.6a50f2e856e2102a11c19c25:Trae CN.T(2026/7/10 21:26:00)`
 
 #### 2. ⚡ Bug 修复（Bug Fixing）
-- **核心任务**：修复 Windows 环境下特定的 Junction/Symlink 创建异常问题，优化 `hit-shim` 代理转发时参数传递的解析鲁棒性。
-- **关键 Session ID**：`6a42153cf456dcd062a16dd2`
+- **核心任务**：修复各种测试出的 BUG。
+- **关键 Session ID**：`.133507582525852:60b04c6d9fa9712ca5e3c8ef79a7769b_6a42153cf456dcd062a16dd2.6a50c83bcbc8cdf245e17194.6a50c83a56e2102a11c19c19:Trae CN.T(2026/7/10 18:23:55)`
 
 #### 3. 🧪 自动化测试（Testing & Validation）
-- **核心任务**：编写跨平台集成测试用例，覆盖 `git` / `7zip` 模拟安装生命周期；解决 CI 容器中 junction 临时路径无法写入的边界测试。
-- **关键 Session ID**：`6a3fe5b65c3cfae8ea13d862`
+- **核心任务**：编写集成测试用例，覆盖 `git` / `7zip` 模拟安装生命周期。
+- **关键 Session ID**：`.133507582525852:7984adf84dfdf344d73b04b6ad6ac546_6a3fe5b65c3cfae8ea13d862.6a506f24cbc8cdf245e17030.6a506f2356e2102a11c19c15:Trae CN.T(2026/7/10 12:03:48)`
 
 ---
 
@@ -135,8 +130,7 @@
 ---
 
 ## 6. 对应的报名审核通过的帖子链接
-
-*(帖子链接：待补充 —— 审核通过后我会立即更新在这里)*
+[Hit 项目报名审核通过的帖子](https://forum.trae.cn/t/topic/48644)
 
 ---
 

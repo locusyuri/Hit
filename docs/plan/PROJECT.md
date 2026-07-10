@@ -248,7 +248,7 @@ hit/
 
 ### hit-cli — 命令行界面
 
-用户交互入口，`clap` 参数解析（含 alias）、`tabled` 表格渲染、`indicatif` 进度条。
+用户交互入口，`clap` 参数解析（含 alias）、`rusty-rich` 统一格式化输出（表格、进度条、彩色日志、面板等）。
 
 ### hit-test-utils — 共享测试 fixture
 

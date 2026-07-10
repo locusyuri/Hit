@@ -22,6 +22,7 @@
 - ~~**卸载 Hit 自身** — 通过 PowerShell 脚本实现两种卸载模式，与安装脚本 `install-hit.ps1` 对称：`uninstall-env.ps1`（模式1：只清理环境变量，保留已安装软件）和 `uninstall-hit.ps1`（模式2：彻底删除全部内容）。无需 CLI 子命令。~~ ✅ **已实现（脚本方案）**
 - ~~**tabled 美化 CLI 输出** — 将 `search`、`list`、`cache list`、`bucket list` 等命令的手写文本表格改为 `tabled` crate 自动渲染的表格，列宽自适应、对齐整齐、无需手写格式化逻辑，比 `println!` 拼接更美观且零维护成本。~~ ✅ **已实现**
 - **交互式搜索安装（`hit si`）** — 交互式搜索安装命令，在所有已注册 Bucket 中搜索匹配软件包，通过列表界面展示（名称/版本/来源/可执行文件），支持上下箭头选择、Enter 安装、Esc 取消、同名多 Bucket 来源选择。原 ratatui 实现已移除（全屏 TUI 过重），改用 **dialoguer**（内联选择器，fzf 风格交互，不接管终端）。
+- **色彩系统美化输出** — 引入 `colored` crate 为 CLI 输出添加色彩：成功用绿色、错误用红色、警告用黄色、进度步骤用青色、表格表头加粗高亮，保持与 Scoop 原版 PowerShell 的色彩风格一致（2026-07-10，从 BUGS.md 移入）。
 
 ---
 

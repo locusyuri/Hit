@@ -352,6 +352,21 @@ crates/
 | 3.3.2 | 统一 search/list/cache/bucket 命令的表格输出：调用 `tables::print_*_table()` 函数渲染表格，移除手写 `println!` 格式化逻辑 | ✅ | 3.3.1  |
 | 3.3.3 | 移除 ratatui/crossterm/comfy-table 依赖，删除 `tui.rs` 和 `si` 命令                    | ✅ | -      |
 
+### 3.4 统一色彩输出（rusty-rich）
+
+> 使用 rusty-rich 替代 colored/tabled/indicatif，提供一站式格式化输出：彩色日志、表格、进度条、面板、语法高亮等。
+
+| 序号  | 任务                                                                                   | 状态 | 依赖        |
+| :--- | --- | :--: | --- |
+| 3.4.1 | 添加 rusty-rich 依赖到 hit-cli Cargo.toml（minimal feature，避免 syntect/pulldown-cmark 过重） | 📋 | rusty-rich |
+| 3.4.2 | 定义统一色彩主题：成功绿色 ✔、错误红色 ✘、警告黄色 ⚠、步骤青色 ▶、表格表头青色粗体 | 📋 | 3.4.1      |
+| 3.4.3 | 新增 `output.rs` 模块：封装语义化输出函数（success/error/warn/info/step），统一替代散落的 `.green()`/`.red()` 调用 | 📋 | 3.4.1      |
+| 3.4.4 | 修改 `tables.rs`：使用 rusty-rich Table API 替代 tabled，为表格表头添加青色粗体高亮 | 📋 | 3.4.1, 3.4.2 |
+| 3.4.5 | 修改 `progress.rs`：使用 rusty-rich Progress API 替代 indicatif | 📋 | 3.4.1      |
+| 3.4.6 | 修改 `main.rs`：使用 `output::error()` 统一错误输出样式 | 📋 | 3.4.3      |
+| 3.4.7 | 修改各命令文件（search.rs, list.rs, info.rs, status.rs）：补充空状态消息和标签的颜色渲染 | 📋 | 3.4.3      |
+| 3.4.8 | 移除 colored/tabled/indicatif 依赖，清理相关代码 | 📋 | 3.4.4-3.4.7 |
+
 ---
 
 ## 远期展望（Phase 4-5）

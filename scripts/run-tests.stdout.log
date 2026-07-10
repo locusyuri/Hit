@@ -1,0 +1,523 @@
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mSet-Content: [0mC:\Repos\Hit\scripts\run-tests.ps1:55[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  55 | [0m … |WARN|ERROR|错误' } | Set-Content -Path $warnLog -Encoding UTF8 [36;1m-Append[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                                                 ~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mA parameter cannot be found that matches parameter name 'Append'.[0m
+[31;1mInvalidOperation: [0mC:\Repos\Hit\scripts\run-tests.ps1:247[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m 247 | [0m Add-Content -Path $report -Value "`n[36;1m$sep[0m`n## 测试结束`n$sep`n完成时间: $(Get- …[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                     ~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe variable '$sep' cannot be retrieved because it has not been set.[0m
+
+[完成] REPORT: C:\Repos\Hit\docs\bugs\REPORT.md
+[完成] WARN 日志: C:\Repos\Hit\docs\bugs\REPORT_warn.log

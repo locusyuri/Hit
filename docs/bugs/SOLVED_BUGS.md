@@ -482,3 +482,82 @@ Target: C:\...\hit\apps\curl\8.21.0_1\bin\curl.exe
 
 **验证**：226 测试通过，`cargo check` 通过。
 
+---
+
+## 升级时 Junction 创建失败 os error 183 ⭐⭐⭐⭐⭐（2026-07-10 解决）
+
+**现象**：`hit update --force` 在软件已是最新版本时，升级流程尝试原地覆盖 junction 导致失败，报 `os error 183`。
+
+**根因**：`create_junction` 使用 `lnk.exists()` 检测 junction 是否存在，但 `exists()` 会跟随 junction 到目标目录，目标不存在时返回 `false`，导致跳过删除步骤，后续创建新 junction 时报错。
+
+**修复**：
+- `crates/hit-core/src/win/fs.rs` — 使用 `symlink_metadata_exists` 函数替代 `lnk.exists()`，确保检测 junction 自身存在性而非目标目录
+- `crates/hit-cli/src/commands/doctor.rs` — 修复直接调用 `junction::create` 而非 `create_junction` 的问题，统一 junction 创建逻辑
+
+**验证**：`hit doctor --fix` 成功修复 junction 损坏问题；`cargo build --release` 通过。
+
+---
+
+## post_install 脚本中 `$false` 被当作命令 ⭐⭐⭐（2026-07-10 解决）
+
+**现象**：git/7zip 安装后 post_install 报 `false: The term 'false' is not recognized as a cmdlet`。
+
+**根因**：`run_hook_script` 中的变量替换循环将脚本 body 中的 `$global` 替换为 `"false"`（字符串），且 preamble 中已设置 `$global=$false`，导致 PowerShell 解析错误。
+
+**修复**：
+- `crates/hit-core/src/install/controller.rs` — 移除 body 中的变量替换循环，仅通过 preamble 设置变量（`$dir`、`$version`、`$persist_dir`、`$bucketsdir`、`$scoopdir`、`$app`、`$bucket`、`$global`）
+
+**验证**：`cargo build --release` 通过。
+
+---
+
+## 搜索输出排版问题：描述字段导致错位 ⭐⭐（2026-07-10 解决）
+
+**现象**：`hit search git` 输出表格中"描述"列内容过长，表格列宽被撑开，名称和版本列无法对齐。
+
+**修复**：
+- `crates/hit-cli/src/tables.rs` — 添加 `truncate` 函数限制描述列宽度为 40 字符，超出部分截断加 `…`
+
+**验证**：`hit search git` 输出表格列对齐正确。
+
+---
+
+## `hit doctor --fix` 无法修复缺失的应用目录 ⭐⭐⭐（2026-07-10 解决）
+
+**现象**：`hit doctor` 检测到应用目录不存在，但 `--fix` 显示"没有可自动修复的问题"。
+
+**根因**：`MissingAppDir` 的 `fixable` 标志为 `false`，且无修复逻辑。
+
+**修复**：
+- `crates/hit-cli/src/commands/doctor.rs` — 将 `MissingAppDir` 的 `fixable` 改为 `true`，并添加删除 db.json 中孤立记录的修复逻辑
+
+**验证**：`hit doctor --fix` 成功修复缺失目录问题。
+
+---
+
+## 日志级别 `-v/-vv/-vvv` 输出相同 ⭐⭐（2026-07-10 解决）
+
+**现象**：`hit -v list`、`hit -vv list`、`hit -vvv list` 输出完全相同，均只显示表格内容。
+
+**根因**：代码中缺少 `tracing::info!`、`debug!`、`trace!` 宏调用。
+
+**修复**：
+- `crates/hit-core/src/install/controller.rs` — 添加 `tracing::info!`、`debug!`、`trace!` 宏调用
+- `crates/hit-cli/src/commands/list.rs` — 添加 `tracing::info!`、`debug!`、`trace!` 宏调用
+
+**验证**：
+- `-v`：显示 INFO 级别日志
+- `-vv`：显示 INFO + DEBUG 级别日志
+- `-vvv`：显示 INFO + DEBUG + TRACE 级别日志
+
+---
+
+## `hit wrongcmd` 错误提示误导 ⭐（2026-07-10 解决）
+
+**现象**：输入错误命令时，提示"a similar subcommand exists: 'r'"，但 `r` 是 `reset` 的别名，与 `wrongcmd` 语义无关。
+
+**修复**：
+- `crates/hit-cli/src/main.rs` — 改用 `Cli::try_parse()` 捕获 clap 错误，过滤掉相似子命令建议行
+
+**验证**：`hit wrongcmd` 不再显示误导性的相似建议。
+

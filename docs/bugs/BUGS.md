@@ -5,22 +5,24 @@
 
 ---
 
-## 重装/升级时 Junction 创建失败 os error 183 ⭐⭐⭐⭐⭐
+## 升级时 Junction 创建失败 os error 183 ⭐⭐⭐⭐⭐
 
-> **极为严重** —— `hit install curl --force` 和 `hit update --force`（7zip）重装/升级时旧 junction 无法删除。开发 Agent 已修四次，仍未生效。
+> **严重** —— `hit update --force` 在软件已是最新版本时，升级流程尝试原地覆盖 junction 导致失败。`hit install --force` 已修复，但 `hit update --force` 仍存在问题。
 
 ### 现象
 
 ```
-$ hit install curl --force
+$ hit update --force
+升级 curl → 8.21.0_2
 WARN 事务回滚 app=curl
-错误: IO 错误：创建 Junction: ...\current -> ...\8.21.0_2：
+✘ 升级失败: IO 错误：创建 Junction: ...\current -> ...\8.21.0_2：
 Cannot create a file when that file already exists. (os error 183)
 
 $ hit update --force
-升级 7zip → 26.02
-WARN 事务回滚 app=7zip
-✘ 升级失败: 同上 junction os error 183
+升级 git → 2.55.0.2
+WARN 事务回滚 app=git
+✘ 升级失败: IO 错误：创建 Junction: ...\current -> ...\2.55.0.2：
+Cannot create a file when that file already exists. (os error 183)
 ```
 
 ### 注意
@@ -28,14 +30,15 @@ WARN 事务回滚 app=7zip
 - ✅ `hit i 7zip`（首次安装）→ 成功
 - ✅ `hit rm 7zip`（卸载）→ `✔ 7zip 已卸载`
 - ✅ `hit i 7zip`（**卸载后**重装）→ 成功（clean install）
-- ❌ `hit install curl --force`（**不卸载**直接 `--force` 重装）→ 报 os error 183
-- ❌ `hit update --force` 中 7zip 升级 → 报 os error 183（curl/git 升级成功）
+- ✅ `hit install curl --force`（**不卸载**直接 `--force` 重装）→ **已修复**，走卸载→安装完整路径
+- ❌ `hit update --force` 中 curl/git 已是最新版本时升级 → 报 os error 183
+- ⚠️ `hit update --force` 中 7zip 升级 → 完成（但有奇怪的错误信息输出）
 
-**关键发现**：卸载→重装（clean install）正常工作，但 `--force`（覆盖式重装）的 junction 重写路径有问题。`--force` 的重装没有走"先卸载再安装"的完整流程，而是尝试在原地覆盖 junction，旧 junction 删除失败就报 183。建议 `--force` 直接走卸载→安装的完整路径。
+**关键发现**：`hit install --force` 已改为走"先卸载再安装"的完整路径，junction 问题已修复。但 `hit update --force` 在软件已是最新版本时，仍尝试原地覆盖 junction，旧 junction 删除失败就报 183。建议 upgrade 流程中检测版本相同情况时跳过重装，或也走卸载→安装完整路径。
 
 ### 证据
 
-第九轮实测 §5.4（curl --force 回滚）、§8.5（7zip 升级回滚）
+第九轮实测 §5.4（curl --force 回滚）、§8.5（7zip 升级回滚）；第十轮实测 §8.5（update --force）
 
 ---
 
@@ -94,6 +97,66 @@ C:\...\git\2.54.0: The term '...' is not recognized as a name of a cmdlet
 2. 错误信息用红色、成功用绿色、警告用黄色、进度步骤用青色
 3. 表格表头加粗或高亮
 4. 保持与 Scoop 原版 PowerShell 的色彩风格一致（绿色 ✔ / 红色 ✘）
+
+---
+
+## `hit doctor --fix` 无法修复缺失的应用目录 ⭐⭐⭐
+
+### 现象
+
+`hit doctor` 检测到 7zip 应用目录不存在，但 `--fix` 显示"没有可自动修复的问题"：
+
+```
+$ hit doctor
+⚠ 发现 1 个问题：
+  ✗ 7zip: 应用目录不存在
+提示 使用 hit doctor --fix 自动修复可修复的问题
+
+$ hit doctor --fix
+⚠ 发现 1 个问题：
+  ✗ 7zip: 应用目录不存在
+ℹ 没有可自动修复的问题
+```
+
+### 证据
+
+第十轮实测 §14.1、§14.3
+
+---
+
+## 日志级别 `-v/-vv/-vvv` 输出相同 ⭐⭐
+
+### 现象
+
+`hit -v list`、`hit -vv list`、`hit -vvv list` 输出完全相同，均只显示表格内容，没有 INFO/DEBUG/TRACE 级别的日志输出。
+
+### 证据
+
+第十轮实测 §18.1、§18.2、§18.3
+
+---
+
+## `hit wrongcmd` 错误提示误导 ⭐
+
+### 现象
+
+输入错误命令时，提示"a similar subcommand exists: 'r'"，但 `r` 是 `reset` 的别名，与 `wrongcmd` 语义无关，可能造成误解。
+
+### 证据
+
+第十轮实测 §19.2
+
+---
+
+## `hit cleanup --cache` 输出为空 ⭐
+
+### 现象
+
+`hit cleanup --cache` 命令执行后没有任何输出反馈，用户无法判断是否执行成功。
+
+### 证据
+
+第十轮实测 §11.3
 
 ---
 

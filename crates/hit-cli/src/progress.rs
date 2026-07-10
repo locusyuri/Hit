@@ -1,17 +1,17 @@
 //! EventBus 进度渲染器
 //!
 //! 后台线程订阅 `Session` 的 EventBus 事件，使用 `indicatif` 渲染进度条、
-//! `colored` 渲染彩色日志，并处理 `PromptConfirm` 的交互式确认。
+//! `owo-colors` 渲染彩色日志，并处理 `PromptConfirm` 的交互式确认。
 
 use std::collections::HashMap;
 use std::io::{self, BufRead, Write};
 use std::time::Duration;
 
-use colored::Colorize;
 use flume::Receiver;
 use hit_common::event::{Event, InstallPhase};
 use hit_common::Session;
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
+use owo_colors::OwoColorize;
 
 /// 进度渲染器（后台线程）
 pub struct ProgressRenderer {

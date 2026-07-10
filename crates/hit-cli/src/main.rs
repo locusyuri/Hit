@@ -2,11 +2,13 @@
 //!
 //! 主要模块：
 //! - `cli`：clap 命令树（含 alias：i/s/u/rm/ls/st/b/c）
-//! - `progress`：EventBus 订阅 → indicatif / colored 渲染
+//! - `progress`：EventBus 订阅 → indicatif / owo-colors 渲染
+//! - `output`：统一色彩主题与语义化输出函数
 //! - `commands/`：各子命令实现
 
 mod cli;
 mod commands;
+mod output;
 mod progress;
 mod welcome;
 mod tables;
@@ -14,7 +16,7 @@ mod tables;
 use std::process::ExitCode;
 
 use clap::Parser;
-use colored::Colorize;
+use owo_colors::OwoColorize;
 
 use cli::{Cli, Command};
 use progress::ProgressRenderer;

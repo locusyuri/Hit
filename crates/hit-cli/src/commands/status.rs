@@ -1,8 +1,8 @@
 //! `hit status` — 查看系统状态
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
 use hit_common::Session;
+use owo_colors::OwoColorize;
 
 /// 状态参数
 #[derive(ClapArgs, Debug)]

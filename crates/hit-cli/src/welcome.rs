@@ -6,8 +6,8 @@
 use std::io::{self, BufRead, Write};
 use std::sync::atomic::AtomicBool;
 
-use colored::Colorize;
 use hit_common::Session;
+use owo_colors::OwoColorize;
 use hit_common::config::HitConfig;
 
 /// 检测是否首次运行。

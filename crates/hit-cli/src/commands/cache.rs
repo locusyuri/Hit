@@ -1,8 +1,8 @@
 //! `hit cache` — 缓存管理
 
 use clap::{Args as ClapArgs, Subcommand};
-use colored::Colorize;
 use hit_common::Session;
+use owo_colors::OwoColorize;
 
 use crate::tables::{self, CacheRow};
 

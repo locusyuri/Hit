@@ -61,7 +61,11 @@ url = "2"
 # hit-cli
 clap = { version = "4", features = ["derive"] }
 indicatif = "0.17"
-colored = "2"
+owo-colors = "4"
+anstyle = "1"
+supports-color = "2"
+terminal_size = "0.3"
+is-terminal = "0.4"
 tabled = "0.16"
 
 [profile.release]

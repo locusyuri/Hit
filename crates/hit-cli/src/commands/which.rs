@@ -1,8 +1,8 @@
 //! `hit which` — 查找命令对应的 shim 路径和真实 exe 路径
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
 use hit_common::Session;
+use owo_colors::OwoColorize;
 
 /// which 参数
 #[derive(ClapArgs, Debug)]

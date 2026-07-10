@@ -1,8 +1,8 @@
 //! `hit doctor` — 健康检查与自动修复
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
 use hit_common::Session;
+use owo_colors::OwoColorize;
 use hit_core::win::fs::{create_junction, remove_junction};
 
 /// 健康检查参数
@@ -32,11 +32,11 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     );
 
     for issue in &issues {
-        let icon = match issue.issue {
+        let (icon_color, icon_char) = match issue.issue {
             hit_core::health::IssueType::MissingAppDir
             | hit_core::health::IssueType::MissingVersion
-            | hit_core::health::IssueType::StaleDbRecord => "✗".red(),
-            _ => "⚠".yellow(),
+            | hit_core::health::IssueType::StaleDbRecord => (true, "✗"),
+            _ => (false, "⚠"),
         };
 
         let fixable = if issue.fixable {
@@ -45,13 +45,23 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
             String::new()
         };
 
-        println!(
-            "  {} {}: {}{}",
-            icon,
-            issue.app.bold(),
-            issue.issue,
-            fixable
-        );
+        if icon_color {
+            println!(
+                "  {} {}: {}{}",
+                icon_char.red(),
+                issue.app.bold(),
+                issue.issue,
+                fixable
+            );
+        } else {
+            println!(
+                "  {} {}: {}{}",
+                icon_char.yellow(),
+                issue.app.bold(),
+                issue.issue,
+                fixable
+            );
+        }
     }
 
     // 自动修复

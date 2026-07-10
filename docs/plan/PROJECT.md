@@ -179,8 +179,9 @@ hit/
 │   │   └── src/
 │   │       ├── main.rs
 │   │       ├── cli.rs            # clap 命令树（含 alias）
-│   │       ├── progress.rs       # EventBus → indicatif / colored 渲染
+│   │       ├── progress.rs       # EventBus → indicatif 进度条 + owo-colors 彩色文本
 │   │       ├── tables.rs         # tabled 表格渲染（search/list/cache/bucket）
+│   │       ├── output.rs         # 统一色彩主题与语义化输出函数
 │   │       └── commands/         # install / uninstall / list / search / ...
 │   │
 │   └── hit-test-utils/           # 共享测试 fixture（仅 [dev-dependencies]）
@@ -248,7 +249,25 @@ hit/
 
 ### hit-cli — 命令行界面
 
-用户交互入口，`clap` 参数解析（含 alias）、`tabled` 表格渲染、`indicatif` 进度条。
+用户交互入口，`clap` 参数解析（含 alias）、`tabled` 表格渲染、`indicatif` 进度条、`owo-colors` 统一色彩输出。
+
+**新增模块**：
+- `output.rs`：统一色彩主题与语义化输出函数，定义成功绿色、错误红色、警告黄色、步骤青色、表格表头青色粗体等样式
+
+**统一色彩输出**：
+- 成功消息使用绿色（✔）
+- 错误消息使用红色（✘）
+- 警告消息使用黄色（⚠）
+- 步骤提示使用青色（▶）
+- 表格表头使用青色粗体高亮
+- 次要信息使用灰色（dim）
+
+**核心依赖**：
+- `owo-colors`：零依赖终端着色，支持 ANSI 颜色和样式
+- `anstyle`：ANSI 颜色控制核心
+- `supports-color`：NO_COLOR / TTY 检测
+- `terminal-size`：终端宽度检测
+- `is-terminal`：TTY 检测
 
 ### hit-test-utils — 共享测试 fixture
 

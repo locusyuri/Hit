@@ -1,8 +1,8 @@
 //! `hit cleanup` — 清理旧版本与缓存
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
 use hit_common::Session;
+use owo_colors::OwoColorize;
 
 /// 清理参数
 #[derive(ClapArgs, Debug)]

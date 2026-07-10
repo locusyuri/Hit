@@ -1,8 +1,8 @@
 //! `hit uninstall` — 卸载软件
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
 use hit_common::Session;
+use owo_colors::OwoColorize;
 
 /// 卸载参数
 #[derive(ClapArgs, Debug)]

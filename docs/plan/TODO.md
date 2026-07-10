@@ -352,6 +352,21 @@ crates/
 | 3.3.2 | 统一 search/list/cache/bucket 命令的表格输出：调用 `tables::print_*_table()` 函数渲染表格，移除手写 `println!` 格式化逻辑 | ✅ | 3.3.1  |
 | 3.3.3 | 移除 ratatui/crossterm/comfy-table 依赖，删除 `tui.rs` 和 `si` 命令                    | ✅ | -      |
 
+### 3.4 统一色彩输出（owo-colors）
+
+> 使用 owo-colors 替代 colored，配合 anstyle/supports-color/is-terminal/terminal-size 实现统一的 CLI 色彩输出系统。保留 tabled（表格）和 indicatif（进度条）专用库。
+
+| 序号  | 任务                                                                                   | 状态 | 依赖        |
+| :--- | --- | :--: | --- |
+| 3.4.1 | 添加 owo-colors/anstyle/supports-color/is-terminal/terminal-size 依赖到 hit-cli Cargo.toml | 📋 | owo-colors |
+| 3.4.2 | 定义统一色彩主题：成功绿色 ✔、错误红色 ✘、警告黄色 ⚠、步骤青色 ▶、表格表头青色粗体 | 📋 | 3.4.1      |
+| 3.4.3 | 新增 `output.rs` 模块：封装语义化输出函数（success/error/warn/info/step），统一替代散落的 `.green()`/`.red()` 调用 | 📋 | 3.4.1      |
+| 3.4.4 | 修改 `progress.rs`：使用 owo-colors 替代 colored 渲染彩色文本，保留 indicatif 用于进度条 | 📋 | 3.4.1      |
+| 3.4.5 | 修改 `main.rs`：使用 `output::error()` 统一错误输出样式 | 📋 | 3.4.3      |
+| 3.4.6 | 修改各命令文件（search.rs, list.rs, info.rs, status.rs）：补充空状态消息和标签的颜色渲染 | 📋 | 3.4.3      |
+| 3.4.7 | 修改剩余命令文件（install.rs, update.rs, doctor.rs, cleanup.rs, hold.rs, unhold.rs, cache.rs, config.rs, home.rs, which.rs, reset.rs, uninstall.rs, welcome.rs）：将 colored 替换为 owo-colors | 📋 | 3.4.3      |
+| 3.4.8 | 移除 colored 依赖，清理相关代码 | 📋 | 3.4.4-3.4.7 |
+
 ---
 
 ## 远期展望（Phase 4-5）

@@ -1,8 +1,8 @@
 //! `hit hold` — 版本锁定
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
 use hit_common::Session;
+use owo_colors::OwoColorize;
 
 /// hold 参数
 #[derive(ClapArgs, Debug)]

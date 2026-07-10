@@ -1,8 +1,8 @@
 //! `hit reset` — 版本切换
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
 use hit_common::Session;
+use owo_colors::OwoColorize;
 
 /// 版本切换参数
 #[derive(ClapArgs, Debug)]

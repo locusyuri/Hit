@@ -1,8 +1,8 @@
 //! `hit info` — 查看软件包详情
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
 use hit_common::Session;
+use owo_colors::OwoColorize;
 use hit_core::bucket::index::build_index;
 use hit_core::manifest::{parse_str, supported_architectures};
 

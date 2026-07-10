@@ -1,8 +1,8 @@
 //! `hit config` — 管理配置
 
 use clap::{Args as ClapArgs, Subcommand};
-use colored::Colorize;
 use hit_common::Session;
+use owo_colors::OwoColorize;
 
 /// 配置管理参数
 #[derive(ClapArgs, Debug)]

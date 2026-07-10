@@ -5,7 +5,7 @@
 use std::sync::atomic::AtomicBool;
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
+use rusty_rich::{Console, Text};
 use hit_common::Session;
 use hit_core::bucket::index::build_index;
 use hit_core::manifest::parse_str;
@@ -31,21 +31,22 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     let should_interrupt = AtomicBool::new(false);
 
     // Step 1: 更新所有 Bucket
-    println!("{} 正在更新 Bucket...", "刷新".cyan().bold());
+    let mut console = Console::new();
+    console.println(&Text::from_markup("[bold cyan]刷新[/bold cyan] 正在更新 Bucket..."));
     let buckets = hit_core::bucket::list_buckets(session)?;
     let mut updated = 0;
     for bucket in &buckets {
         match hit_core::bucket::pull_bucket(session, &bucket.name, &should_interrupt) {
             Ok(_path) => {
                 updated += 1;
-                println!("  {} {}", "✔".green(), bucket.name);
+                console.println(&Text::from_markup(&format!("  [green]✔[/green] {}", bucket.name)));
             }
             Err(e) => {
-                println!("  {} {} 失败: {e}", "✘".red(), bucket.name);
+                console.println(&Text::from_markup(&format!("  [red]✘[/red] {} 失败: {}", bucket.name, e)));
             }
         }
     }
-    println!("{} Bucket 更新完成（{updated}/{}）\n", "✔".green(), buckets.len());
+    console.println(&Text::from_markup(&format!("[green]✔[/green] Bucket 更新完成（{updated}/{}）\n", buckets.len())));
 
     // Step 2: 检查新版本
     let db = hit_core::store::Db::load(&hit_core::store::db_path(session))?;
@@ -59,7 +60,7 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     };
 
     if apps_to_check.is_empty() {
-        println!("没有已安装的软件");
+        console.println(&Text::from_markup("[yellow]没有已安装的软件[/yellow]"));
         return Ok(());
     }
 
@@ -69,7 +70,7 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
         let pkg = match db.get_package(app_name) {
             Some(p) => p,
             None => {
-                println!("  {} 未安装，跳过", app_name.dimmed());
+                console.println(&Text::from_markup(&format!("  [grey50]{} 未安装，跳过[/grey50]", app_name)));
                 continue;
             }
         };
@@ -109,18 +110,17 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     }
 
     if upgradable.is_empty() {
-        println!("所有软件已是最新版本");
+        console.println(&Text::from_markup("[yellow]所有软件已是最新版本[/yellow]"));
         return Ok(());
     }
 
-    // Step 3: 执行升级
-    println!("{} 可升级 {} 个软件", "⬆".cyan().bold(), upgradable.len());
+    console.println(&Text::from_markup(&format!("[bold cyan]⬆[/bold cyan] 可升级 {} 个软件", upgradable.len())));
 
     let arch = Arch::current().unwrap_or(Arch::X86_64);
     let mut upgraded = 0;
 
     for (app_name, bucket, manifest) in &upgradable {
-        println!("{} {} → {}", "升级".cyan().bold(), app_name, manifest.version.green());
+        console.println(&Text::from_markup(&format!("[bold cyan]升级[/bold cyan] {} → {}", app_name, manifest.version)));
 
         let options = hit_core::install::InstallOptions {
             force: true,
@@ -133,15 +133,15 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
         match hit_core::install::install(session, app_name, manifest, bucket, &options) {
             Ok(result) => {
                 upgraded += 1;
-                println!("  {} {} 升级完成", "✔".green(), result.version);
+                console.println(&Text::from_markup(&format!("  [green]✔[/green] {} 升级完成", result.version)));
             }
             Err(e) => {
-                println!("  {} 升级失败: {e}", "✘".red());
+                console.println(&Text::from_markup(&format!("  [red]✘[/red] 升级失败: {}", e)));
             }
         }
     }
 
-    println!("\n{} 升级完成（{}/{}）", "✔".green(), upgraded, upgradable.len());
+    console.println(&Text::from_markup(&format!("\n[green]✔[/green] 升级完成（{}/{})", upgraded, upgradable.len())));
 
     Ok(())
 }

@@ -1,7 +1,7 @@
 //! `hit which` — 查找命令对应的 shim 路径和真实 exe 路径
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
+use rusty_rich::{Console, Text};
 use hit_common::Session;
 
 /// which 参数
@@ -26,11 +26,12 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
         anyhow::anyhow!("解析 {} 失败: {e}", shim_path.display())
     })?;
 
-    println!("{}:   {}", "Shim".bold(), shim_path.display());
-    println!("{}: {}", "Target".bold(), shim_data.path);
+    let mut console = Console::new();
+    console.println(&Text::from_markup(&format!("[bold]Shim[/bold]:   {}", shim_path.display())));
+    console.println(&Text::from_markup(&format!("[bold]Target[/bold]: {}", shim_data.path)));
 
     if !shim_data.args.is_empty() {
-        println!("{}:  {}", "Args".bold(), shim_data.args.join(" "));
+        console.println(&Text::from_markup(&format!("[bold]Args[/bold]:  {}", shim_data.args.join(" "))));
     }
 
     Ok(())

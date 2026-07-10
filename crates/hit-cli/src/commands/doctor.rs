@@ -1,7 +1,7 @@
 //! `hit doctor` — 健康检查与自动修复
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
+use rusty_rich::{Console, Text};
 use hit_common::Session;
 use hit_core::win::fs::{create_junction, remove_junction};
 
@@ -20,49 +20,47 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     // 额外检查 shim 完整性
     issues.extend(check_shims(session));
 
+    let mut console = Console::new();
+
     if issues.is_empty() {
-        println!("{} 系统健康，无问题", "✔".green().bold());
+        console.println(&Text::from_markup("[bold green]✔[/bold green] 系统健康，无问题"));
         return Ok(());
     }
 
-    println!(
-        "{} 发现 {} 个问题：\n",
-        "⚠".yellow().bold(),
-        issues.len()
-    );
+    console.println(&Text::from_markup(&format!("[bold yellow]⚠[/bold yellow] 发现 {} 个问题：\n", issues.len())));
 
     for issue in &issues {
         let icon = match issue.issue {
             hit_core::health::IssueType::MissingAppDir
             | hit_core::health::IssueType::MissingVersion
-            | hit_core::health::IssueType::StaleDbRecord => "✗".red(),
-            _ => "⚠".yellow(),
+            | hit_core::health::IssueType::StaleDbRecord => "[red]✗[/red]",
+            _ => "[yellow]⚠[/yellow]",
         };
 
         let fixable = if issue.fixable {
-            " (可修复)".dimmed().to_string()
+            "[grey50] (可修复)[/grey50]".to_string()
         } else {
             String::new()
         };
 
-        println!(
-            "  {} {}: {}{}",
+        console.println(&Text::from_markup(&format!(
+            "  {} [bold]{}[/bold]: {}{}",
             icon,
-            issue.app.bold(),
+            issue.app,
             issue.issue,
             fixable
-        );
+        )));
     }
 
     // 自动修复
     if args.fix {
         let fixable_count = issues.iter().filter(|i| i.fixable).count();
         if fixable_count == 0 {
-            println!("\n{} 没有可自动修复的问题", "ℹ".blue());
+            console.println(&Text::from_markup("\n[blue]ℹ[/blue] 没有可自动修复的问题"));
             return Ok(());
         }
 
-        println!("\n{} 正在修复 {} 个问题...", "修复".cyan().bold(), fixable_count);
+        console.println(&Text::from_markup(&format!("\n[bold cyan]修复[/bold cyan] 正在修复 {} 个问题...", fixable_count)));
 
         let mut fixed = 0;
         for issue in &issues {
@@ -77,12 +75,12 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
                         db.remove_package(&issue.app);
                         if let Ok(()) = db.save() {
                             fixed += 1;
-                            println!("  {} {} 已移除孤立记录", "✔".green(), issue.app);
+                            console.println(&Text::from_markup(&format!("  [green]✔[/green] {} 已移除孤立记录", issue.app)));
                         } else {
-                            println!("  {} {} 修复失败: 保存数据库失败", "✗".red(), issue.app);
+                            console.println(&Text::from_markup(&format!("  [red]✗[/red] {} 修复失败: 保存数据库失败", issue.app)));
                         }
                     } else {
-                        println!("  {} {} 修复失败: 加载数据库失败", "✗".red(), issue.app);
+                        console.println(&Text::from_markup(&format!("  [red]✗[/red] {} 修复失败: 加载数据库失败", issue.app)));
                     }
                 }
                 hit_core::health::IssueType::MissingCurrent => {
@@ -91,10 +89,10 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
                         match create_junction(&version_dir, &issue.path) {
                             Ok(()) => {
                                 fixed += 1;
-                                println!("  {} {} → {}", "✔".green(), issue.app, version_dir.display());
+                                console.println(&Text::from_markup(&format!("  [green]✔[/green] {} → {}", issue.app, version_dir.display())));
                             }
                             Err(e) => {
-                                println!("  {} {} 修复失败: {e}", "✗".red(), issue.app);
+                                console.println(&Text::from_markup(&format!("  [red]✗[/red] {} 修复失败: {}", issue.app, e)));
                             }
                         }
                     }
@@ -109,10 +107,10 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
                             match create_junction(&version_dir, &issue.path) {
                                 Ok(()) => {
                                     fixed += 1;
-                                    println!("  {} {} → {}", "✔".green(), issue.app, version_dir.display());
+                                    console.println(&Text::from_markup(&format!("  [green]✔[/green] {} → {}", issue.app, version_dir.display())));
                                 }
                                 Err(e) => {
-                                    println!("  {} {} 修复失败: {e}", "✗".red(), issue.app);
+                                    console.println(&Text::from_markup(&format!("  [red]✗[/red] {} 修复失败: {}", issue.app, e)));
                                 }
                             }
                         }
@@ -121,29 +119,23 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
                     { let _ = issue; }
                 }
                 hit_core::health::IssueType::BrokenShim => {
-                    // 删除损坏的 shim 文件
                     let _ = std::fs::remove_file(&issue.path);
                     let exe_path = issue.path.with_extension("exe");
                     let _ = std::fs::remove_file(&exe_path);
                     fixed += 1;
-                    println!("  {} {} 已删除", "✔".green(), issue.app);
+                    console.println(&Text::from_markup(&format!("  [green]✔[/green] {} 已删除", issue.app)));
                 }
                 _ => {}
             }
         }
 
-        println!(
-            "\n{} 已修复 {}/{} 个问题",
-            "✔".green(),
+        console.println(&Text::from_markup(&format!(
+            "\n[green]✔[/green] 已修复 {}/{} 个问题",
             fixed,
             fixable_count
-        );
+        )));
     } else {
-        println!(
-            "\n{} 使用 {} 自动修复可修复的问题",
-            "提示".blue(),
-            "hit doctor --fix".yellow()
-        );
+        console.println(&Text::from_markup("\n[blue]提示[/blue] 使用 [yellow]hit doctor --fix[/yellow] 自动修复可修复的问题"));
     }
 
     Ok(())

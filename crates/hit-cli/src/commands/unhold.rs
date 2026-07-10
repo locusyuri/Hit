@@ -1,7 +1,7 @@
 //! `hit unhold` — 解除版本锁定
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
+use rusty_rich::{Console, Text};
 use hit_common::Session;
 
 /// unhold 参数
@@ -19,19 +19,17 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
         .get_package_mut(&args.package)
         .ok_or_else(|| anyhow::anyhow!("'{}' 未安装", args.package))?;
 
+    let mut console = Console::new();
+
     if !pkg.held {
-        println!("{} '{}' 未处于锁定状态", "⏭".dimmed(), args.package);
+        console.println(&Text::from_markup(&format!("[grey50]⏭[/grey50] '{}' 未处于锁定状态", args.package)));
         return Ok(());
     }
 
     pkg.held = false;
     db.save()?;
 
-    println!(
-        "{} '{}' 已解除锁定",
-        "🔓".green(),
-        args.package
-    );
+    console.println(&Text::from_markup(&format!("[green]🔓[/green] '{}' 已解除锁定", args.package)));
 
     Ok(())
 }

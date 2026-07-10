@@ -1,7 +1,7 @@
 //! `hit uninstall` — 卸载软件
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
+use rusty_rich::{Console, Text};
 use hit_common::Session;
 
 /// 卸载参数
@@ -28,11 +28,11 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
             return Err(anyhow::anyhow!("'{app}' 未安装"));
         }
 
-        println!("{} {} ...", "卸载".cyan().bold(), app);
+        let mut console = Console::new();
+        console.println(&Text::from_markup(&format!("[bold cyan]卸载[/bold cyan] {} ...", app)));
 
         hit_core::install::uninstall(session, app)?;
 
-        // --purge：删除 persist 数据
         if args.purge {
             let persist_dir = session.persist_path().join(app);
             if persist_dir.exists() {
@@ -40,7 +40,7 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
             }
         }
 
-        println!("{} {} 已卸载", "✔".green().bold(), app.bold());
+        console.println(&Text::from_markup(&format!("[bold green]✔[/bold green] [bold]{}[/bold] 已卸载", app)));
     }
 
     Ok(())

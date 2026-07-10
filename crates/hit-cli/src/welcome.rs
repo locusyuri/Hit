@@ -6,7 +6,7 @@
 use std::io::{self, BufRead, Write};
 use std::sync::atomic::AtomicBool;
 
-use colored::Colorize;
+use rusty_rich::{Console, Text};
 use hit_common::Session;
 use hit_common::config::HitConfig;
 
@@ -49,30 +49,32 @@ pub fn run_first_time_setup(session: &Session) -> anyhow::Result<()> {
 
     let should_interrupt = AtomicBool::new(false);
 
+    let mut console = Console::new();
+
     match choice {
         1 => {
-            println!("\n{} 正在添加官方 Bucket...\n", "开始".cyan().bold());
+            console.println(&Text::from_markup("\n[bold cyan]开始[/bold cyan] 正在添加官方 Bucket...\n"));
             let results = hit_core::bucket::add_default_buckets(session, &should_interrupt)?;
             for r in &results {
                 match &r.outcome {
                     hit_core::bucket::AddOutcome::Added => {
-                        println!("  {} {}", "✔".green(), r.name);
+                        console.println(&Text::from_markup(&format!("  [green]✔[/green] {}", r.name)));
                     }
                     hit_core::bucket::AddOutcome::Skipped => {
-                        println!("  {} {}（已存在）", "⏭".dimmed(), r.name);
+                        console.println(&Text::from_markup(&format!("  [grey50]⏭[/grey50] {}（已存在）", r.name)));
                     }
                     hit_core::bucket::AddOutcome::Failed(msg) => {
-                        println!("  {} {} 失败: {msg}", "✘".red(), r.name);
+                        console.println(&Text::from_markup(&format!("  [red]✘[/red] {} 失败: {}", r.name, msg)));
                     }
                 }
             }
-            println!("\n{} 官方 Bucket 添加完成", "✔".green());
+            console.println(&Text::from_markup("\n[green]✔[/green] 官方 Bucket 添加完成"));
         }
         2 => {
             interactive_add_buckets(session, &should_interrupt)?;
         }
         3 => {
-            println!("\n已跳过。你可以稍后使用 {} 添加 Bucket。", "hit bucket add".yellow());
+            console.println(&Text::from_markup("\n已跳过。你可以稍后使用 [yellow]hit bucket add[/yellow] 添加 Bucket。"));
         }
         _ => unreachable!(),
     }
@@ -86,8 +88,8 @@ pub fn run_first_time_setup(session: &Session) -> anyhow::Result<()> {
 
 /// 显示欢迎横幅和菜单
 fn show_welcome() -> anyhow::Result<()> {
-    println!(
-        r#"
+    let mut console = Console::new();
+    console.print_str(r#"
   _    _       _
  | |  | |     | |
  | |__| | ___ | | ___  _   _  __ _  ___
@@ -96,22 +98,24 @@ fn show_welcome() -> anyhow::Result<()> {
  |_|  |_|\___/|_|\___/ \__, |\__,_|\___|
                          __/ |
                         |___/
-"#
-    );
+"#);
 
-    println!("{}", "首次使用 Hit？".bold());
-    println!();
-    println!("  {} 快速开始 — 添加官方 Bucket（main, extras, versions）", "1)".green());
-    println!("  {} 自定义 — 手动选择要添加的 Bucket", "2)".yellow());
-    println!("  {} 跳过", "3)".dimmed());
-    println!();
+    console.println(&Text::from_markup("[bold]首次使用 Hit？[/bold]"));
+    console.print_str("\n");
+    console.println(&Text::from_markup("  [green]1)[/green] 快速开始 — 添加官方 Bucket（main, extras, versions）"));
+    console.println(&Text::from_markup("  [yellow]2)[/yellow] 自定义 — 手动选择要添加的 Bucket"));
+    console.println(&Text::from_markup("  [grey50]3)[/grey50] 跳过"));
+    console.print_str("\n");
 
     Ok(())
 }
 
 /// 读取用户选择（1/2/3）
 fn read_choice() -> anyhow::Result<u8> {
-    print!("请选择 [{}]: ", "1/2/3".green());
+    let mut console = Console::new();
+    console.print_str("请选择 [");
+    console.println(&Text::from_markup("[green]1/2/3[/green]"));
+    console.print_str("]: ");
     io::stdout().flush()?;
 
     let stdin = io::stdin();
@@ -132,17 +136,18 @@ fn read_choice() -> anyhow::Result<u8> {
 /// 交互式添加 Bucket（用户逐个输入名称）
 fn interactive_add_buckets(session: &Session, interrupt: &AtomicBool) -> anyhow::Result<()> {
     let known = hit_core::bucket::known_buckets();
+    let mut console = Console::new();
 
-    println!("\n可用的官方 Bucket：");
+    console.print_str("\n可用的官方 Bucket：\n");
     for (name, _url) in known {
-        println!("  - {name}");
+        console.print_str(&format!("  - {name}\n"));
     }
-    println!("\n输入 Bucket 名称（回车确认，空行结束）：");
+    console.print_str("\n输入 Bucket 名称（回车确认，空行结束）：\n");
 
     let stdin = io::stdin();
 
     loop {
-        print!("{} ", "bucket >".cyan());
+        console.print_str("[cyan]bucket >[/cyan] ");
         io::stdout().flush()?;
 
         let mut line = String::new();
@@ -153,17 +158,16 @@ fn interactive_add_buckets(session: &Session, interrupt: &AtomicBool) -> anyhow:
             break;
         }
 
-        // 查找 URL
         let url = match hit_core::bucket::resolve_known_bucket(&name) {
             Some(u) => u.to_string(),
             None => {
-                print!("  Bucket '{}' 不在已知列表中，请输入 Git 仓库 URL（或留空取消）：", name);
+                console.print_str(&format!("  Bucket '{}' 不在已知列表中，请输入 Git 仓库 URL（或留空取消）：", name));
                 io::stdout().flush()?;
                 let mut url_line = String::new();
                 stdin.lock().read_line(&mut url_line)?;
                 let url = url_line.trim().to_string();
                 if url.is_empty() {
-                    println!("  已跳过 '{}'", name);
+                    console.println(&Text::from_markup(&format!("  已跳过 '{}'", name)));
                     continue;
                 }
                 url
@@ -172,20 +176,20 @@ fn interactive_add_buckets(session: &Session, interrupt: &AtomicBool) -> anyhow:
 
         let target = session.buckets_path().join(&name);
         if target.exists() {
-            println!("  {} '{}' 已存在，跳过", "⏭".dimmed(), name);
+            console.println(&Text::from_markup(&format!("  [grey50]⏭[/grey50] '{}' 已存在，跳过", name)));
             continue;
         }
 
-        print!("  正在添加 '{}'...", name);
+        console.print_str(&format!("  正在添加 '{}'...", name));
         io::stdout().flush()?;
 
         match hit_core::bucket::clone_bucket(session, &name, &url, &hit_core::bucket::CloneOptions::default(), interrupt) {
-            Ok(_) => println!(" {}", "完成".green()),
-            Err(e) => println!(" {} {e}", "失败".red()),
+            Ok(_) => console.println(&Text::from_markup(" [green]完成[/green]")),
+            Err(e) => console.println(&Text::from_markup(&format!(" [red]失败[/red] {}", e))),
         }
     }
 
-    println!();
+    console.print_str("\n");
     Ok(())
 }
 

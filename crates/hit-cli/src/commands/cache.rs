@@ -1,7 +1,7 @@
 //! `hit cache` — 缓存管理
 
 use clap::{Args as ClapArgs, Subcommand};
-use colored::Colorize;
+use rusty_rich::{Console, Text};
 use hit_common::Session;
 
 use crate::tables::{self, CacheRow};
@@ -41,8 +41,10 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
 fn cmd_list(session: &Session) -> anyhow::Result<()> {
     let entries = hit_core::download::cache::list_cache(session)?;
 
+    let mut console = Console::new();
+
     if entries.is_empty() {
-        println!("缓存为空");
+        console.println(&Text::from_markup("[yellow]缓存为空[/yellow]"));
         return Ok(());
     }
 
@@ -71,11 +73,12 @@ fn cmd_list(session: &Session) -> anyhow::Result<()> {
 /// cache clean — 清理缓存
 fn cmd_clean(session: &Session, app: Option<&str>) -> anyhow::Result<()> {
     let count = hit_core::download::cache::remove_cache(session, app)?;
+    let mut console = Console::new();
 
     if count == 0 {
-        println!("没有可清理的缓存文件");
+        console.println(&Text::from_markup("[yellow]没有可清理的缓存文件[/yellow]"));
     } else {
-        println!("{} 已清理 {} 个缓存文件", "✔".green(), count);
+        console.println(&Text::from_markup(&format!("[green]✔[/green] 已清理 {} 个缓存文件", count)));
     }
 
     Ok(())

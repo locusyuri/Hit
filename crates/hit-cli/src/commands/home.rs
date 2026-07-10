@@ -1,7 +1,7 @@
 //! `hit home` — 打开软件主页
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
+use rusty_rich::{Console, Text};
 use hit_common::Session;
 use hit_core::bucket::index::build_index;
 use hit_core::manifest::parse_str;
@@ -48,12 +48,8 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
         ));
     }
 
-    println!(
-        "{} {} → {}",
-        "打开".cyan().bold(),
-        args.name,
-        manifest.homepage
-    );
+    let mut console = Console::new();
+    console.println(&Text::from_markup(&format!("[bold cyan]打开[/bold cyan] {} → {}", args.name, manifest.homepage)));
 
     // Windows: 使用 cmd /c start 打开浏览器
     std::process::Command::new("cmd")

@@ -1,7 +1,7 @@
 //! `hit reset` — 版本切换
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
+use rusty_rich::{Console, Text};
 use hit_common::Session;
 
 /// 版本切换参数
@@ -26,21 +26,12 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
         ));
     }
 
-    println!(
-        "{} {} → {} ...",
-        "切换".cyan().bold(),
-        args.app,
-        args.version.green()
-    );
+    let mut console = Console::new();
+    console.println(&Text::from_markup(&format!("[bold cyan]切换[/bold cyan] {} → {} ...", args.app, args.version)));
 
     hit_core::install::reset_version(session, &args.app, &args.version)?;
 
-    println!(
-        "{} {} 已切换到 {}",
-        "✔".green().bold(),
-        args.app,
-        args.version.green()
-    );
+    console.println(&Text::from_markup(&format!("[bold green]✔[/bold green] {} 已切换到 {}", args.app, args.version)));
 
     Ok(())
 }

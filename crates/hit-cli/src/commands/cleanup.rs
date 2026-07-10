@@ -1,7 +1,7 @@
 //! `hit cleanup` — 清理旧版本与缓存
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
+use rusty_rich::{Console, Text};
 use hit_common::Session;
 
 /// 清理参数
@@ -22,6 +22,7 @@ pub struct Args {
 /// 执行清理
 pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     let mut total_cleaned = 0;
+    let mut console = Console::new();
 
     // 清理旧版本
     if args.all || !args.apps.is_empty() {
@@ -74,43 +75,40 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
                     continue;
                 }
 
-                // 删除旧版本
                 let version_path = entry.path();
                 match std::fs::remove_dir_all(&version_path) {
                     Ok(()) => {
                         total_cleaned += 1;
-                        println!(
-                            "  {} {} {}",
-                            "删除".dimmed(),
-                            app_name,
-                            dir_name.dimmed()
-                        );
-                    }
-                    Err(e) => {
-                        println!(
-                            "  {} {} {}: {e}",
-                            "跳过".yellow(),
+                        console.println(&Text::from_markup(&format!(
+                            "  [grey50]删除[/grey50] {} {}",
                             app_name,
                             dir_name
-                        );
+                        )));
+                    }
+                    Err(e) => {
+                        console.println(&Text::from_markup(&format!(
+                            "  [yellow]跳过[/yellow] {} {}: {}",
+                            app_name,
+                            dir_name,
+                            e
+                        )));
                     }
                 }
             }
         }
     }
 
-    // 清理缓存
     if args.cache {
         let count = hit_core::download::cache::remove_cache(session, None)?;
         if count > 0 {
-            println!("{} 已清理 {} 个缓存文件", "✔".green(), count);
+            console.println(&Text::from_markup(&format!("[green]✔[/green] 已清理 {} 个缓存文件", count)));
         }
     }
 
     if total_cleaned == 0 && !args.cache {
-        println!("没有需要清理的内容");
+        console.println(&Text::from_markup("[yellow]没有需要清理的内容[/yellow]"));
     } else if total_cleaned > 0 {
-        println!("\n{} 已清理 {} 个旧版本", "✔".green(), total_cleaned);
+        console.println(&Text::from_markup(&format!("\n[green]✔[/green] 已清理 {} 个旧版本", total_cleaned)));
     }
 
     Ok(())

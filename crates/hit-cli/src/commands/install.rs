@@ -5,7 +5,7 @@
 use std::sync::atomic::AtomicBool;
 
 use clap::Args as ClapArgs;
-use colored::Colorize;
+use rusty_rich::{Console, Text};
 use hit_common::Session;
 use hit_core::bucket::index::{build_index, SoftwareIndex};
 use hit_core::manifest::{parse_str, Arch, Manifest};
@@ -151,7 +151,8 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
             std::fs::remove_dir_all(&app_dir).ok();
         }
 
-        println!("{} {} ...", "安装".cyan().bold(), spec.name);
+        let mut console = Console::new();
+        console.println(&Text::from_markup(&format!("[bold cyan]安装[/bold cyan] {} ...", spec.name)));
 
         let (bucket, app, manifest) = find_manifest(session, &spec)?;
 
@@ -172,13 +173,12 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
 
         let result = hit_core::install::install(session, &app, &manifest, &bucket, &options)?;
 
-        println!(
-            "{} {} {} 安装完成（{}）",
-            "✔".green().bold(),
-            app.bold(),
-            result.version.green(),
-            result.shims_created.len().to_string().green()
-        );
+        console.println(&Text::from_markup(&format!(
+            "[bold green]✔[/bold green] [bold]{}[/bold] {} 安装完成（{}）",
+            app,
+            result.version,
+            result.shims_created.len()
+        )));
     }
 
     Ok(())

@@ -1,7 +1,7 @@
 //! `hit config` — 管理配置
 
 use clap::{Args as ClapArgs, Subcommand};
-use colored::Colorize;
+use rusty_rich::{Console, Text};
 use hit_common::Session;
 
 /// 配置管理参数
@@ -37,34 +37,43 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
 /// config list — 显示所有配置项
 fn cmd_list(session: &Session) -> anyhow::Result<()> {
     let cfg = session.config();
+    let mut console = Console::new();
 
-    println!(
-        "{:<30} {}",
-        "proxy".bold(),
+    console.println(&Text::from_markup(&format!(
+        "[bold]{:<30}[/bold] {}",
+        "proxy",
         cfg.proxy.as_deref().unwrap_or("(未设置)")
-    );
-    println!(
-        "{:<30} {}",
-        "mirror".bold(),
+    )));
+    console.println(&Text::from_markup(&format!(
+        "[bold]{:<30}[/bold] {}",
+        "mirror",
         cfg.mirror.as_deref().unwrap_or("(未设置)")
-    );
-    println!("{:<30} {}", "aria2_enabled".bold(), cfg.aria2_enabled);
-    println!("{:<30} {}", "no_junction".bold(), cfg.no_junction);
-    println!(
-        "{:<30} {}",
-        "root_path".bold(),
+    )));
+    console.println(&Text::from_markup(&format!(
+        "[bold]{:<30}[/bold] {}",
+        "aria2_enabled",
+        cfg.aria2_enabled
+    )));
+    console.println(&Text::from_markup(&format!(
+        "[bold]{:<30}[/bold] {}",
+        "no_junction",
+        cfg.no_junction
+    )));
+    console.println(&Text::from_markup(&format!(
+        "[bold]{:<30}[/bold] {}",
+        "root_path",
         cfg.root_path.as_deref().unwrap_or("(未设置)")
-    );
-    println!(
-        "{:<30} {}",
-        "auto_cleanup_days".bold(),
+    )));
+    console.println(&Text::from_markup(&format!(
+        "[bold]{:<30}[/bold] {}",
+        "auto_cleanup_days",
         cfg.auto_cleanup_days
-    );
-    println!(
-        "{:<30} {}",
-        "health_check_interval_days".bold(),
+    )));
+    console.println(&Text::from_markup(&format!(
+        "[bold]{:<30}[/bold] {}",
+        "health_check_interval_days",
         cfg.health_check_interval_days
-    );
+    )));
 
     Ok(())
 }
@@ -122,7 +131,8 @@ fn cmd_set(session: &Session, key: &str, value: &str) -> anyhow::Result<()> {
     }
 
     session.save_config()?;
-    println!("{} 配置 '{}' 已更新为 '{}'", "✔".green(), key, value);
+    let mut console = Console::new();
+    console.println(&Text::from_markup(&format!("[green]✔[/green] 配置 '{}' 已更新为 '{}'", key, value)));
 
     Ok(())
 }

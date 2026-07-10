@@ -74,7 +74,7 @@ pub fn check_installed_apps(session: &Session) -> Vec<HealthIssue> {
                 app: name.clone(),
                 issue: IssueType::MissingAppDir,
                 path: app_dir,
-                fixable: false,
+                fixable: true,
             });
             continue;
         }

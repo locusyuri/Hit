@@ -75,6 +75,9 @@ pub fn install(
 ) -> Result<InstallResult> {
     let arch = options.arch.unwrap_or_else(|| Arch::current().unwrap_or(Arch::X86_64));
 
+    tracing::info!(app, version = %manifest.version, bucket, "开始安装");
+    tracing::debug!(app, force = options.force, arch = ?arch, no_deps = options.no_deps, "安装选项");
+
     // 已安装检测
     let current_path = session.apps_path().join(app).join("current");
     if current_path.exists() && !options.force {
@@ -88,6 +91,7 @@ pub fn install(
     emit_phase(session, app, InstallPhase::Resolve, true);
     let flat = FlatManifest::resolve_architecture(manifest.clone(), arch);
     let version = flat.inner().version.clone();
+    tracing::info!(app, resolved_version = %version, "manifest 解析完成");
     emit_phase(session, app, InstallPhase::Resolve, false);
 
     // Step 2: 解析依赖
@@ -119,11 +123,14 @@ pub fn install(
         .as_ref()
         .map(|u| u.as_slice().to_vec())
         .unwrap_or_default();
+    tracing::debug!(app, urls = ?urls, "准备下载");
     let mut cache_files = Vec::new();
     for url in &urls {
         let path = download_to_cache(session, app, &version, url, &options.should_interrupt)?;
+        tracing::trace!(app, cache_path = ?path, "下载完成");
         cache_files.push(path);
     }
+    tracing::info!(app, cache_count = cache_files.len(), "下载完成");
     emit_phase(session, app, InstallPhase::Download, false);
 
     // Step 4: 校验哈希
@@ -196,7 +203,9 @@ pub fn install(
 
     // Step 9: 创建 current junction
     emit_phase(session, app, InstallPhase::Commit, true);
+    tracing::info!(app, version_dir = ?version_dir, "创建 current junction");
     let current_dir = link_current(&version_dir, false)?;
+    tracing::debug!(app, current_dir = ?current_dir, "junction 创建完成");
     tx.record_undo(UndoAction::RemoveJunction(current_dir.clone()));
     emit_phase(session, app, InstallPhase::Commit, false);
 
@@ -534,16 +543,8 @@ fn run_hook_script(
         None => return Ok(()),
     };
 
-    let mut body = script.joined();
-    for (k, v) in var_map {
-        // $global 是 PowerShell 内置变量，不应替换到脚本 body 中
-        // （preamble 已正确设置 $global=$false）
-        if k != "$global" {
-            body = body.replace(k.as_str(), v.as_str());
-        }
-    }
+    let body = script.joined();
 
-    // 定义 Scoop 兼容的 PowerShell 变量，使 post_install 脚本能引用 $dir、$version 等
     let app = var_map.get("$app").cloned().unwrap_or_default();
     let version = flat.inner().version.clone();
     let persist_dir = session.persist_path().join(&app);

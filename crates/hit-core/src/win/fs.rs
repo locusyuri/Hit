@@ -21,7 +21,7 @@ use hit_common::error::{HitError, Result};
 /// 3. `pwsh -Command Remove-Item -Force -LiteralPath`（最可靠，处理各种边缘情况）
 /// 4. `fs::remove_dir()`（不跟随 junction 的目录删除）
 pub fn create_junction(src: &Path, lnk: &Path) -> Result<()> {
-    if lnk.exists() {
+    if symlink_metadata_exists(lnk) {
         remove_junction_readonly(lnk);
         let deleted = junction::delete(lnk).is_ok()
             || rmdir_junction(lnk)
@@ -177,6 +177,15 @@ pub fn remove_persist_link(source: &Path) -> Result<()> {
 // ============================================================================
 // 辅助函数
 // ============================================================================
+
+/// 使用 symlink_metadata 检测路径是否存在（不跟随 junction）
+/// 
+/// `fs::exists()` 会跟随 junction 到目标目录，当目标不存在时返回 false，
+/// 但 junction reparse point 本身可能仍然存在。此函数直接检测 reparse point，
+/// 用于在创建新 junction 前正确清理旧的 reparse point。
+fn symlink_metadata_exists(path: &Path) -> bool {
+    std::fs::symlink_metadata(path).is_ok()
+}
 
 /// 设置目录的 readonly 属性
 fn set_readonly(path: &Path) {

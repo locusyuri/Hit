@@ -170,10 +170,17 @@ pub fn pull_bucket(
 
     // 读取 remote URL（必须是 git 仓库）
     let remote_url = {
-        let repo = gix::open(&target).map_err(|e| HitError::Bucket {
-            bucket: name.into(),
-            message: format!("无法打开 git 仓库：{e}"),
-        })?;
+        let repo = match gix::open(&target) {
+            Ok(r) => r,
+            Err(e) => {
+                tracing::warn!(
+                    "bucket '{}' 不是有效 git 仓库，重新克隆: {}",
+                    name,
+                    e
+                );
+                return clone_bucket_recreate(session, name, &target, should_interrupt);
+            }
+        };
         let remote = repo.find_remote("origin").map_err(|e| HitError::Bucket {
             bucket: name.into(),
             message: format!("无法读取 origin：{e}"),
@@ -192,8 +199,13 @@ pub fn pull_bucket(
     });
 
     // 删除现有目录后重新浅克隆
-    std::fs::remove_dir_all(&target)
-        .map_err(|e| HitError::io("删除旧 bucket 目录", e))?;
+    match std::fs::remove_dir_all(&target) {
+        Ok(()) => {}
+        Err(e) => {
+            tracing::warn!("删除旧 bucket 目录失败，尝试强制删除: {}", e);
+            force_remove_dir_all(&target)?;
+        }
+    }
 
     clone_bucket(
         session,
@@ -202,6 +214,48 @@ pub fn pull_bucket(
         &CloneOptions::default(),
         should_interrupt,
     )
+}
+
+fn clone_bucket_recreate(
+    session: &Session,
+    name: &str,
+    target: &PathBuf,
+    should_interrupt: &AtomicBool,
+) -> Result<PathBuf> {
+    let known_url = crate::bucket::resolve_known_bucket(name);
+    let url = match known_url {
+        Some(u) => u.to_string(),
+        None => {
+            return Err(HitError::Bucket {
+                bucket: name.into(),
+                message: "非 git 仓库且未知 bucket，无法重新克隆".into(),
+            });
+        }
+    };
+
+    session.emit(Event::LogInfo {
+        message: format!("正在更新 bucket '{name}'..."),
+    });
+
+    force_remove_dir_all(target)?;
+
+    clone_bucket(session, name, &url, &CloneOptions::default(), should_interrupt)
+}
+
+fn force_remove_dir_all(path: &PathBuf) -> Result<()> {
+    let path_str = path.to_str().unwrap_or_default();
+    
+    let success = std::process::Command::new("cmd.exe")
+        .args(["/C", "rmdir", "/S", "/Q", path_str])
+        .status()
+        .map(|s| s.success())
+        .unwrap_or(false);
+
+    if !success {
+        return Err(HitError::io("强制删除目录", std::io::Error::last_os_error()));
+    }
+
+    Ok(())
 }
 
 /// 将 gix 克隆错误转换为 `HitError::Bucket`

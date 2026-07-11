@@ -20,15 +20,22 @@ use hit_common::error::{HitError, Result};
 /// 2. `cmd.exe /c rmdir`（Windows 原生，正确删除 junction reparse point）
 /// 3. `pwsh -Command Remove-Item -Force -LiteralPath`（最可靠，处理各种边缘情况）
 /// 4. `fs::remove_dir()`（不跟随 junction 的目录删除）
+/// 5. `cmd.exe /c rmdir /S /Q`（终极兜底，强制删除整个目录树）
 pub fn create_junction(src: &Path, lnk: &Path) -> Result<()> {
-    if symlink_metadata_exists(lnk) {
+    if symlink_metadata_exists(lnk) || lnk.exists() {
         remove_junction_readonly(lnk);
         let deleted = junction::delete(lnk).is_ok()
             || rmdir_junction(lnk)
             || powershell_remove_item(lnk)
             || fs::remove_dir(lnk).is_ok();
+        
         if !deleted {
-            tracing::warn!("移除旧 junction 失败: {}，尝试覆盖创建", lnk.display());
+            tracing::warn!("移除旧 junction 失败: {}，尝试终极兜底", lnk.display());
+            let _ = force_remove_junction(lnk);
+        }
+
+        if symlink_metadata_exists(lnk) || lnk.exists() {
+            tracing::warn!("移除旧 junction 仍失败: {}，尝试覆盖创建", lnk.display());
         }
     }
 
@@ -39,6 +46,15 @@ pub fn create_junction(src: &Path, lnk: &Path) -> Result<()> {
 
     set_readonly(lnk);
     Ok(())
+}
+
+fn force_remove_junction(lnk: &Path) -> bool {
+    let path_str = lnk.to_str().unwrap_or_default();
+    std::process::Command::new("cmd.exe")
+        .args(["/C", "rmdir", "/S", "/Q", path_str])
+        .status()
+        .map(|s| s.success())
+        .unwrap_or(false)
 }
 
 /// 用 `pwsh Remove-Item -Force -LiteralPath` 删除 junction。

@@ -12,25 +12,13 @@ use hit_common::config::HitConfig;
 
 /// 检测是否首次运行。
 ///
-/// 判定逻辑（双条件，必须同时满足才算首次运行）：
-/// 1. config.json 不存在（安装脚本会预置 config，存在则说明已初始化）
-/// 2. buckets/ 目录不存在或为空（无任何 bucket）
-///
-/// 两个条件都满足才视为首次运行。这样：
-/// - 已安装环境（config 在 + bucket 在）绝不触发
-/// - 安装脚本刚装好但用户还没添加 bucket（config 在 + bucket 空）也不触发，
-///   避免污染已有配置环境
-///
-/// config 路径使用 `HitConfig::default_path()`，与 Session 加载配置的路径一致，
-/// 避免因路径解析逻辑不同导致误判。
+/// 判定逻辑：检查 buckets/ 目录是否为空（无任何 bucket）。
+/// 
+/// 安装脚本会预先创建 config.json，但首次运行引导应该在用户第一次使用 hit 时触发。
+/// 只要 buckets 目录为空，就认为是首次运行，显示欢迎引导。
+/// 
+/// 引导完成后会添加 bucket，再次运行时 buckets 不为空，就不会重复触发。
 pub fn is_first_run() -> bool {
-    // 条件 1：config.json 不存在（使用 default_path 与 Session 一致）
-    let config_path = HitConfig::default_path();
-    if config_path.exists() {
-        return false;
-    }
-
-    // 条件 2：buckets/ 目录不存在或为空
     let buckets = hit_common::paths::buckets_path();
     if !buckets.exists() {
         return true;

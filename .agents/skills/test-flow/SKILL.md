@@ -14,6 +14,16 @@ disable_model_invocation: false
 
 按 `docs/bugs/TEST_FLOW.md` 定义的完整流程执行命令测试，生成测试报告并更新 bug 记录。
 
+## 核心原则
+
+**严格遵守：只测试，不修改代码。**
+
+- 仅执行测试命令并记录结果
+- 将发现的问题写入 `docs/bugs/BUGS.md`
+- 将完整测试输出写入 `docs/bugs/REPORT.md`
+- **禁止**对源代码进行任何修改
+- **禁止**修复发现的 bug（除非用户明确要求）
+
 ---
 
 ## 核心参考文档

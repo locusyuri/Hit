@@ -4,6 +4,62 @@
 
 ---
 
+## 首次启动引导功能彻底不可用 ⭐⭐⭐⭐⭐（2026-07-11 解决）
+
+**现象**：首次运行 `hit` 时不再显示欢迎引导界面，用户无法通过引导快速添加官方 bucket。
+
+**根因**：安装脚本 `install-hit.ps1` 在安装时预先创建了 `config.json` 文件，而 `is_first_run()` 的判定条件是"config.json 不存在 **且** buckets 目录为空"。由于 config.json 总是存在，条件永远不满足，引导永远不会触发。
+
+**修复**：`crates/hit-cli/src/welcome.rs` — 修改 `is_first_run()`，移除 config.json 存在性检查，改为仅检查 buckets 目录是否为空。安装脚本只预置 config，不预置 bucket，因此 buckets 为空时正确触发引导。
+
+**验证**：`cargo build --release` 通过。
+
+---
+
+## 升级时 Junction 创建失败 os error 183 ⭐⭐⭐⭐⭐（2026-07-11 解决）
+
+**现象**：`hit update --force` 在软件已是最新版本时，升级流程尝试原地覆盖 junction 导致失败，报 `os error 183`。
+
+**根因**：`create_junction` 使用 `lnk.exists()` 检测 junction 是否存在，但 `exists()` 会跟随 junction 到目标目录，目标不存在时返回 `false`，导致跳过删除步骤。
+
+**修复**：
+- `crates/hit-core/src/win/fs.rs` — 使用 `symlink_metadata_exists` 函数替代 `lnk.exists()`；添加第五级 fallback `cmd.exe /c rmdir /S /Q` 终极兜底删除方案
+- `crates/hit-cli/src/commands/update.rs` — `--force` 时先卸载再安装，避免 junction 创建冲突
+
+**验证**：`hit update --force` 成功升级。
+
+---
+
+## `hit search/info` 指定 bucket 时返回未找到 ⭐⭐⭐（2026-07-11 解决）
+
+**现象**：`hit search git --bucket main` 和 `hit info git` 返回"未找到"，但 main bucket 已添加且包含 git 软件。
+
+**修复**：代码本身已支持大小写不敏感匹配，问题已解决。
+
+**验证**：`hit search git --bucket main` 返回正确结果。
+
+---
+
+## Bucket 更新时出现"无法打开 git 仓库"错误 ⭐⭐（2026-07-11 解决）
+
+**现象**：多次执行 `hit update` 后，部分 bucket 突然出现"does not appear to be a git repository"错误。
+
+**修复**：`crates/hit-core/src/bucket/git_client.rs` — 在 `pull_bucket` 中添加 `gix::open` 失败的 fallback 逻辑，自动重新克隆已知 bucket；添加 `force_remove_dir_all` 函数强制删除目录。
+
+**验证**：`hit bucket update` 正确处理无效 git 仓库。
+
+---
+
+## `hit cleanup --cache` 输出为空 ⭐（2026-07-11 解决）
+
+**现象**：`hit cleanup --cache` 命令执行后没有任何输出反馈。
+
+**修复**：`crates/hit-cli/src/commands/cleanup.rs` — 当清理缓存且删除文件数为 0 时，输出"没有缓存文件需要清理"。
+
+**验证**：空缓存时输出"✔ 没有缓存文件需要清理"。
+
+---
+
 ## 欢迎页面未在 `hit --help` 触发 ⭐
 
 执行 `hit --help` 后没有显示欢迎页面，而是直接显示了帮助信息。

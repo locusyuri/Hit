@@ -1,0 +1,20 @@
+{
+	"mcpServers": {
+		"context7": {
+			"type": "stdio",
+			"command": "bunx",
+			"args": ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-01559ca7-a37a-4a07-85a0-4a2cfbdfbcde"],
+			"description": "Nuxt、Vue、Tailwind、shadcn-vue 等库的实时文档查询"
+			},
+		"codegraph": {
+			"command": "codegraph",
+			"args": [
+				"serve",
+				"--mcp"
+			],
+			"env": {},
+			"description": "代码图谱查询，支持函数定义、调用关系、代码搜索等功能",
+			"type": "stdio"
+			}   
+	}
+}

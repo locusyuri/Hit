@@ -130,6 +130,10 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
             should_interrupt: AtomicBool::new(false),
         };
 
+        if args.force {
+            let _ = hit_core::install::uninstall(session, app_name);
+        }
+
         match hit_core::install::install(session, app_name, manifest, bucket, &options) {
             Ok(result) => {
                 upgraded += 1;

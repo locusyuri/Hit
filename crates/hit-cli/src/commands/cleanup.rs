@@ -100,17 +100,25 @@ pub fn execute(args: &Args, session: &Session) -> anyhow::Result<()> {
     }
 
     // 清理缓存
-    if args.cache {
+    let _cache_cleaned = if args.cache {
         let count = hit_core::download::cache::remove_cache(session, None)?;
         if count > 0 {
             println!("{} 已清理 {} 个缓存文件", "✔".green(), count);
+        } else {
+            println!("{} 没有缓存文件需要清理", "✔".green());
         }
-    }
+        count
+    } else {
+        0
+    };
 
-    if total_cleaned == 0 && !args.cache {
+    // 输出总结（仅清理旧版本时）
+    if args.cache && total_cleaned == 0 {
+        // 仅清理缓存，已在上面处理输出
+    } else if total_cleaned == 0 && !args.cache {
         println!("没有需要清理的内容");
     } else if total_cleaned > 0 {
-        println!("\n{} 已清理 {} 个旧版本", "✔".green(), total_cleaned);
+        println!("{} 已清理 {} 个旧版本", "✔".green(), total_cleaned);
     }
 
     Ok(())
